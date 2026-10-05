@@ -1,0 +1,1503 @@
+/* Final reference alignment and responsive corrections. */
+.question-numbers button {
+  max-width: 49px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+.question-numbers {
+  column-gap: 12px;
+}
+.legend {
+  flex-wrap: wrap;
+}
+:root {
+  --brand-circuit: #1b72ff;
+  --brand-matrix: #00804c;
+  --brand-void: #141413;
+  --brand-static: #f5f5f2;
+}
+.panel {
+  background: #fff;
+}
+.sidebar nav a {
+  font-weight: 400;
+}
+.sidebar nav a.active {
+  font-weight: 500;
+}
+.app-promo {
+  padding-left: 21px;
+  padding-right: 21px;
+}
+.app-promo h3 {
+  font-size: 16px;
+  letter-spacing: -0.55px;
+}
+.store {
+  padding-left: 11px;
+  padding-right: 8px;
+  gap: 8px;
+}
+.store span {
+  font-size: 18px;
+  letter-spacing: -0.5px;
+}
+.store small {
+  letter-spacing: 0;
+}
+.course-card:not(.compact) {
+  display: flex;
+  flex-direction: column;
+}
+.course-card:not(.compact) .course-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.course-card:not(.compact) .course-body > p {
+  min-height: 58px;
+}
+.course-card:not(.compact) .teacher {
+  margin-top: auto;
+  padding-top: 11px;
+}
+.course-image img {
+  object-fit: cover;
+}
+.path {
+  grid-template-rows: auto auto;
+  min-height: 118px;
+}
+.path small {
+  grid-row: 2;
+  align-self: end;
+}
+.path > svg {
+  grid-row: 2;
+  z-index: 1;
+}
+.path strong {
+  letter-spacing: -0.25px;
+}
+.primary > #learning-paths {
+  margin-top: 3px;
+}
+.hero {
+  background: linear-gradient(125deg, #d0e6ff, #f4faff 65%, #b6eee4);
+}
+.overview-hero .hero-photo {
+  width: 62%;
+  object-position: 68% 50%;
+  mask-image: linear-gradient(to right, transparent, #000 33%);
+}
+.hero-features {
+  background: linear-gradient(0deg, #f8fbfd, #f8fbfdeb 65%, #f8fbfd00);
+}
+.ring {
+  background: conic-gradient(var(--blue) 0deg 108deg, #e4e7ee 108deg 360deg);
+}
+.right-rail > .panel > .section-title h2 {
+  font-size: 19px;
+  letter-spacing: -0.8px;
+  line-height: 1.2;
+}
+.right-rail .ai-small .section-title h2 {
+  font-size: 17px;
+}
+.ai-small,
+.sync-panel {
+  background: linear-gradient(125deg, #f9fbff, #e4f5ff 70%, #cef4eb);
+}
+.context-info {
+  background: linear-gradient(125deg, #e2efff, #f1f9ff);
+}
+.purchase-protection {
+  background: linear-gradient(130deg, #e4f7f0, #f4faf8);
+}
+.ai-hero:after {
+  content: "";
+  position: absolute;
+  right: -15%;
+  bottom: -120px;
+  width: 80%;
+  height: 170px;
+  background: linear-gradient(90deg, #c3e4ff, #a3f1df);
+  border-radius: 50%;
+  transform: rotate(21deg);
+  pointer-events: none;
+}
+.ai-hero .ai-features {
+  z-index: 1;
+}
+.ai-small-body img,
+.course-ai > img {
+  object-fit: cover;
+  object-position: center 12%;
+}
+.bot-avatar {
+  object-fit: cover;
+  object-position: center 5%;
+}
+.chat-panel .section-title {
+  margin-top: 5px;
+}
+.curriculum-row strong {
+  font-weight: 600;
+}
+.certificate:before,
+.certificate:after {
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  background: linear-gradient(
+    140deg,
+    #00764b,
+    #00ac79 65%,
+    #98d0ff 66%,
+    #d4ebff 73%,
+    transparent 74%
+  );
+  top: -185px;
+  left: -145px;
+  transform: rotate(-17deg);
+  pointer-events: none;
+}
+.certificate:after {
+  top: auto;
+  left: auto;
+  bottom: -185px;
+  right: -150px;
+  transform: rotate(163deg);
+  width: 290px;
+  height: 290px;
+}
+.certificate-top {
+  z-index: 2;
+}
+.certificate-seal {
+  border: 7px double #d3a238;
+  box-shadow: 0 4px 7px #82581b24;
+  background: radial-gradient(circle at 35% 30%, #ffe8ae, #efc465 75%);
+}
+.certificate-seal:before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid #e0b559;
+  border-radius: 50%;
+}
+.certificate-seal .ribbon {
+  position: absolute;
+  top: calc(100% - 5px);
+  left: 13%;
+  width: 74%;
+  height: 46px;
+  background: linear-gradient(100deg, #065fff, #287aff);
+  clip-path: polygon(
+    14% 0,
+    86% 0,
+    100% 100%,
+    72% 82%,
+    57% 100%,
+    50% 44%,
+    43% 100%,
+    27% 82%,
+    0 100%
+  );
+  z-index: -1;
+}
+.quote {
+  background: #edf5ff;
+  position: relative;
+}
+.quote > span {
+  position: absolute;
+  left: 16px;
+  top: 20px;
+}
+.quote blockquote {
+  margin: 27px 0 12px 31px;
+}
+.signup-form {
+  background: #fff;
+}
+.signup-intro {
+  overflow: hidden;
+}
+.signup-photo {
+  width: 100%;
+  height: 100%;
+  object-position: 64% 50%;
+  mask-image: linear-gradient(0deg, #000 72%, transparent 100%);
+}
+.signup-intro > .handwriting {
+  background: #f6fbffe0;
+  border-radius: 45%;
+  padding: 5px 10px 9px;
+  border-bottom: 0;
+  text-decoration: underline;
+  text-decoration-color: var(--blue);
+  text-decoration-thickness: 4px;
+  text-underline-offset: 9px;
+}
+.signup-form .field em,
+.settings-form .field em {
+  display: none;
+}
+.signup-page > header {
+  padding-bottom: 6px;
+}
+.signup-benefits {
+  gap: 27px;
+}
+.signup-copy {
+  padding-top: 52px;
+}
+.settings-form .about-you textarea {
+  font-size: 14px;
+}
+.completion {
+  background: #e5f6ef;
+}
+.calendar-toolbar {
+  min-width: 0;
+}
+.settings-nav > button {
+  font-weight: 400;
+}
+.settings-nav > button.selected {
+  background: #eaf3ff;
+}
+@media (min-width: 901px) {
+  .page-heading:not(.standalone) {
+    margin-top: -12px;
+  }
+  .page-heading.heading-certificates {
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+  .page-heading.heading-payment {
+    margin-top: 15px;
+    margin-bottom: 0;
+  }
+  .page-heading.heading-courses {
+    margin-top: 23px;
+  }
+  .columns:not(.detail-columns):not(.assessment-columns):not(
+      .certificate-columns
+    ):not(.payment-columns):not(.courses-columns)
+    > .right-rail {
+    margin-top: -14px;
+  }
+  .primary .path {
+    min-height: 118px;
+  }
+  .profile-summary {
+    min-height: 173px;
+  }
+  .certificate-profile {
+    margin-bottom: 17px;
+  }
+  .certificate-lower .panel {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+  .right-rail .achievement {
+    margin-top: 15px;
+  }
+  .right-rail .upcoming.flat {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .right-rail .upcoming small {
+    margin-top: 3px;
+  }
+  .right-rail .recent-row {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .right-rail .insight {
+    margin-bottom: 5px;
+  }
+  .right-rail .learning-progress {
+    margin-top: 8px;
+  }
+  .right-rail .section-title {
+    margin-bottom: 12px;
+  }
+  .right-rail .quick-link {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+  .right-rail .quote {
+    min-height: 170px;
+  }
+  .ai-hero > img {
+    width: 225px;
+    height: 270px;
+    right: 13px;
+    top: 40px;
+  }
+  .ai-hero .hero-copy > p {
+    max-width: 555px;
+  }
+  .ai-hero .hero-copy {
+    padding-top: 43px;
+  }
+  .settings-nav > button {
+    margin-bottom: 9px;
+  }
+  .settings-form,
+  .settings-nav {
+    min-height: 920px;
+  }
+  .payment-columns .checkout-steps {
+    min-height: 76px;
+  }
+}
+@media (min-width: 1351px) {
+  .app-promo {
+    padding-top: 27px;
+    padding-bottom: 24px;
+  }
+  .app-promo p {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .sidebar nav {
+    gap: 14px;
+  }
+  .course-body > p {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .compact .course-body > p {
+    min-height: 55px;
+  }
+  .course-card:not(.compact) .course-body > p {
+    min-height: 56px;
+  }
+  .course-card:not(.compact) .teacher {
+    padding-top: 0;
+    margin-top: 12px;
+  }
+  .course-card:not(.compact) .course-body > .btn {
+    margin-top: auto;
+  }
+  .teacher b {
+    font-size: 12px;
+  }
+  .teacher small {
+    font-size: 11px;
+  }
+  .course-card:not(.compact) .course-meta {
+    margin: 12px 0;
+  }
+  .courses-columns > .right-rail {
+    margin-top: -59px;
+  }
+  .rail-paths .path {
+    min-height: 73px;
+  }
+  .path strong {
+    font-size: 11px;
+  }
+  .path p {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  .path small {
+    font-size: 11px;
+  }
+  .path {
+    padding: 12px 15px;
+    gap: 8px 12px;
+  }
+  .overview-hero .hero-copy h2 {
+    font-size: 41px;
+  }
+  .overview-hero .hero-copy > p {
+    font-size: 17px;
+  }
+  .overview-hero .hero-copy {
+    padding-top: 34px;
+  }
+  .right-rail .lesson-preview strong {
+    font-size: 12px;
+  }
+  .right-rail .lesson-preview small {
+    font-size: 11px;
+  }
+  .right-rail > .panel > .section-title h2 {
+    font-size: 19px;
+  }
+  .right-rail .recent-row span {
+    font-size: 13px;
+  }
+  .right-rail .recent-row small {
+    font-size: 11px;
+  }
+  .right-rail .recent-row > small {
+    font-size: 10px;
+  }
+  .right-rail .context-info p {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .right-rail .context-info label {
+    margin-top: 16px;
+  }
+  .right-rail .upcoming strong {
+    font-size: 13px;
+  }
+  .right-rail .upcoming small {
+    font-size: 12px;
+  }
+  .right-rail .upcoming.flat strong {
+    font-size: 12px;
+  }
+  .right-rail .upcoming.flat small {
+    font-size: 12px;
+  }
+  .right-rail .achievement strong {
+    font-size: 13px;
+  }
+  .right-rail .achievement small {
+    font-size: 12px;
+  }
+  .certificate-profile .profile-stats > div {
+    width: 98px;
+  }
+  .profile-summary p {
+    font-size: 14px;
+  }
+  .profile-summary h2 {
+    font-size: 24px;
+  }
+  .profile-summary {
+    gap: 24px;
+  }
+  .certificate {
+    min-height: 367px;
+  }
+  .certificate-columns .right-rail .section-title {
+    margin-bottom: 9px;
+  }
+  .certificate-columns .right-rail .learning-progress {
+    gap: 13px;
+  }
+  .certificate-columns .right-rail .learning-progress > div:last-child {
+    max-width: 132px;
+    margin-left: auto;
+  }
+  .settings-form-heading {
+    margin-bottom: 25px;
+  }
+  .signup-layout {
+    grid-template-columns: 1.07fr 1fr;
+  }
+  .signup-form {
+    padding: 39px 39px 29px;
+    min-height: 895px;
+  }
+  .signup-form > h1 {
+    font-size: 43px;
+  }
+  .signup-form > p {
+    font-size: 18px;
+  }
+  .signup-form .role-option {
+    font-size: 13px;
+    letter-spacing: -0.25px;
+    min-height: 54px;
+    padding: 12px;
+  }
+  .signup-form .form-grid {
+    gap: 20px 22px;
+  }
+}
+@media (max-width: 1350px) and (min-width: 901px) {
+  .right-rail > .panel > .section-title h2 {
+    font-size: 17px;
+  }
+  .app-promo {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .app-promo h3 {
+    font-size: 15px;
+  }
+  .store span {
+    font-size: 17px;
+  }
+  .primary .path {
+    min-height: 118px;
+  }
+  .rail-paths .path {
+    min-height: 69px;
+  }
+}
+@media (max-width: 900px) {
+  .path {
+    min-height: 0;
+  }
+  .signup-copy {
+    padding-top: 40px;
+  }
+  .signup-page > header {
+    padding-bottom: 18px;
+  }
+  .app-promo h3 {
+    font-size: 16px;
+  }
+  .right-rail > .panel > .section-title h2 {
+    font-size: 17px;
+  }
+  .certificate-seal .ribbon {
+    height: 34px;
+  }
+  .signup-photo {
+    object-position: 64% 50%;
+  }
+  .signup-form .role-option {
+    white-space: normal;
+  }
+}
+@media (max-width: 700px) {
+  .overview-hero .hero-photo {
+    width: 75%;
+    opacity: 0.65;
+  }
+  .signup-copy {
+    padding-top: 29px;
+  }
+  .signup-photo {
+    height: 410px;
+    object-position: 65% 50%;
+    opacity: 0.55;
+    mask-image: linear-gradient(90deg, transparent, #000 75%);
+  }
+  .signup-intro {
+    min-height: 410px;
+  }
+  .signup-benefits {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    width: calc(100% - 40px);
+    margin: 28px 20px 10px;
+    padding: 20px;
+    background: #fff;
+  }
+  .signup-benefits > div {
+    gap: 12px;
+  }
+  .signup-benefits h3 {
+    font-size: 13px;
+  }
+  .signup-benefits p {
+    font-size: 11px;
+  }
+  .signup-benefits .icon-box {
+    width: 39px;
+    height: 43px;
+  }
+  .signup-benefits > div:last-child {
+    grid-column: 1/-1;
+  }
+  .signup-intro > .handwriting {
+    margin: 10px 0 22px 45px;
+    font-size: 20px;
+  }
+  .certificate:before {
+    width: 150px;
+    height: 150px;
+    top: -116px;
+    left: -107px;
+  }
+  .certificate:after {
+    width: 180px;
+    height: 180px;
+    bottom: -150px;
+    right: -129px;
+  }
+  .right-rail > .panel > .section-title h2 {
+    font-size: 18px;
+  }
+  .ai-hero > img {
+    right: 5px;
+  }
+  .calendar-toolbar {
+    display: grid;
+    grid-template-columns: 34px 1fr auto 34px;
+    gap: 10px;
+  }
+  .calendar-toolbar h1 {
+    grid-column: 1/3;
+    font-size: 23px;
+    width: auto;
+  }
+  .calendar-toolbar .segmented {
+    grid-column: 3/5;
+    justify-self: end;
+  }
+  .calendar-toolbar > .btn {
+    grid-row: 2;
+    grid-column: 3;
+    margin: 0;
+    justify-self: end;
+  }
+  .calendar-toolbar > .square {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  .calendar-toolbar > .square:last-child {
+    grid-row: 2;
+    grid-column: 4;
+  }
+  .calendar-toolbar > b {
+    grid-row: 2;
+    grid-column: 2;
+    text-align: center;
+  }
+  .calendar-toolbar .segmented button {
+    padding: 10px 13px;
+  }
+  .certificate-seal .ribbon {
+    height: 38px;
+  }
+}
+@media (max-width: 480px) {
+  .overview-hero .hero-photo {
+    width: 85%;
+    opacity: 0.45;
+  }
+  .hero-features strong {
+    white-space: normal;
+  }
+  .ai-hero > img {
+    width: 115px;
+    height: 166px;
+    right: -3px;
+    top: 225px;
+    opacity: 0.85;
+  }
+  .ai-features {
+    width: 68%;
+    gap: 15px 8px;
+  }
+  .ai-features > div {
+    gap: 6px;
+  }
+  .ai-features span:not(.icon-box) {
+    font-size: 9px;
+    max-width: 58px;
+  }
+  .ai-features .icon-box {
+    width: 25px;
+    height: 29px;
+  }
+  .ai-features .icon-box svg {
+    width: 19px;
+  }
+  .right-rail > .panel > .section-title h2 {
+    font-size: 19px;
+  }
+  .right-rail .ai-small .section-title h2 {
+    font-size: 18px;
+  }
+  .community-banner {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 14px;
+  }
+  .community-banner > div {
+    min-width: 0;
+  }
+  .community-banner > .btn {
+    grid-column: 2;
+    justify-self: start;
+  }
+  .community-count {
+    grid-column: 2;
+    margin-left: 0;
+    font-size: 13px;
+  }
+  .community-count b {
+    font-size: 17px;
+  }
+  .compact .course-image {
+    min-height: 165px;
+    padding: 0;
+  }
+  .compact .course-image img {
+    object-position: 50% 50%;
+  }
+  .course-card:not(.compact) .course-body > p {
+    min-height: 0;
+  }
+  .calendar-toolbar {
+    grid-template-columns: 34px 1fr auto 34px;
+    gap: 10px;
+  }
+  .calendar-toolbar h1 {
+    grid-column: 1/-1;
+    font-size: 24px;
+  }
+  .calendar-toolbar .segmented {
+    grid-column: 1/4;
+    grid-row: 2;
+    justify-self: start;
+  }
+  .calendar-toolbar > .btn {
+    grid-column: 4;
+    grid-row: 2;
+    justify-self: end;
+  }
+  .calendar-toolbar > .square {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .calendar-toolbar > b {
+    grid-column: 2/4;
+    grid-row: 3;
+  }
+  .calendar-toolbar > .square:last-child {
+    grid-column: 4;
+    grid-row: 3;
+  }
+  .signup-copy {
+    padding-top: 27px;
+  }
+  .signup-photo {
+    height: 355px;
+    opacity: 0.4;
+    object-position: 68% 50%;
+  }
+  .signup-copy > p {
+    color: #3d5076;
+  }
+  .signup-benefits {
+    grid-template-columns: 1fr;
+    gap: 17px;
+    margin-top: 25px;
+    width: calc(100% - 30px);
+    margin-left: 15px;
+    margin-right: 15px;
+    padding: 17px;
+  }
+  .signup-benefits > div {
+    gap: 15px;
+  }
+  .signup-benefits h3 {
+    font-size: 14px;
+  }
+  .signup-benefits p {
+    font-size: 12px;
+  }
+  .signup-benefits .icon-box {
+    width: 45px;
+    height: 47px;
+  }
+  .signup-intro > .handwriting {
+    font-size: 19px;
+    margin-left: 40px;
+  }
+  .certificate {
+    padding: 17px 18px;
+  }
+  .certificate:before {
+    top: -131px;
+    left: -120px;
+    width: 155px;
+    height: 155px;
+  }
+  .certificate:after {
+    bottom: -160px;
+    right: -145px;
+    width: 185px;
+    height: 185px;
+  }
+  .certificate-seal {
+    right: 12px;
+    top: 87px;
+    width: 61px;
+    height: 68px;
+    border-width: 4px;
+  }
+  .certificate-seal > img {
+    width: 43px;
+  }
+  .certificate-seal .ribbon {
+    height: 25px;
+    left: 9%;
+    width: 82%;
+  }
+  .certificate-body h1 {
+    font-size: 27px;
+  }
+  .certificate-body > p:last-child {
+    max-width: 100%;
+  }
+  .certificate-bottom {
+    gap: 8px;
+  }
+  .certificate-top > i {
+    font-size: 10px;
+  }
+  .certificate-top > img {
+    width: 99px;
+  }
+  .settings-form .about-you textarea {
+    font-size: 13px;
+  }
+}
+@media print {
+  .certificate:before {
+    top: -180px;
+    left: -130px;
+  }
+  .certificate:after {
+    bottom: -150px;
+    right: -100px;
+  }
+  .certificate-seal {
+    top: 50mm;
+    right: 20mm;
+    width: 35mm;
+    height: 40mm;
+  }
+  .certificate-seal > img {
+    width: 25mm;
+  }
+  .certificate-seal .ribbon {
+    height: 15mm;
+  }
+}
+
+/* ── Compact app shell: slimmer sidebar pinned to the full viewport height,
+   with the page content scrolling on its own instead of the whole document. ── */
+@media (min-width: 901px) {
+  .app-shell {
+    grid-template-columns: 206px minmax(0, 1fr);
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    padding: 7px;
+    gap: 7px;
+  }
+  .sidebar {
+    position: relative;
+    top: 0;
+    height: 100%;
+    min-height: 0;
+    padding: 16px 11px 14px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+  .sidebar::-webkit-scrollbar {
+    width: 0;
+  }
+  .brand {
+    height: auto;
+    margin-bottom: 10px;
+    padding: 0 6px;
+  }
+  .brand img {
+    width: 138px;
+    height: 50px;
+  }
+  .sidebar nav {
+    gap: 4px;
+  }
+  .sidebar nav a {
+    min-height: 40px;
+    padding: 8px 11px;
+    gap: 12px;
+    font-size: 14px;
+    border-radius: 9px;
+  }
+  .sidebar nav a > svg {
+    width: 19px;
+    height: 19px;
+  }
+  .sidebar nav a .badge {
+    margin-left: -4px;
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+  .sidebar .dot {
+    width: 7px;
+    height: 7px;
+    margin-left: -4px;
+  }
+
+  /* Promo card shrinks to whatever room is left, and disappears on short screens. */
+  .app-promo {
+    margin-top: auto;
+    padding: 14px 13px 13px;
+    border-radius: 13px;
+    flex-shrink: 0;
+  }
+  .app-promo .icon-box {
+    width: 38px;
+    height: 38px;
+    margin-bottom: 6px;
+  }
+  .app-promo .icon-box svg {
+    width: 20px;
+    height: 20px;
+  }
+  .app-promo h3 {
+    font-size: 13px;
+    margin-bottom: 5px;
+    letter-spacing: -0.4px;
+  }
+  .app-promo p {
+    font-size: 11px;
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+  .store {
+    padding: 5px 9px;
+    gap: 7px;
+    margin-top: 5px;
+    border-radius: 6px;
+  }
+  .store > svg {
+    width: 19px;
+    height: 21px;
+  }
+  .store span {
+    font-size: 14px;
+  }
+  .store small {
+    font-size: 8px;
+  }
+
+  /* The content column is the only thing that scrolls. */
+  .main {
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+  .main::-webkit-scrollbar {
+    width: 8px;
+  }
+  .main::-webkit-scrollbar-thumb {
+    background: #d3d9e6;
+    border-radius: 8px;
+  }
+  .main::-webkit-scrollbar-thumb:hover {
+    background: #b9c2d4;
+  }
+  .main::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+@media (min-width: 901px) and (max-height: 720px) {
+  .app-promo {
+    display: none;
+  }
+}
+@media (min-width: 1351px) {
+  .sidebar nav {
+    gap: 5px;
+  }
+}
+
+/* ── Sign-up / log-in: full-bleed layout that scrolls once the form
+   outgrows the viewport instead of being squeezed into it. ── */
+@media (min-width: 901px) {
+  .signup-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+  .signup-page > header {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 14px 34px 8px;
+  }
+  .signup-page > header > a > img {
+    width: 152px;
+    height: 46px;
+  }
+  .signup-page > header .btn {
+    min-height: 36px;
+    padding: 7px 18px;
+    font-size: 14px;
+  }
+  .signup-layout {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    max-width: none;
+    margin: 0;
+    padding: 0 26px 20px 30px;
+    gap: 26px;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+  .signup-intro,
+  .signup-form {
+    min-height: 0;
+    height: auto;
+  }
+  .signup-intro {
+    display: flex;
+    flex-direction: column;
+  }
+  .signup-copy {
+    padding-top: 18px;
+  }
+  .signup-copy .eyebrow {
+    font-size: 11px;
+    letter-spacing: 2.4px;
+    margin-bottom: 10px;
+  }
+  .signup-copy h1 {
+    font-size: 46px;
+    letter-spacing: -1.6px;
+  }
+  .signup-copy > p {
+    font-size: 15px;
+    margin-top: 10px;
+  }
+  .signup-benefits {
+    width: 300px;
+    padding: 15px 16px;
+    margin-top: 16px;
+    gap: 12px;
+    border-radius: 15px;
+  }
+  .signup-benefits > div {
+    gap: 13px;
+  }
+  .signup-benefits .icon-box {
+    width: 40px;
+    height: 40px;
+  }
+  .signup-benefits .icon-box svg {
+    width: 21px;
+    height: 21px;
+  }
+  .signup-benefits h3 {
+    font-size: 13px;
+    margin: 1px 0 3px;
+  }
+  .signup-benefits p {
+    font-size: 11.5px;
+    line-height: 1.3;
+  }
+  .signup-intro > .handwriting {
+    margin: 10px 0 0 42px;
+    font-size: 18px;
+    padding: 4px 8px 7px;
+  }
+  /* Feather every edge now that the photo spans half the viewport. */
+  .signup-photo {
+    mask-image:
+      linear-gradient(180deg, transparent, #000 16% 88%, transparent),
+      linear-gradient(90deg, transparent, #000 14%);
+    mask-composite: intersect;
+  }
+
+  .signup-form {
+    align-self: stretch;
+    padding: 24px 26px 22px;
+    border-radius: 16px;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-content: safe center;
+  }
+  .signup-form > h1 {
+    font-size: 31px;
+    letter-spacing: -1px;
+    margin-bottom: 3px;
+  }
+  .signup-form > p {
+    font-size: 14px;
+    white-space: normal;
+  }
+  .signup-form .form-grid {
+    margin-top: 16px;
+    gap: 12px 16px;
+  }
+  .signup-form .field {
+    font-size: 13px;
+    gap: 5px;
+  }
+  .signup-form .input-wrap {
+    min-height: 40px;
+    padding: 0 12px;
+    gap: 10px;
+  }
+  .signup-form .input-wrap input,
+  .signup-form .input-wrap select {
+    padding: 7px 0;
+    font-size: 13px;
+  }
+  .signup-form .input-wrap svg {
+    width: 17px;
+    height: 17px;
+  }
+  .signup-form fieldset {
+    margin: 15px 0 12px;
+  }
+  .signup-form legend {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .signup-form .role-option {
+    font-size: 12px;
+    min-height: 0;
+    padding: 9px 11px;
+    gap: 11px;
+    margin-bottom: 7px;
+    line-height: 1.3;
+  }
+  .signup-form input[type="radio"] {
+    width: 19px;
+    height: 19px;
+  }
+  .signup-form input[type="radio"]:checked {
+    border-width: 5px;
+    box-shadow: inset 0 0 0 4px white;
+  }
+  .signup-form .create-account {
+    margin-top: 4px;
+    min-height: 46px;
+    font-size: 16px;
+  }
+  .signup-form .login-link {
+    margin-top: 11px;
+    font-size: 12px;
+  }
+}
+
+/* Log in: a focused, roomier single-column card rather than a half-empty
+   version of the eight-field sign-up form. */
+.signup-form.login-mode {
+  max-width: 470px;
+  width: 100%;
+  margin: 0 auto;
+  align-self: center;
+  padding: 38px 38px 34px;
+}
+.signup-form.login-mode > h1 {
+  font-size: 34px;
+  letter-spacing: -1.1px;
+  margin-bottom: 7px;
+}
+.signup-form.login-mode > p {
+  font-size: 15px;
+  color: var(--muted);
+  white-space: normal;
+  line-height: 1.45;
+}
+.signup-form.login-mode .form-grid {
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 26px;
+  gap: 18px;
+}
+.signup-form.login-mode .field {
+  font-size: 14px;
+  gap: 7px;
+}
+.signup-form.login-mode .input-wrap {
+  min-height: 50px;
+  padding: 0 15px;
+  background: #f8fafd;
+}
+.signup-form.login-mode .input-wrap input {
+  font-size: 14px;
+}
+.signup-form.login-mode .input-wrap:focus-within {
+  background: #fff;
+  box-shadow: 0 0 0 3px #0066ff1f;
+}
+.login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 18px 0 22px;
+  font-size: 13px;
+}
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.remember-me input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 1.5px solid #bbc4d6;
+  border-radius: 5px;
+  background: #fff;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+}
+.remember-me input:checked {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+.remember-me input:checked:after {
+  content: "";
+  width: 9px;
+  height: 5px;
+  border: 2px solid #fff;
+  border-top: 0;
+  border-right: 0;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+.login-options .text-link {
+  font-size: 13px;
+  border: 0;
+  background: none;
+  color: var(--blue);
+  padding: 0;
+}
+.signup-form.login-mode .create-account {
+  margin-top: 0;
+  min-height: 52px;
+  font-size: 17px;
+}
+.signup-form.login-mode .login-link {
+  margin-top: 22px;
+  font-size: 13px;
+}
+
+/* ── Shared site footer ── */
+.site-footer {
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid #eef0f5;
+  margin-top: 22px;
+  padding: 44px 48px 18px;
+  color: #1d2740;
+}
+.site-footer-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.65fr);
+  gap: 40px;
+  padding-bottom: 34px;
+}
+.site-footer-logo img {
+  width: 168px;
+  height: 52px;
+  object-fit: contain;
+  object-position: left center;
+}
+.site-footer-about > p {
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 46ch;
+  margin: 18px 0 0;
+}
+.site-footer-quote {
+  font-style: italic;
+  color: var(--muted);
+  font-size: 14px !important;
+}
+.site-footer-contact {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 15px;
+}
+.site-footer-contact li {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.site-footer-contact svg {
+  color: #6b7897;
+  flex-shrink: 0;
+}
+.site-footer-contact a {
+  color: var(--blue);
+}
+.site-footer-contact a:hover {
+  text-decoration: underline;
+}
+.site-footer-social {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+.site-footer-social a {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #dfe4ee;
+  display: grid;
+  place-items: center;
+  color: #3b4761;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+.site-footer-social svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.site-footer-social a:hover {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+.site-footer-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+}
+.site-footer-nav h2 {
+  font-size: 21px;
+  font-weight: 700;
+  margin: 0 0 22px;
+  letter-spacing: -0.4px;
+}
+.site-footer-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.site-footer-nav a,
+.site-footer-nav button {
+  font-size: 15px;
+  color: #35415e;
+  border: 0;
+  background: none;
+  padding: 0;
+  text-align: left;
+  line-height: 1.35;
+}
+.site-footer-nav a:hover,
+.site-footer-nav button:hover {
+  color: var(--blue);
+}
+.site-footer-bottom {
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.site-footer-bottom > small {
+  font-size: 13px;
+  color: var(--muted);
+}
+.partner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #fdf3da;
+  color: #7a5a12;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.partner-badge svg {
+  color: #eaa300;
+  fill: #eaa300;
+}
+.site-footer-lang {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  background: none;
+  color: #35415e;
+  font-size: 14px;
+  padding: 0;
+}
+.site-footer-lang svg {
+  color: #6b7897;
+}
+.site-footer-lang:hover {
+  color: var(--blue);
+}
+
+@media (max-width: 1100px) {
+  .site-footer {
+    padding: 34px 30px 16px;
+  }
+  .site-footer-top {
+    gap: 28px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  }
+  .site-footer-nav {
+    gap: 18px;
+  }
+  .site-footer-nav h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .site-footer-about > p,
+  .site-footer-contact,
+  .site-footer-nav a,
+  .site-footer-nav button {
+    font-size: 14px;
+  }
+}
+@media (max-width: 820px) {
+  .site-footer-top {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  .site-footer-about > p {
+    max-width: none;
+  }
+}
+@media (max-width: 700px) {
+  .site-footer {
+    padding: 28px 20px 16px;
+    border-radius: 14px;
+  }
+  .site-footer-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+  }
+  .site-footer-bottom {
+    gap: 12px;
+  }
+  .site-footer-lang {
+    margin-left: 0;
+  }
+}
+@media (max-width: 420px) {
+  .site-footer-nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
