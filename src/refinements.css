@@ -27,16 +27,16 @@
   font-weight: 500;
 }
 .app-promo {
-  padding-left: 21px;
-  padding-right: 21px;
+  padding-inline-start: 21px;
+  padding-inline-end: 21px;
 }
 .app-promo h3 {
   font-size: 16px;
   letter-spacing: -0.55px;
 }
 .store {
-  padding-left: 11px;
-  padding-right: 8px;
+  padding-inline-start: 11px;
+  padding-inline-end: 8px;
   gap: 8px;
 }
 .store span {
@@ -489,7 +489,7 @@
   }
   .certificate-columns .right-rail .learning-progress > div:last-child {
     max-width: 132px;
-    margin-left: auto;
+    margin-inline-start: auto;
   }
   .settings-form-heading {
     margin-bottom: 25px;
@@ -522,8 +522,8 @@
     font-size: 17px;
   }
   .app-promo {
-    padding-left: 14px;
-    padding-right: 14px;
+    padding-inline-start: 14px;
+    padding-inline-end: 14px;
   }
   .app-promo h3 {
     font-size: 15px;
@@ -721,7 +721,7 @@
   }
   .community-count {
     grid-column: 2;
-    margin-left: 0;
+    margin-inline-start: 0;
     font-size: 13px;
   }
   .community-count b {
@@ -783,8 +783,8 @@
     gap: 17px;
     margin-top: 25px;
     width: calc(100% - 30px);
-    margin-left: 15px;
-    margin-right: 15px;
+    margin-inline-start: 15px;
+    margin-inline-end: 15px;
     padding: 17px;
   }
   .signup-benefits > div {
@@ -802,7 +802,7 @@
   }
   .signup-intro > .handwriting {
     font-size: 19px;
-    margin-left: 40px;
+    margin-inline-start: 40px;
   }
   .certificate {
     padding: 17px 18px;
@@ -925,14 +925,14 @@
     height: 19px;
   }
   .sidebar nav a .badge {
-    margin-left: -4px;
+    margin-inline-start: -4px;
     padding: 2px 6px;
     font-size: 10px;
   }
   .sidebar .dot {
     width: 7px;
     height: 7px;
-    margin-left: -4px;
+    margin-inline-start: -4px;
   }
 
   /* Promo card shrinks to whatever room is left, and disappears on short screens. */
@@ -1267,7 +1267,7 @@
   height: 5px;
   border: 2px solid #fff;
   border-top: 0;
-  border-right: 0;
+  border-inline-end: 0;
   transform: rotate(-45deg) translate(1px, -1px);
 }
 .login-options .text-link {
@@ -1397,7 +1397,7 @@
   border: 0;
   background: none;
   padding: 0;
-  text-align: left;
+  text-align: start;
   line-height: 1.35;
 }
 .site-footer-nav a:hover,
@@ -1432,7 +1432,7 @@
   fill: #eaa300;
 }
 .site-footer-lang {
-  margin-left: auto;
+  margin-inline-start: auto;
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -1447,6 +1447,44 @@
 }
 .site-footer-lang:hover {
   color: var(--blue);
+}
+
+.signup-locale {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  background: transparent;
+  color: #35415e;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+[dir="rtl"] .lucide-arrow-right,
+[dir="rtl"] .lucide-chevron-left,
+[dir="rtl"] .lucide-chevron-right {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .signup-header-actions {
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 900px) {
+  [dir="rtl"] .sidebar {
+    left: auto;
+    right: 0;
+    transform: translateX(100%);
+  }
+
+  [dir="rtl"] .sidebar.open {
+    transform: translateX(0);
+  }
+
+  [dir="rtl"] .sidebar .mobile-close {
+    right: auto;
+    left: 5px;
+  }
 }
 
 @media (max-width: 1100px) {
@@ -1493,7 +1531,7 @@
     gap: 12px;
   }
   .site-footer-lang {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 }
 @media (max-width: 420px) {

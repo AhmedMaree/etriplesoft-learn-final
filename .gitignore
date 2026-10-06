@@ -1,4 +1,10 @@
 node_modules/
+.next/
+out/
 dist/
 tmp/
 test-results/
+playwright-report/
+coverage/
+*.tsbuildinfo
+.impeccable/current-review/

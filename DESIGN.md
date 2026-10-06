@@ -114,3 +114,16 @@ Visible keyboard focus uses a 3px blue outline with a 3px offset where not super
 - Don't substitute the PDF brand blue for every screenshot-derived action blue.
 - Don't claim exact pixel parity: typography, replacement images, outline icons, and certificate ornament remain deliberate differences.
 - Don't imply production services from demo controls; interaction behavior is local to this React application.
+
+## Bilingual and RTL requirements
+
+The approved design must be shared across English and Arabic. Localization must preserve the current visual identity and page composition while allowing text and reading direction to adapt; it is not a redesign brief.
+
+- English is LTR and Arabic is RTL. The locale layout controls document `lang` and `dir`; components should not set global direction independently.
+- Preserve typography roles, colors, gradients, spacing, alignment, container widths, card treatments, imagery, and responsive composition in both locales.
+- English font: the current `Learn` alias uses the bundled Inter variable font. Arabic font: the bundled Inter font was visually sampled at 1280px and looked readable, but embedded Arabic glyph coverage versus fallback and all-width visual review remain unverified. Arabic font sign-off is pending. Do not choose a replacement without visual review.
+- Review Arabic glyph rendering, line height, heading and paragraph wrapping, font weight, button/input height, and clipping separately. Do not apply Latin letter-spacing rules to Arabic unless validated.
+- Prefer logical CSS properties (`margin-inline-*`, `padding-inline-*`, `inset-inline-*`, `border-inline-*`, `text-align: start/end`, and logical sizing) where they express the layout. Review existing physical left/right positioning contextually rather than rewriting mechanically.
+- Identify icons as directional or non-directional. Adapt arrows, chevrons, back/forward controls, and progression indicators when meaning requires it. Never mirror logos, brand marks, Odoo/Microsoft marks, photos, screenshots, video, charts whose meaning changes, play/download symbols, or generic non-directional icons automatically.
+- Shared components should support translated text and direction without duplicated English/Arabic component trees. Allow natural Arabic text expansion and wrapping without clipping or distorted artwork.
+- In Arabic layouts, keep emails, URLs, code, IDs, and technical product names legible with appropriate local directionality; do not translate product names such as Odoo, Python, PostgreSQL, API, and CRM solely because the interface is Arabic.

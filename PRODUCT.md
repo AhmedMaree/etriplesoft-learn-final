@@ -5,7 +5,7 @@
 Responsive web learning portal.
 
 ## Stack
-React + TypeScript + Vite, confirmed by the user. Local demo interactions; no backend supplied.
+Next.js App Router, React, and strict TypeScript. Local demo interactions; no backend is connected.
 
 ## Scope
 Implement the ten provided page screenshots: signup, overview, courses, course detail, AI assistant, assessment, calendar, certifications, payment, and settings. Preserve reference copy, layout, branding, and assets. All pages must be responsive.

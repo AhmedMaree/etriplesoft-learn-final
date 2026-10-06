@@ -5,9 +5,9 @@ const bundled =
 export default defineConfig({
   testDir: "tests",
   fullyParallel: true,
-  workers: 2,
+  workers: 1,
   use: {
-    baseURL: "http://127.0.0.1:5173",
+  baseURL: "http://127.0.0.1:3010",
     viewport: { width: 1448, height: 1086 },
     launchOptions: {
       executablePath:
@@ -17,7 +17,7 @@ export default defineConfig({
   },
   webServer: {
     command: "npm.cmd run dev",
-    url: "http://127.0.0.1:5173",
+    url: "http://127.0.0.1:3010",
     reuseExistingServer: true,
   },
   reporter: "list",
