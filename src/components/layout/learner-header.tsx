@@ -15,14 +15,21 @@ import {
   Settings,
 } from "lucide-react";
 import { Avatar } from "@/components/shared/profile-avatar";
-import { useStoredValue } from "@/lib/browser/demo-storage";
 import { featuredCourse } from "@/features/courses/data/demo-courses";
+import { logoutAction } from "@/features/auth/actions";
+import type { Locale } from "@/i18n/config";
 
-export function LearnerHeader({ onOpenMenu }: { onOpenMenu: () => void }) {
+export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, authenticated }: {
+  onOpenMenu: () => void
+  locale: Locale
+  displayName: string | null
+  avatarUrl: string | null
+  authenticated: boolean
+}) {
   const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
-  const learnerName = useStoredValue("learner-name", "Ahmed Salah");
+  const learnerName = displayName || t("auth.learner");
   const [query, setQuery] = useState("");
   const [menu, setMenu] = useState(false);
   const [notification, setNotification] = useState(false);
@@ -103,7 +110,7 @@ export function LearnerHeader({ onOpenMenu }: { onOpenMenu: () => void }) {
       </div>
       <div className="header-action">
         <button className="user-menu" onClick={() => setMenu(!menu)}>
-          <Avatar />
+          <Avatar src={avatarUrl} alt={learnerName} />
           <span>
             <strong>{learnerName}</strong>
             <small>{t("navigation.learning")}</small>
@@ -116,10 +123,11 @@ export function LearnerHeader({ onOpenMenu }: { onOpenMenu: () => void }) {
               <Settings size={16} />
               {t("navigation.settings")}
             </Link>
-            <Link href="/sign-up" onClick={() => setMenu(false)}>
-              <LogOut size={16} />
-              {t("auth.signUpAction")} / {t("auth.login")}
-            </Link>
+            {authenticated ? <form action={logoutAction.bind(null, locale)}>
+              <button type="submit" onClick={() => setMenu(false)}><LogOut size={16} />{t("auth.logout")}</button>
+            </form> : <Link href="/login" onClick={() => setMenu(false)}>
+              {t("auth.login")}
+            </Link>}
           </div>
         )}
       </div>

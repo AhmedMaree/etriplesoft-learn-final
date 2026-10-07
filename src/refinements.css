@@ -1282,6 +1282,48 @@
   min-height: 52px;
   font-size: 17px;
 }
+
+.signup-form .auth-message {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  white-space: normal;
+  line-height: 1.45;
+}
+.signup-form .auth-message.error {
+  color: #9b1c1c;
+  background: #fff0f0;
+}
+.signup-form .auth-message.success {
+  color: #17633a;
+  background: #edf9f1;
+}
+.signup-form .auth-resend {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+.signup-form .auth-resend > p {
+  white-space: normal;
+}
+.signup-form .auth-fields {
+  display: grid;
+  gap: 16px;
+}
+.popover form button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  text-align: start;
+  cursor: pointer;
+}
 .signup-form.login-mode .login-link {
   margin-top: 22px;
   font-size: 13px;

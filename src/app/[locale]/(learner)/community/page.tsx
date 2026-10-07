@@ -3,14 +3,14 @@ import { Link } from "@/i18n/navigation";
 import { ArrowRight } from "lucide-react";
 import { Panel } from "@/components/ui/primitives";
 import { PageHeading } from "@/components/layout/page-heading";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   return createPageMetadata(params, "community", "/community");
 }
 
-export default function CommunityRoute() {
-  const t = useTranslations("common");
+export default async function CommunityRoute() {
+  const t = await getTranslations("common");
   return (
     <>
       <PageHeading

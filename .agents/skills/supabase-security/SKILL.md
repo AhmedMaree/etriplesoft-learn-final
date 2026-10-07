@@ -24,14 +24,17 @@ Use for any ETripleSoft Learn Supabase schema, authentication, authorization, RL
 - Represent elevated privileges in protected membership/role records, not a client-editable profile field. Database role data is authoritative; JWT claims are not a substitute for current authorization.
 - Avoid recursive RLS. Prefer `SECURITY INVOKER`. Only use `SECURITY DEFINER` for a justified atomic operation or protected lookup; place it in a non-exposed schema, use an empty/fixed safe `search_path`, qualify relations, explicitly check caller identity, revoke default `PUBLIC` execution, grant only necessary roles, and document why it bypasses RLS.
 - Draft explicit anonymous, learner, instructor, organization-manager, and admin behavior for each table. Scope instructors to assigned courses; defer organization-manager access until the approved reporting policy exists.
+- Instructor attribution alone grants no authoring, publishing, roster, or assessment-result permission. Require exact-locale published LMS translations; do not apply UI-message fallback to course content.
 - Do not authorize with user-editable Auth metadata. Database role memberships are authoritative; app metadata/JWT claims can be stale and require refresh before changes take effect.
 - Protect Supabase Storage with bucket/object policies; object names are not authorization. Use private resources and signed access only after enrollment/preview checks.
 
 ## Sensitive workflows
 
-- **Payments:** verify provider webhook signatures; persist provider event/reference IDs with unique constraints; process idempotently; update payment/order and grant enrollment atomically. Never unlock from a success redirect. Never store PAN/CVV.
-- **Assessments:** never return answer keys before allowed submission; use server-created start/expiry timestamps; validate attempt owner/state and option/question relationships; grade server-side in an atomic operation; reject replay and post-submission writes.
-- **Certificates:** issue only from authoritative completion state; enforce unique certificate identity and opaque verification token; return a narrow public verification projection without internal user IDs.
+- **Payments:** verify provider webhook signatures; persist unique provider event/reference IDs; use `orders` and `order_items`; process idempotently; update payment/order and grant no more than one enrollment per paid item atomically. Never unlock from a success redirect. Never store PAN/CVV. Preserve payment/event history. If refunds are enabled, a confirmed full refund normally revokes paid access; any admin override/reconciliation is explicit and audited.
+- **Assessments:** bind every attempt to an immutable quiz version; never return answer keys before configured post-submission reveal; use server-created start/expiry timestamps; validate attempt owner/state and option/question relationships; autosave and grade server-side atomically; reject replay and post-submission writes.
+- **Completion:** store an immutable completion snapshot so later required curriculum additions do not invalidate a legitimate earlier completion.
+- **Certificates:** issue only from authoritative completion state; enforce unique certificate identity and opaque verification token; retain revoke/reissue history; return a narrow public verification projection without internal user IDs.
+- **Audit:** restrict and record high-value role, enrollment, payment, assessment correction, certificate, and sensitive support access. Keep audit records append-only and omit unnecessary sensitive values.
 - **Video:** verify entitlement server-side before issuing protected playback access. Do not expose provider secrets or trust client-reported completion alone.
 - **AI:** keep provider keys server-side; validate inputs, rate-limit, authorize retrieval to entitled content, constrain tool permissions, and scope persisted history to its owner.
 - **Uploads:** validate size/type and ownership server-side; avoid trusting client MIME/path; define deletion and retention behavior.

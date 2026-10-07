@@ -1,358 +1,211 @@
-"use client";
+'use client'
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { Sparkles, CalendarDays, Bell, GraduationCap, BarChart3, User, Mail, Lock, Building2, Globe, Languages, Camera, Pencil, CreditCard } from 'lucide-react';
-import { Button, Panel } from '@/components/ui/primitives';
-import { SettingsField, parseProfileFields } from '@/features/settings/components/settings-field';
-import { Avatar } from '@/components/shared/profile-avatar';
-import { saveStored, useStoredValue } from '@/lib/browser/demo-storage';
-import { useDemoToast } from '@/lib/browser/demo-toast';
-import { useTranslations } from 'next-intl';
-import { Field } from '@/components/ui/field';
-import { useLocaleChange } from '@/i18n/use-locale-change';
+import { useState, type FormEvent } from 'react'
+import Image from 'next/image'
+import { Link } from '@/i18n/navigation'
+import { useRouter } from 'next/navigation'
+import { Sparkles, Bell, BarChart3, User, Mail, Lock, Globe, Languages, Camera, CreditCard } from 'lucide-react'
+import { Button, Panel } from '@/components/ui/primitives'
+import { Avatar } from '@/components/shared/profile-avatar'
+import { useDemoToast } from '@/lib/browser/demo-toast'
+import { useTranslations } from 'next-intl'
+import { Field } from '@/components/ui/field'
+import { useLocaleChange } from '@/i18n/use-locale-change'
+import { updateLocalePreferenceAction } from '@/features/auth/actions'
+import { saveSettingsAction } from '@/features/settings/actions'
+import { createClient } from '@/lib/supabase/client'
+import type { Database } from '@/types/database'
+import type { Locale } from '@/i18n/config'
 
-export function SettingsPage() {
-  const t = useTranslations('settings');
-  const common = useTranslations('common');
-  const { locale, changeLocale } = useLocaleChange();
-  const notify = useDemoToast();
+type LearnerPreferences = Database['public']['Tables']['learner_preferences']['Row']
+type PreferenceKey = 'email_notifications' | 'course_reminders' | 'assignment_deadlines' | 'community_updates' | 'daily_learning_reminders' | 'course_recommendations' | 'autoplay_next'
 
-  const [tab, setTab] = useState("Profile");
-  const savedPhoto = useStoredValue("profile-photo", "");
-  const savedBio = useStoredValue(
-    "profile-bio",
-    "Computer engineering student passionate about software development and AI.\nExcited to keep learning!",
-  );
-  const savedPreferences = useStoredValue("preferences", "{}");
-  const savedProfileData = useStoredValue("profile-data", "{}");
-  const profileFields = parseProfileFields(savedProfileData);
-  const learnerName = useStoredValue("learner-name", "Ahmed Salah");
-  const [photoDraft, setPhotoDraft] = useState<string | null>(null);
-  const [bioDraft, setBioDraft] = useState<string | null>(null);
-  const [toggleDraft, setToggleDraft] =
-    useState<Record<string, boolean> | null>(null);
-  const photo = photoDraft ?? savedPhoto;
-  const bio = bioDraft ?? savedBio;
-  let storedPreferences: Record<string, boolean> = {};
-  try {
-    const parsed: unknown = JSON.parse(savedPreferences);
-    if (
-      typeof parsed === "object" &&
-      parsed !== null &&
-      !Array.isArray(parsed)
-    ) {
-      for (const [key, value] of Object.entries(parsed)) {
-        if (typeof value === "boolean") storedPreferences[key] = value;
-      }
-    }
-  } catch {
-    storedPreferences = {};
+const preferenceControls: { key: PreferenceKey; label: string }[] = [
+  { key: 'email_notifications', label: 'emailNotifications' },
+  { key: 'course_reminders', label: 'courseReminders' },
+  { key: 'assignment_deadlines', label: 'assignmentDeadlines' },
+  { key: 'community_updates', label: 'communityUpdates' },
+  { key: 'daily_learning_reminders', label: 'dailyLearningReminders' },
+  { key: 'course_recommendations', label: 'courseRecommendations' },
+  { key: 'autoplay_next', label: 'autoplayNext' },
+]
+
+export function SettingsPage({
+  userId,
+  email,
+  displayName,
+  avatarUrl,
+  preferences,
+  locale,
+}: {
+  userId: string
+  email: string
+  displayName: string
+  avatarUrl: string | null
+  preferences: LearnerPreferences
+  locale: Locale
+}) {
+  const t = useTranslations('settings')
+  const common = useTranslations('common')
+  const auth = useTranslations('auth')
+  const { changeLocale } = useLocaleChange()
+  const notify = useDemoToast()
+  const router = useRouter()
+  const [tab, setTab] = useState<'Profile' | 'Account' | 'Security' | 'Notifications' | 'Learning Preferences' | 'AI Assistant Preferences'>('Profile')
+  const [toggles, setToggles] = useState<Record<PreferenceKey, boolean>>({
+    email_notifications: preferences.email_notifications,
+    course_reminders: preferences.course_reminders,
+    assignment_deadlines: preferences.assignment_deadlines,
+    community_updates: preferences.community_updates,
+    daily_learning_reminders: preferences.daily_learning_reminders,
+    course_recommendations: preferences.course_recommendations,
+    autoplay_next: preferences.autoplay_next,
+  })
+  const [photo, setPhoto] = useState(avatarUrl)
+  const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [formVersion, setFormVersion] = useState(0)
+  const tabs = [
+    ['Profile', 'profile', 'profileDescription', User],
+    ['Account', 'account', 'accountDescription', CreditCard],
+    ['Security', 'security', 'securityDescription', Lock],
+    ['Notifications', 'notifications', 'notificationsDescription', Bell],
+    ['Learning Preferences', 'learningPreferences', 'learningDescription', BarChart3],
+    ['AI Assistant Preferences', 'aiPreferences', 'aiDescription', Sparkles],
+  ] as const
+  const tabTitle = tabs.find(([key]) => key === tab)?.[1] ?? 'profile'
+  const isPreferencesTab = tab === 'Notifications' || tab === 'Learning Preferences'
+  const editable = tab === 'Profile' || isPreferencesTab
+
+  async function save(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!editable) return
+    const data = new FormData(event.currentTarget)
+    const name = String(data.get('display_name') ?? '')
+    const timezone = String(data.get('timezone') ?? '')
+    setSaving(true)
+    const result = await saveSettingsAction({ displayName: name, timezone, preferences: toggles })
+    setSaving(false)
+    notify(result === 'saved' ? t('saved') : result === 'invalid' ? t('saveError') : t('saveError'))
   }
-  const toggles = toggleDraft ?? storedPreferences;
-  const [formVersion, setFormVersion] = useState(0);
-  const settings = [
-    ["Profile", "profile", "profileDescription"],
-    ["Account", "account", "accountDescription"],
-    ["Security", "security", "securityDescription"],
-    ["Notifications", "notifications", "notificationsDescription"],
-    ["Learning Preferences", "learningPreferences", "learningDescription"],
-    ["AI Assistant Preferences", "aiPreferences", "aiDescription"],
-  ] as const;
-  const tabTitle = settings.find(([key]) => key === tab)?.[1] ?? "profile";
-  function save(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    if (tab === "Security") {
-      if (data.get("New Password") !== data.get("Confirm New Password")) {
-        notify("The new passwords do not match.");
-        return;
-      }
-      if (String(data.get("New Password")).length < 8) {
-        notify("Use at least 8 characters for your new password.");
-        return;
-      }
-      notify(
-        "Password validated. Connect authentication to update it securely.",
-      );
-      e.currentTarget.reset();
-      return;
+
+  async function uploadAvatar(file: File) {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 5 * 1024 * 1024) {
+      notify(t('invalidImage'))
+      return
     }
-    const formValues: Record<string, string> = {};
-    for (const [key, value] of data.entries()) {
-      if (typeof value === "string") formValues[key] = value;
+    setUploading(true)
+    const supabase = createClient()
+    const objectKey = `${userId}/avatar`
+    const { error: uploadError } = await supabase.storage.from('avatars').upload(objectKey, file, {
+      contentType: file.type,
+      upsert: true,
+    })
+    if (uploadError) {
+      setUploading(false)
+      notify(t('photoError'))
+      return
     }
-    saveStored("profile-data", JSON.stringify({ ...profileFields, ...formValues }));
-    if (photo) {
-      try {
-        saveStored("profile-photo", photo);
-      } catch {
-        notify("Photo is too large to save. Please choose a smaller image.");
-        return;
-      }
+    const { data: updated, error: profileError } = await supabase
+      .from('profiles')
+      .update({ avatar_object_key: objectKey })
+      .eq('id', userId)
+      .select('id')
+      .maybeSingle()
+    if (profileError || !updated) {
+      await supabase.storage.from('avatars').remove([objectKey])
+      setUploading(false)
+      notify(t('photoError'))
+      return
     }
-    if (data.get("Your Name"))
-      saveStored("learner-name", String(data.get("Your Name")));
-    saveStored("profile-bio", bio);
-    saveStored("preferences", JSON.stringify(toggles));
-    notify("Your changes have been saved.");
+    const { data: signed, error: signedError } = await supabase.storage.from('avatars').createSignedUrl(objectKey, 3600)
+    setUploading(false)
+    if (signedError || !signed) {
+      notify(t('photoError'))
+      router.refresh()
+      return
+    }
+    setPhoto(signed.signedUrl)
+    notify(t('photoSaved'))
+    router.refresh()
   }
+
+  async function switchLocale(value: string) {
+    const nextLocale: Locale = value === 'Arabic' ? 'ar' : 'en'
+    await updateLocalePreferenceAction(nextLocale)
+    changeLocale(nextLocale)
+  }
+
   return (
     <div className="settings-layout">
       <Panel className="settings-nav">
-            <h2>{t('title')}</h2>
-            <p>{t('subtitle')}</p>
-        {settings.map((s, i) => {
-          const I = [User, CreditCard, Lock, Bell, BarChart3, Sparkles][i];
-          return (
-            <button
-              className={tab === s[0] ? "selected" : ""}
-              onClick={() => setTab(s[0])}
-              key={s[0]}
-            >
-              <I />
-              <span>
-                <strong>{t(s[1])}</strong>
-                <small>{t(s[2])}</small>
-              </span>
-            </button>
-          );
-        })}
+        <h2>{t('title')}</h2>
+        <p>{t('subtitle')}</p>
+        {tabs.map(([key, title, description, Icon]) => (
+          <button className={tab === key ? 'selected' : ''} onClick={() => setTab(key)} key={key}>
+            <Icon />
+            <span><strong>{t(title)}</strong><small>{t(description)}</small></span>
+          </button>
+        ))}
       </Panel>
-      <form
-        key={`${tab}-${formVersion}`}
-        className="panel settings-form"
-        onSubmit={save}
-      >
+      <form key={`${tab}-${formVersion}`} className="panel settings-form" onSubmit={save}>
         <div className="settings-form-heading">
-          <div>
-            <h1>{t(tabTitle)}</h1>
-            <p>
-              {tab === "Profile" ? t("profileSubtitle") : t("manageSelected", { item: t(tabTitle).toLowerCase() })}
-            </p>
-          </div>
-          {tab === "Profile" && (
-            <div className="change-photo">
-              {photo ? (
-                <Image
-                  className="avatar"
-                  src={photo}
-                  alt="Your profile"
-                  width={100}
-                  height={100}
-                  unoptimized
-                />
-              ) : (
-                <Avatar />
-              )}
-              <div>
-                <label className="btn outline">
-                  <Camera size={20} />
-                  {t("changePhoto")}
-                  <input
-                    type="file"
-                    accept="image/png,image/jpeg,image/gif"
-                    onChange={(e) => {
-                      const f = e.target.files?.[0];
-                      if (!f) return;
-                      if (f.size > 5 * 1024 * 1024) {
-                        notify("Please choose an image smaller than 5 MB.");
-                        return;
-                      }
-                      const reader = new FileReader();
-                      reader.onload = () => {
-                        setPhotoDraft(String(reader.result));
-                        notify("Photo selected. Save Changes to keep it.");
-                      };
-                      reader.readAsDataURL(f);
-                    }}
-                  />
-                </label>
-                <small>JPG, PNG or GIF. Max 5MB.</small>
-              </div>
-            </div>
-          )}
-        </div>
-        {tab === "Profile" ? (
-          <>
-            <div className="form-grid">
-              <SettingsField
-                label={t("fullName")}
-                name="Your Name"
-                icon={User}
-                value={learnerName}
-                required
-              />
-              <SettingsField
-                label={t("email")}
-                name="Your Email"
-                icon={Mail}
-                type="email"
-                value="ahmed.salah@university.edu"
-                required
-              />
-              <SettingsField label={t("age")} name="Age" icon={CalendarDays} type="number" value="24" />
-              <SettingsField
-                label={t("gender")}
-                name="Gender"
-                icon={User}
-                value="Male"
-                options={["Male", "Female", "Prefer not to say"]}
-              />
-              <SettingsField
-                label={t("university")}
-                name="University"
-                icon={Building2}
-                value="Cairo University"
-                options={[
-                  "Cairo University",
-                  "Ain Shams University",
-                  "Alexandria University",
-                  "Other",
-                ]}
-              />
-              <SettingsField
-                label={t("faculty")}
-                name="Faculty"
-                icon={GraduationCap}
-                value="Faculty of Engineering"
-                options={[
-                  "Faculty of Engineering",
-                  "Computer Science",
-                  "Business",
-                  "Other",
-                ]}
-              />
-              <SettingsField
-                label={t("timezone")}
-                name="Timezone"
-                icon={Globe}
-                value="(GMT+2) Cairo, Egypt"
-                options={[
-                  "(GMT+2) Cairo, Egypt",
-                  "(GMT+0) London",
-                  "(GMT+5) Karachi",
-                ]}
-              />
-              <Field
-                label={t('language')}
-                name="Language"
-                icon={Languages}
-                value={locale === 'en' ? 'English (US)' : 'Arabic'}
-                options={['English (US)', 'Arabic']}
-                onChange={(event) => changeLocale(event.currentTarget.value === 'Arabic' ? 'ar' : 'en')}
-              />
-            </div>
-            <div className="about-you">
-              <Pencil />
-              <div>
-                <h3>{t("aboutYou")}</h3>
-                <p>
-                  {t("aboutPrompt")}
-                </p>
-                <textarea
-                  aria-label="About you"
-                  maxLength={500}
-                  value={bio}
-                  onChange={(e) => setBioDraft(e.target.value)}
-                />
-                <small>{bio.length}/500</small>
-              </div>
-            </div>
-          </>
-        ) : tab === "Security" ? (
-          <div className="form-grid">
-            <SettingsField
-              label={t("currentPasswordLabel")}
-              name="Current Password"
-              type="password"
-              icon={Lock}
-              required
-            />
-            <SettingsField label={t("newPasswordLabel")} name="New Password" type="password" icon={Lock} required />
-            <SettingsField
-              label={t("confirmNewPassword")}
-              name="Confirm New Password"
-              type="password"
-              icon={Lock}
-              required
-            />
-          </div>
-        ) : tab === "Account" ? (
-          <div className="form-grid">
-            <SettingsField
-              label={t("accountEmail")}
-              name="Account Email"
-              type="email"
-              icon={Mail}
-              value="ahmed.salah@university.edu"
-            />
-            <SettingsField
-              label={t("accountType")}
-              name="Account Type"
-              value="Professional"
-              options={["Student", "Professional", "Company enrolled"]}
-            />
-          </div>
-        ) : (
-          <div className="preference-options">
-            {(tab === "Notifications"
-              ? [
-                  "Email notifications",
-                  "Course reminders",
-                  "Assignment deadlines",
-                  "Community updates",
-                ]
-              : tab === "Learning Preferences"
-                ? [
-                    "Daily learning reminders",
-                    "Show course recommendations",
-                    "Autoplay next lesson",
-                  ]
-                : [
-                    "Use current course context",
-                    "Personalized recommendations",
-                    "Save conversation history",
-                  ]
-            ).map((t) => (
-              <label key={t}>
-                <span>
-                  <strong>{t}</strong>
-                  <p>Enable {t.toLowerCase()} for your learning experience.</p>
-                </span>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-label={t}
-                  aria-checked={toggles[t] !== false}
-                  className={"switch " + (toggles[t] !== false ? "on" : "")}
-                  onClick={() =>
-                    setToggleDraft({
-                      ...toggles,
-                      [t]: toggles[t] === false,
-                    })
-                  }
-                />
+          <div><h1>{t(tabTitle)}</h1><p>{tab === 'Profile' ? t('profileSubtitle') : t('manageSelected', { item: t(tabTitle).toLowerCase() })}</p></div>
+          {tab === 'Profile' && <div className="change-photo">
+            {photo ? <Image className="avatar" src={photo} alt={t('profilePhotoAlt')} width={100} height={100} unoptimized /> : <Avatar large />}
+            <div>
+              <label className="btn outline">
+                <Camera size={20} />{uploading ? t('uploadingPhoto') : t('changePhoto')}
+                <input type="file" accept="image/png,image/jpeg,image/webp" disabled={uploading} onChange={(event) => {
+                  const file = event.currentTarget.files?.[0]
+                  if (file) void uploadAvatar(file)
+                  event.currentTarget.value = ''
+                }} />
               </label>
-            ))}
-          </div>
-        )}
-        <div className="settings-buttons">
-          <Button
-            outline
-            onClick={() => {
-              setBioDraft(null);
-              setPhotoDraft(null);
-              setToggleDraft(null);
-              setFormVersion((v) => v + 1);
-              notify("Unsaved changes discarded.");
-            }}
-          >
-            {common("cancel")}
-          </Button>
-          <Button type="submit">{common("save")}</Button>
+              <small>{t('avatarFormats')}</small>
+            </div>
+          </div>}
         </div>
+
+        {tab === 'Profile' ? <div className="form-grid">
+          <Field label={t('fullName')} name="display_name" icon={User} value={displayName} required maxLength={120} />
+          <Field label={t('email')} name="email" icon={Mail} type="email" value={email} readOnly dir="ltr" />
+          <Field label={t('timezone')} name="timezone" icon={Globe} value={preferences.timezone} options={['UTC', 'Africa/Cairo', 'Europe/London', 'Asia/Karachi']} />
+          <Field label={t('language')} name="Language" icon={Languages} value={locale === 'en' ? 'English (US)' : 'Arabic'} options={['English (US)', 'Arabic']} onChange={(event) => void switchLocale(event.currentTarget.value)} />
+        </div> : tab === 'Account' ? <div className="form-grid">
+          <Field label={t('accountEmail')} name="account_email" icon={Mail} type="email" value={email} readOnly dir="ltr" />
+          <p>{t('accountEmailHelp')}</p>
+          <strong>{t('deferredTitle')}</strong><p>{t('deferredCopy')}</p>
+        </div> : tab === 'Security' ? <div className="preference-options">
+          <p>{t('changePasswordHelp')}</p>
+          <Link className="text-link" href="/forgot-password">{auth('forgotPassword')}</Link>
+        </div> : isPreferencesTab ? <div className="preference-options">
+          {(tab === 'Notifications' ? preferenceControls.slice(0, 4) : preferenceControls.slice(4)).map(({ key, label }) => (
+            <label key={key}>
+              <span><strong>{t(label)}</strong><p>{t('preferenceDescription', { item: t(label).toLowerCase() })}</p></span>
+              <button type="button" role="switch" aria-label={t(label)} aria-checked={toggles[key]} className={`switch ${toggles[key] ? 'on' : ''}`} onClick={() => setToggles((current) => ({ ...current, [key]: !current[key] }))} />
+            </label>
+          ))}
+        </div> : <div className="preference-options">
+          <strong>{t('deferredTitle')}</strong><p>{t('deferredCopy')}</p>
+        </div>}
+
+        {editable && <div className="settings-buttons">
+          <Button outline onClick={() => {
+            setToggles({
+              email_notifications: preferences.email_notifications,
+              course_reminders: preferences.course_reminders,
+              assignment_deadlines: preferences.assignment_deadlines,
+              community_updates: preferences.community_updates,
+              daily_learning_reminders: preferences.daily_learning_reminders,
+              course_recommendations: preferences.course_recommendations,
+              autoplay_next: preferences.autoplay_next,
+            })
+            setFormVersion((current) => current + 1)
+          }}>{common('cancel')}</Button>
+          <Button type="submit" disabled={saving || uploading}>{saving ? auth('sending') : common('save')}</Button>
+        </div>}
       </form>
     </div>
-  );
+  )
 }

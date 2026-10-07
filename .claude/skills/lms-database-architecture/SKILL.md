@@ -17,8 +17,9 @@ Use this skill for ETripleSoft Learn database architecture, schema reviews, migr
 
 - Model entities and relationships relationally. Define primary/foreign keys, ownership, deletion behavior, nullability, unique/check constraints, timestamps, lifecycle, and indexes from observed queries and RLS predicates.
 - Keep business identity, prices, status, ordering, entitlement, scoring, and authorization independent of locale. Prefer one entity plus `(entity_id, locale)` translation rows for stable localized content; explain JSONB and duplicated-row tradeoffs before recommending alternatives.
+- Model per-locale publication independently and require exact-locale LMS content; never infer fallback from UI message behavior. Keep neutral media explicit and support locale-specific resources/videos where needed.
 - Avoid giant JSONB blobs for relational business data, unnecessary polymorphic references, premature services, redundant stored aggregates, and speculative tables.
-- Use explicit state transitions for publishing, enrollment, attempts, payments, and certificates. Preserve historical financial and learning records; choose archive/revoke over deletion where history matters.
+- Use explicit state transitions for publishing, enrollment, attempts, payments, and certificates. Preserve historical financial and learning records; choose archive/revoke over deletion where history matters. Re-enrollment creates a new entitlement record; nullable expiration does not imply a V1 expiry policy.
 - Review N+1/query shape and index the actual access pattern, including foreign keys used by joins/RLS. Do not repeat indexes already supplied by primary/unique constraints.
 - Keep generated Supabase TypeScript schema types as the database boundary and map them to domain/UI types where shapes differ.
 
@@ -26,7 +27,9 @@ Use this skill for ETripleSoft Learn database architecture, schema reviews, migr
 
 Evaluate profiles/Auth separation, elevated roles, course/module/lesson content, translations, resource/video boundaries, enrollment, progress, assessments, certificates, purchases/payments, organizations, admin workflows, auditability, and future calendar/notification/AI domains. Classify each as V1 or deferred based on the product, not generic LMS convention.
 
-For assessments, isolate answer keys, use server timestamps, define attempt/answer uniqueness, and make scoring authoritative. For commerce, snapshot currency/amounts, make provider references idempotent, and grant enrollment only from verified server events. For certificates, define authoritative eligibility and unique verification. For organizations, scope manager access explicitly and avoid assuming managers may inspect individual learner records.
+For assessments, bind attempts to immutable quiz versions, isolate answer keys, use server timestamps, define attempt/answer uniqueness, and make autosave/grading authoritative. Completion rules should produce a historical snapshot so later curriculum edits do not erase prior eligibility. For commerce, use order items, snapshot currency/amounts, make provider events idempotent, and grant one enrollment per verified paid item. For certificates, define authoritative eligibility, unique public verification, and reissue history. For organizations, scope manager access explicitly and avoid assuming managers may inspect individual learner answers.
+
+When audit is in scope, log high-value role, entitlement, payment, assessment-correction, certificate, and sensitive support actions through typed targets; avoid noisy CRUD logging and sensitive payloads.
 
 ## Required output/review
 

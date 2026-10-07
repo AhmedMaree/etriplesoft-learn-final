@@ -15,7 +15,10 @@
     "settings": "Settings",
     "assessment": "Assessment",
     "checkout": "Checkout",
-    "signUp": "Create Account"
+    "signUp": "Create Account",
+    "login": "Log in",
+    "forgotPassword": "Forgot password",
+    "resetPassword": "Reset password"
   },
   "common": {
     "dashboard": "Dashboard",
@@ -89,7 +92,8 @@
     "appTitle": "Learn Anywhere with Our Mobile App",
     "appCopy": "Access courses, track your progress, and learn on the go.",
     "downloadOn": "Download on the",
-    "getItOn": "GET IT ON"
+    "getItOn": "GET IT ON",
+    "learner": "Learner"
   },
   "dashboard": {
     "welcome": "Welcome back",
@@ -387,7 +391,7 @@
     "emailNotifications": "Email notifications",
     "weeklyDigest": "Weekly learning summary",
     "appearance": "Appearance",
-    "learningPreferences": "Learning Preferences",
+    "learningPreferences": "Learning preferences",
     "aiPreferences": "AI Assistant Preferences",
     "profileDescription": "Personal information and details",
     "accountDescription": "Manage your account settings",
@@ -412,7 +416,28 @@
     "cancelDiscard": "Unsaved changes discarded.",
     "photoLarge": "Photo is too large to save. Please choose a smaller image.",
     "smallImage": "Please choose an image smaller than 5 MB.",
-    "photoSelected": "Photo selected. Save Changes to keep it."
+    "photoSelected": "Photo selected. Save Changes to keep it.",
+    "saveError": "We could not save your settings. Please try again.",
+    "photoSaved": "Your profile photo has been updated.",
+    "invalidImage": "Choose a JPG, PNG, or WebP image smaller than 5 MB.",
+    "photoError": "We could not update your profile photo.",
+    "timezoneCairo": "Africa/Cairo",
+    "deferredTitle": "Not available yet",
+    "deferredCopy": "This setting is not available in this phase.",
+    "notificationPreferences": "Notification preferences",
+    "courseReminders": "Course reminders",
+    "assignmentDeadlines": "Assignment deadlines",
+    "communityUpdates": "Community updates",
+    "dailyLearningReminders": "Daily learning reminders",
+    "courseRecommendations": "Course recommendations",
+    "autoplayNext": "Autoplay next lesson",
+    "accountEmailHelp": "Email is managed securely by Supabase Auth.",
+    "changePasswordHelp": "Use password recovery to change your password.",
+    "avatarFormats": "JPG, PNG, or WebP. Max 5 MB.",
+    "languageSaved": "Language preference saved.",
+    "profilePhotoAlt": "Your profile photo",
+    "uploadingPhoto": "Uploading photo?",
+    "preferenceDescription": "Enable {item} for your learning experience."
   },
   "auth": {
     "signUp": "Create your account",
@@ -488,7 +513,39 @@
     "createPassword": "Create a password",
     "confirmPasswordPlaceholder": "Confirm your password",
     "other": "Other",
-    "notApplicable": "Not applicable"
+    "notApplicable": "Not applicable",
+    "forgotTitle": "Reset your password",
+    "forgotCopy": "Enter your email and we will send a recovery link if an account exists.",
+    "resetTitle": "Choose a new password",
+    "resetCopy": "Set a new password for your account.",
+    "sendRecovery": "Send recovery link",
+    "updatePassword": "Update password",
+    "backToLogin": "Back to log in",
+    "resendConfirmation": "Resend confirmation email",
+    "sending": "Please wait?",
+    "errors": {
+      "invalidName": "Enter a name between 1 and 120 characters.",
+      "invalidEmail": "Enter a valid email address.",
+      "weakPassword": "Use a password with at least 8 characters.",
+      "passwordMismatch": "Passwords do not match.",
+      "signupFailed": "We could not create the account. Try logging in or resetting your password.",
+      "unexpected": "Something went wrong. Please try again.",
+      "required": "Enter your password.",
+      "emailUnverified": "Confirm your email before logging in.",
+      "invalidCredentials": "Email or password is incorrect.",
+      "recoveryExpired": "This recovery link is invalid or has expired. Request a new one."
+    },
+    "notices": {
+      "verificationSent": "Check your email to confirm your account before logging in.",
+      "resendGeneric": "If the address can receive a confirmation email, one will be sent shortly.",
+      "recoveryGeneric": "If an account uses this email, a recovery link will be sent shortly.",
+      "passwordUpdated": "Your password has been updated. Log in with the new password.",
+      "recoveryExpired": "This recovery link is invalid or has expired. Request a new one.",
+      "invalidLink": "This link is invalid. Request a new email and try again.",
+      "expiredLink": "This link has expired. Request a new email and try again."
+    },
+    "logout": "Log out",
+    "learner": "Learner"
   },
   "checkout": {
     "title": "Checkout",

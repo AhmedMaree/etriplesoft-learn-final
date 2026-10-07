@@ -11,7 +11,10 @@ export function LegacyHashRedirect() {
     const legacyPage = window.location.hash.slice(1);
     if (isDemoRoute(legacyPage)) {
       const target = legacyPage === "overview" ? "/" : `/${legacyPage}`;
-      router.replace(`${target}${window.location.search}`);
+      const query = new URLSearchParams(window.location.search);
+      query.delete("next");
+      const search = query.size > 0 ? `?${query.toString()}` : "";
+      router.replace(`${target}${search}`);
     }
     window.scrollTo(0, 0);
   }, [router]);

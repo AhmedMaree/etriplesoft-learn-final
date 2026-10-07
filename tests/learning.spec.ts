@@ -12,6 +12,12 @@ const routes = [
   "/en/assessment",
   "/en/payment",
   "/en/sign-up",
+  "/en/login",
+  "/en/forgot-password",
+  "/en/reset-password",
+  "/ar/login",
+  "/ar/forgot-password",
+  "/ar/reset-password",
   "/ar",
   "/ar/courses",
   "/ar/ai-page",
@@ -64,7 +70,7 @@ test("course filtering and search work together", async ({ page }) => {
     page.getByRole("heading", { name: "Course Curriculum" }),
   ).toBeVisible();
 });
-test("signup validates passwords and opens the learner dashboard", async ({
+test("signup validates passwords and does not persist identity in local storage", async ({
   page,
 }) => {
   await page.goto("/en/sign-up");
@@ -74,61 +80,20 @@ test("signup validates passwords and opens the learner dashboard", async ({
   await page
     .getByLabel("Confirm password", { exact: true })
     .fill("different-pass");
-  await page.getByLabel("Age", { exact: true }).fill("24");
-  await page.getByLabel("Gender", { exact: true }).selectOption("Male");
   await page
     .getByRole("button", { name: "Create account", exact: true })
     .click();
-  await expect(page.getByRole("status")).toContainText(
+  await expect(page.locator(".auth-message[role='alert']")).toContainText(
     "Passwords do not match",
   );
-  await page
-    .getByLabel("Confirm password", { exact: true })
-    .fill("test-pass-123");
-  await page
-    .getByRole("button", { name: "Create account", exact: true })
-    .click();
-  await expect(page).toHaveURL(/\/en$/);
-  await expect(page.locator(".user-menu")).toContainText("Demo Learner");
+  expect(await page.evaluate(() => localStorage.getItem("learner-name"))).toBeNull();
 });
-test("settings persist and cancel restores saved values", async ({ page }) => {
+test("anonymous dashboard and settings access redirects to localized login", async ({ page }) => {
+  await page.goto("/ar/overview");
+  await expect(page).toHaveURL(/\/ar\/login\?next=%2Far%2Foverview$/);
+  await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
   await page.goto("/en/settings");
-  await page.getByLabel("Full name", { exact: true }).fill("Updated Learner");
-  await page
-    .getByLabel("Email address", { exact: true })
-    .fill("updated@example.com");
-  await page
-    .getByLabel("About you", { exact: true })
-    .fill("Learning Odoo every day.");
-  await page.getByRole("button", { name: "Save Changes" }).click();
-  await page.reload();
-  await expect(page.getByLabel("Full name", { exact: true })).toHaveValue(
-    "Updated Learner",
-  );
-    await expect(page.getByLabel("Email address", { exact: true })).toHaveValue(
-    "updated@example.com",
-  );
-  await page.getByLabel("Full name", { exact: true }).fill("Unsaved");
-  await page.getByRole("button", { name: "Cancel", exact: true }).click();
-  await expect(page.getByLabel("Full name", { exact: true })).toHaveValue(
-    "Updated Learner",
-  );
-  await page
-    .locator(".settings-nav")
-    .getByRole("button", { name: /Notifications/ })
-    .click();
-  await page
-    .getByRole("switch", { name: "Email notifications", exact: true })
-    .click();
-  await page.getByRole("button", { name: "Save Changes" }).click();
-  await page.reload();
-  await page
-    .locator(".settings-nav")
-    .getByRole("button", { name: /Notifications/ })
-    .click();
-  await expect(
-    page.getByRole("switch", { name: "Email notifications", exact: true }),
-  ).toHaveAttribute("aria-checked", "false");
+  await expect(page).toHaveURL(/\/en\/login\?next=%2Fen%2Fsettings$/);
 });
 test("assessment saves answers, changes questions and scores submission", async ({
   page,
@@ -161,7 +126,7 @@ test("assessment saves answers, changes questions and scores submission", async 
     .click();
   await expect(page.locator(".assessment-result")).toContainText("100%");
   await page.getByRole("button", { name: "View Certificate" }).click();
-  await expect(page).toHaveURL(/\/certificates$/);
+  await expect(page).toHaveURL(/\/en\/login\?next=%2Fen%2Fcertificates$/);
 });
 test("assistant sends local replies and context switch is interactive", async ({
   page,
@@ -218,15 +183,15 @@ test("demo checkout applies a coupon without collecting payment", async ({
 });
 test("mobile navigation opens, navigates and closes", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/en", { waitUntil: "domcontentloaded" });
+  await page.goto("/en/courses", { waitUntil: "domcontentloaded" });
   await page.getByRole("button", { name: "Open navigation" }).click();
   await expect(page.locator(".sidebar")).toHaveClass(/open/);
   await page
     .locator(".sidebar nav")
     .getByRole("link", { name: "Settings", exact: true })
     .click();
-  await expect(page).toHaveURL(/\/settings$/);
-  await expect(page.locator(".sidebar")).not.toHaveClass(/open/);
+  await expect(page).toHaveURL(/\/en\/login\?next=%2Fen%2Fsettings$/);
+  await expect(page.locator(".sidebar")).toHaveCount(0);
 });
 
 test("legacy fragment URLs resolve to the matching App Router page", async ({
@@ -245,12 +210,15 @@ test("legacy routes, query strings, and language switching preserve the page", a
     ["/community", "/en/community"],
     ["/messages", "/en/messages"],
     ["/calendar", "/en/calendar"],
-    ["/certificates", "/en/certificates"],
-    ["/settings", "/en/settings"],
+    ["/certificates", "/en/login?next=%2Fen%2Fcertificates"],
+    ["/settings", "/en/login?next=%2Fen%2Fsettings"],
     ["/assessment", "/en/assessment"],
     ["/payment", "/en/payment"],
     ["/sign-up", "/en/sign-up"],
-    ["/overview", "/en"],
+    ["/login", "/en/login"],
+    ["/forgot-password", "/en/forgot-password"],
+    ["/reset-password", "/en/reset-password"],
+    ["/overview", "/en/login?next=%2Fen%2Foverview"],
   ];
   for (const [oldUrl, target] of legacy) {
     await page.goto(oldUrl);

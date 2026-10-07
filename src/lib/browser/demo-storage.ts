@@ -3,12 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 export type DemoStorageKey =
-  | "assessment-answers"
-  | "learner-name"
-  | "preferences"
-  | "profile-bio"
-  | "profile-data"
-  | "profile-photo";
+  | "assessment-answers";
 
 const STORAGE_EVENT = "demo:storage";
 

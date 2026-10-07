@@ -3,14 +3,14 @@ import { Link } from "@/i18n/navigation";
 import { ArrowRight } from "lucide-react";
 import { Panel } from "@/components/ui/primitives";
 import { PageHeading } from "@/components/layout/page-heading";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   return createPageMetadata(params, "messages", "/messages");
 }
 
-export default function MessagesRoute() {
-  const t = useTranslations("common");
+export default async function MessagesRoute() {
+  const t = await getTranslations("common");
   return (
     <>
       <PageHeading

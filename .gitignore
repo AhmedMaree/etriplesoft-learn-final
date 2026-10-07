@@ -8,3 +8,4 @@ playwright-report/
 coverage/
 *.tsbuildinfo
 .impeccable/current-review/
+.env*.local

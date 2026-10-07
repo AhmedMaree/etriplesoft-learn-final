@@ -15,6 +15,11 @@ export type FieldProps = {
   name?: string;
   required?: boolean;
   onChange?: ChangeEventHandler<HTMLSelectElement>;
+  autoComplete?: string;
+  minLength?: number;
+  maxLength?: number;
+  dir?: 'ltr' | 'rtl' | 'auto';
+  readOnly?: boolean;
 };
 
 export function Field({
@@ -27,6 +32,11 @@ export function Field({
   name,
   required = false,
   onChange,
+  autoComplete,
+  minLength,
+  maxLength,
+  dir,
+  readOnly = false,
 }: FieldProps) {
   const [show, setShow] = useState(false);
   const initial = value;
@@ -59,12 +69,16 @@ export function Field({
           <input
             aria-label={label}
             name={name || label}
-            dir={["email", "url", "tel", "password"].includes(type) ? "ltr" : undefined}
+            dir={dir ?? (["email", "url", "tel", "password"].includes(type) ? "ltr" : undefined)}
             type={type === "password" && show ? "text" : type}
             defaultValue={initial}
             placeholder={placeholder}
             required={required}
             min={type === "number" ? 1 : undefined}
+            autoComplete={autoComplete}
+            minLength={minLength}
+            maxLength={maxLength}
+            readOnly={readOnly}
           />
         )}
         {type === "password" && (

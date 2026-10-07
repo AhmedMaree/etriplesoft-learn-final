@@ -1,0 +1,2 @@
+-- No application fixture data is required for the identity foundation.
+-- RLS test users are created transactionally in supabase/tests/database/.

@@ -2,18 +2,16 @@
 
 import Image from "next/image";
 import { ASSET_BASE } from "@/lib/assets";
-import { useStoredValue } from "@/lib/browser/demo-storage";
 
-export function Avatar({ large = false }: { large?: boolean }) {
-  const photo = useStoredValue("profile-photo", "");
+export function Avatar({ large = false, src, alt = "Learner profile" }: { large?: boolean; src?: string | null; alt?: string }) {
   return (
     <Image
       className={`avatar ${large ? "large" : ""}`}
-      src={photo || ASSET_BASE + "profile-image.png"}
-      alt="Ahmed Salah"
+      src={src || ASSET_BASE + "profile-image.png"}
+      alt={alt}
       width={143}
       height={143}
-      unoptimized={Boolean(photo)}
+      unoptimized={Boolean(src)}
       loading="eager"
     />
   );

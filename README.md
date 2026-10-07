@@ -14,7 +14,7 @@ English and Arabic are core product locales. Shared `/en` and `/ar` routes, loca
 
 ## Development
 
-Use Node.js 20.9 or newer.
+Use Node.js 22 or newer.
 
 ```sh
 npm install
@@ -91,11 +91,17 @@ docs/                          Project, architecture, design, and QA guidance
 
 The locale layout, explicit route pages, metadata, page headings, overview composition, shared UI primitives, and community/messages placeholders are Server Components. The learner layout keeps a small Client Component shell for mobile navigation, menus, search, and profile display; route content is passed through as server-rendered children. Interactive feature screens use feature-scoped Client Components. Browser persistence and toast handling live in small client utilities.
 
-The approved global CSS and runtime assets are shared across locales. Course fixtures now live with the courses feature. Demo settings and assessment answers remain localStorage-backed. No account, payment, AI, or LMS backend is connected.
+The approved global CSS and runtime assets are shared across locales. Course fixtures now live with the courses feature. Demo settings and assessment answers remain localStorage-backed. The hosted identity/RLS foundation and session refresh are connected; signup, payments, AI, and LMS workflows remain unimplemented.
 
 ## Environment
 
-No environment variables are required for this frontend phase. Do not add credentials to client code. Backend integrations should document their server-only variables when introduced.
+Copy `.env.example` to `.env.local`, then configure the hosted Supabase DEV URL, publishable key, and project reference. `.env.local` is ignored. The URL and publishable key use Supabase's browser-safe client model. Never add a service-role key to `NEXT_PUBLIC_*`; hosted RLS validation accepts it only as a server-side process variable and uses it solely for disposable test-user setup and cleanup. Production must use a separate Supabase project and deployment environment.
+
+Current database workflow uses local Next.js with hosted Supabase DEV. Run `supabase login`, link the DEV reference with `supabase link --project-ref YOUR_DEV_PROJECT_REF`, apply committed migrations using `npm run db:push`, and regenerate types with `npm run db:types`. Confirm the linked ref and `NEXT_PUBLIC_SUPABASE_URL` both point to DEV before any remote command. The linked CLI migration history is the schema source of truth; do not use remote reset commands.
+
+Run `npm run db:test:hosted` to create two uniquely tagged disposable DEV users, perform authorization checks through anonymous and authenticated publishable-key clients, then delete the users. Supply `SUPABASE_SERVICE_ROLE_KEY` to the process only for that run; it is never required by the app. `npm run db:test` remains the pgTAP suite for a future local/CI database environment and has not been run in the current hosted workflow.
+
+Local Docker Supabase remains an optional future workflow through `npm run db:start`, `npm run db:reset`, and `npm run db:test`. These commands are not part of current development verification.
 
 ## Migration notes
 

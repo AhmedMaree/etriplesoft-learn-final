@@ -4,7 +4,7 @@ The application uses Next.js App Router, React, and TypeScript. Locale routes li
 
 ## Locale routing and messages
 
-`next-intl` v4 is configured by `next.config.ts` and `src/i18n/request.ts`. Routing policy is in `src/i18n/config.ts` and `src/i18n/routing.ts`: supported locales are `en` and `ar`, the default is `en`, every localized route is prefixed, and locale detection is disabled. `src/proxy.ts` applies next-intl routing and preserves the `/overview` compatibility redirect. Locale-aware links and router helpers are in `src/i18n/navigation.ts`; messages are in `messages/en.json` and `messages/ar.json`. See [I18N.md](I18N.md) and [ROUTES.md](ROUTES.md).
+`next-intl` v4 is configured by `next.config.ts` and `src/i18n/request.ts`. Routing policy is in `src/i18n/config.ts` and `src/i18n/routing.ts`: supported locales are `en` and `ar`, the default is `en`, every localized route is prefixed, and locale detection is disabled. `src/proxy.ts` refreshes Supabase sessions through `src/lib/supabase/proxy.ts` and composes refreshed cookies/cache headers onto the next-intl response. It does not decide authorization. Server pages and actions use verified Supabase users for dashboard, settings, and certificates access. Locale-aware links and router helpers are in `src/i18n/navigation.ts`; messages are in `messages/en.json` and `messages/ar.json`. See [I18N.md](I18N.md) and [ROUTES.md](ROUTES.md).
 
 ## Server and Client Components
 
@@ -12,7 +12,7 @@ App Router pages, route layouts, metadata functions, and the overview compositio
 
 ## Features and future backend
 
-Feature code and demo fixtures live under `src/features/`; shared layout, UI, and components live under `src/components/`. Browser-only demo storage and toast behavior live under `src/lib/browser/`. Course, lesson, assessment-question, and event fixtures remain English demo content by design. No database, authentication provider, payment processor, video service, certificate backend, or AI provider is connected. Production enrollment, assessment scoring, payment confirmation, certificates, and AI access require separate server-authoritative designs; see [SECURITY.md](SECURITY.md).
+Feature code and demo fixtures live under `src/features/`; shared layout, UI, and components live under `src/components/`. Browser-only demo storage and toast behavior live under `src/lib/browser/`. Course, lesson, assessment-question, and event fixtures remain English demo content by design. The identity/RLS and auth/avatar migrations are applied to the hosted Supabase DEV project; generated database types live in `src/types/database.ts`, and SSR clients use the publishable key. Signup, login, recovery, profile/preferences, and private avatar storage use Supabase. Server helpers in `src/lib/supabase/auth.ts` verify users for protected learner routes. Course access, assessment scoring, payment confirmation, certificate issuance, and AI access remain demo/future work requiring separate server-authoritative designs; see [SECURITY.md](SECURITY.md).
 
 ## Styling
 
