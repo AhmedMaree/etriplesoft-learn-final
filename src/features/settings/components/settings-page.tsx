@@ -81,11 +81,12 @@ export function SettingsPage({
     event.preventDefault()
     if (!editable) return
     const data = new FormData(event.currentTarget)
-    const name = String(data.get('display_name') ?? '')
-    const timezone = String(data.get('timezone') ?? '')
+    const name = data.has('display_name') ? String(data.get('display_name')) : undefined
+    const timezone = data.has('timezone') ? String(data.get('timezone')) : undefined
     setSaving(true)
     const result = await saveSettingsAction({ displayName: name, timezone, preferences: toggles })
     setSaving(false)
+    if (result === 'saved') router.refresh()
     notify(result === 'saved' ? t('saved') : result === 'invalid' ? t('saveError') : t('saveError'))
   }
 

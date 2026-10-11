@@ -2,11 +2,9 @@ import type { Locale } from '@/i18n/config'
 
 const TRUSTED_AUTH_ORIGINS = new Set([
   'http://127.0.0.1:3010',
-  'https://etriplesoft-learn-final.vercel.app',
 ])
 
 const APP_ROUTES = new Set([
-  '',
   'overview',
   'reset-password',
   'courses',
@@ -19,10 +17,12 @@ const APP_ROUTES = new Set([
   'messages',
   'calendar',
   'payment',
+  'admin',
+  'admin/audit',
 ])
 
 export function safeReturnPath(locale: Locale, candidate?: string | null): string {
-  const fallback = `/${locale}`
+  const fallback = `/${locale}/overview`
   if (!candidate || !candidate.startsWith('/') || candidate.startsWith('//')) return fallback
   if (candidate.includes('\\') || candidate.includes('%') || candidate.includes('?') || candidate.includes('#')) return fallback
 

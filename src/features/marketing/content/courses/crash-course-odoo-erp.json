@@ -1,0 +1,72 @@
+{
+  "slug": "crash-course-odoo-erp",
+  "title": "Crash Course: Odoo ERP",
+  "image": "/marketing/odoo-erp-crash-course.png",
+  "tagline": "Understand how CRM, Sales, Inventory, delivery, invoicing, and payments connect through one practical Odoo workflow.",
+  "description": [
+    "This course is the main entry point for students, fresh graduates, employees, business owners, and future ERP professionals who need more than isolated software tutorials.",
+    "Learners follow one connected business story across Odoo applications, building both system confidence and a practical understanding of how departments exchange information."
+  ],
+  "status": "published",
+  "badge": "Best Seller",
+  "level": "Beginner",
+  "language": "English",
+  "durationHours": 10.8,
+  "durationLabel": "2–4 Weeks",
+  "track": "End User",
+  "format": "Online / Blended",
+  "externalCourseUrl": "https://etriple.odoo.com/slides/crash-course-odoo-erp-2",
+  "price": null,
+  "roles": ["end-user", "implementer", "automation"],
+  "moduleTags": ["Sales", "Accounting", "Inventory", "CRM"],
+  "coveredModuleSlugs": ["crm", "sales", "inventory", "accounting", "website-ecommerce"],
+  "learningOutcomes": [
+    "Explain the purpose and value of ERP systems",
+    "Navigate essential Odoo applications confidently",
+    "Complete a connected CRM-to-payment workflow",
+    "Configure a small product catalog and stock movements",
+    "Understand how business departments share records and responsibilities",
+    "Choose an appropriate next Odoo learning track"
+  ],
+  "whoItsFor": [
+    "Students and graduates building a practical ERP foundation before choosing a specialization",
+    "ERP beginners who want to enter Odoo without getting lost in technical complexity",
+    "Office professionals who need to understand the workflows behind daily administrative work",
+    "Career explorers evaluating functional, administrative, or technical Odoo directions"
+  ],
+  "requirements": [
+    "No prior ERP or Odoo experience",
+    "Basic digital literacy and browser use",
+    "Interest in business processes and technology",
+    "A laptop or desktop for practical activities"
+  ],
+  "curriculum": [
+    { "number": "01", "title": "Introduction to ERP and Odoo", "description": "Understand what ERP systems are, why organizations use them, and how Odoo connects departments." },
+    { "number": "02", "title": "CRM and Sales Workflow", "description": "Follow leads, opportunities, quotations, and sales orders through a realistic sales process." },
+    { "number": "03", "title": "Inventory Basics", "description": "Explore products, warehouses, stock movements, receipts, deliveries, and availability." },
+    { "number": "04", "title": "Accounting Flow Overview", "description": "Understand invoices, payments, commercial documents, and their connection to operations." },
+    { "number": "05", "title": "Complete Business Scenario", "description": "Apply the full customer journey from enquiry and quotation through sale, delivery, invoice, and payment." }
+  ],
+  "projects": [
+    { "title": "Lead-to-Cash Scenario", "description": "Process a customer opportunity through sales, stock delivery, invoicing, and payment." },
+    { "title": "Product and Stock Setup", "description": "Create a small product catalog and complete receipt and delivery movements." },
+    { "title": "ERP Process Map", "description": "Visualize how information moves between Sales, Inventory, and Accounting." }
+  ],
+  "relatedCourseSlugs": ["odoo-system-admin", "odoo-implementation"],
+  "faq": [
+    { "question": "How is this different from the Odoo User Guide?", "answer": "The User Guide focuses on daily usage habits, while this course explains the larger ERP picture through a structured, connected business scenario." },
+    { "question": "Is accounting knowledge required?", "answer": "No. The course introduces the operational meaning of invoices and payments without requiring advanced accounting." },
+    { "question": "Will I work in a real Odoo environment?", "answer": "The planned delivery includes guided practice in an Odoo training environment." },
+    { "question": "What comes after this course?", "answer": "System Admin is a strong operational next step; Implementation suits functional learners; Development suits technical learners." }
+  ],
+  "instructor": {
+    "name": "Khaled Ahmed",
+    "role": "Chief Executive Officer",
+    "bio": "Leads the learning vision and ensures every training track is aligned with real business outcomes and career growth.",
+    "initials": "KA"
+  },
+  "studentCount": 0,
+  "rating": 0,
+  "resourcesCount": 0,
+  "certificate": true
+}

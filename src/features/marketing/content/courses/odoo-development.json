@@ -1,0 +1,74 @@
+{
+  "slug": "odoo-development",
+  "title": "Odoo Development",
+  "image": "/marketing/odoo-development.png",
+  "tagline": "Build and extend Odoo modules using models, fields, business logic, XML views, actions, integrations, and debugging.",
+  "description": [
+    "Odoo development connects business requirements with maintainable modules, interfaces, logic, and integrations. Strong developers understand both the framework and the operational reason behind every customization.",
+    "This broad technical track covers the complete module-development workflow and prepares learners to build, extend, troubleshoot, and support Odoo solutions in realistic projects."
+  ],
+  "status": "published",
+  "badge": "New",
+  "level": "Advanced",
+  "language": "English",
+  "durationHours": 21.4,
+  "durationLabel": "8–12 Weeks",
+  "track": "Developer",
+  "format": "Blended / Bootcamp",
+  "externalCourseUrl": "https://etriple.odoo.com/slides/odoo-development-3",
+  "price": null,
+  "roles": ["developer"],
+  "moduleTags": ["Development", "Modules", "Integrations"],
+  "coveredModuleSlugs": ["sales", "crm", "inventory", "website-ecommerce"],
+  "learningOutcomes": [
+    "Understand Odoo architecture and module structure",
+    "Create models, fields, relationships, and business logic",
+    "Customize interfaces, navigation, actions, and workflows",
+    "Build and extend maintainable custom modules",
+    "Integrate, debug, document, and support technical solutions"
+  ],
+  "whoItsFor": [
+    "Python developers applying programming skills within a business-focused ERP framework",
+    "Technical learners specializing in Odoo architecture, modules, and customization",
+    "ERP technical support moving from troubleshooting into structured development work",
+    "Project developers preparing for custom modules, enhancements, and integration assignments"
+  ],
+  "requirements": [
+    "Working knowledge of Python fundamentals",
+    "Basic XML, HTML, and web-development concepts",
+    "Understanding of relational data and business workflows",
+    "Comfort using Git and a development environment is recommended"
+  ],
+  "curriculum": [
+    { "number": "01", "title": "Odoo Architecture", "description": "Understand architecture, addons, manifests, module structure, environments, and development flow." },
+    { "number": "02", "title": "Module Structure, Models, and Fields", "description": "Define models, relationships, computed values, constraints, and business rules." },
+    { "number": "03", "title": "Business Logic and XML Views", "description": "Build and inherit form, list, search, kanban, and other user-interface views." },
+    { "number": "04", "title": "Actions and Menus", "description": "Organize navigation and connect user actions to business behavior." },
+    { "number": "05", "title": "Custom Modules", "description": "Build a maintainable module from requirement analysis through packaging and installation." },
+    { "number": "06", "title": "Integrations", "description": "Connect Odoo with APIs and external tools while preserving reliable structure." },
+    { "number": "07", "title": "Debugging and Maintenance", "description": "Troubleshoot issues, improve code quality, manage upgrades, and support stable deployments." },
+    { "number": "08", "title": "Capstone Development Scenario", "description": "Design, build, test, document, and present a custom Odoo business solution." }
+  ],
+  "projects": [
+    { "title": "Custom Business Module", "description": "Build models, security, menus, actions, and views for a realistic requirement." },
+    { "title": "Workflow Extension", "description": "Extend an existing Odoo process with new validations, fields, and controlled behavior." },
+    { "title": "External Integration", "description": "Connect Odoo to a third-party service through a documented API workflow." }
+  ],
+  "relatedCourseSlugs": ["python-development-for-odoo", "odoo-implementation"],
+  "faq": [
+    { "question": "How is this different from Python Development for Odoo?", "answer": "Odoo Development is the broader end-to-end framework track — architecture, modules, views, actions, and integrations. Python Development for Odoo goes deeper into Python, the ORM, and advanced backend implementation patterns specifically." },
+    { "question": "Do I need advanced Python?", "answer": "You should be comfortable with Python fundamentals. Learners needing stronger Python and ORM depth may benefit more from the Python Development for Odoo track." },
+    { "question": "Will I build a complete module?", "answer": "Yes. The curriculum includes custom module work and a capstone business solution." },
+    { "question": "Are integrations included?", "answer": "Yes. The course introduces external connections, API workflows, and technical enhancement patterns." }
+  ],
+  "instructor": {
+    "name": "Ibrahim",
+    "role": "Odoo Developer Instructor",
+    "bio": "Builds and extends custom Odoo modules, and teaches the framework end to end \u2014 models, views, actions, integrations, and the debugging habits that keep code maintainable.",
+    "initials": "IB"
+  },
+  "studentCount": 0,
+  "rating": 0,
+  "resourcesCount": 0,
+  "certificate": true
+}

@@ -19,5 +19,5 @@ export default async function ResetPasswordRoute({ params, searchParams }: {
   const [{ locale }, query] = await Promise.all([params, searchParams])
   if (!isLocale(locale)) notFound()
   const user = await getCurrentUser()
-  return <AuthPage locale={locale} mode="reset" next={`/${locale}`} notice={user ? query.notice : 'recoveryExpired'} />
+  return <AuthPage locale={locale} mode="reset" next={`/${locale}/overview`} notice={user ? query.notice : 'recoveryExpired'} />
 }

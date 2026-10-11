@@ -18,7 +18,9 @@
     "signUp": "Create Account",
     "login": "Log in",
     "forgotPassword": "Forgot password",
-    "resetPassword": "Reset password"
+    "resetPassword": "Reset password",
+    "admin": "Admin: roles",
+    "adminAudit": "Admin: audit log"
   },
   "common": {
     "dashboard": "Dashboard",
@@ -46,6 +48,7 @@
     "success": "Changes saved successfully.",
     "openNavigation": "Open navigation",
     "communitySubtitle": "Connect with fellow learners, share ideas, and grow together.",
+    "messages": "Messages",
     "messagesSubtitle": "Stay connected with your learning community.",
     "learningCommunity": "Learning Community",
     "communityPanel": "Connect with other Odoo learners. Community conversations will appear here when a community service is connected.",
@@ -71,7 +74,15 @@
     "footerQuote": "Empower your future with real-world tech skills. Learn. Build. Grow.",
     "copyright": "All rights reserved.",
     "phone": "Phone",
-    "email": "Email"
+    "email": "Email",
+    "dismiss": "Dismiss",
+    "closeNavigation": "Close navigation",
+    "mobileAppUnavailable": "The mobile app is not available in this demo.",
+    "termsUnavailable": "Terms of Service are not configured for this local demo.",
+    "privacyUnavailable": "Privacy Policy is not configured for this local demo.",
+    "location": "New Cairo, Egypt",
+    "brandName": "ETripleSoft Learn",
+    "makingProgress": "You’re making progress!"
   },
   "navigation": {
     "overview": "Overview",
@@ -227,7 +238,9 @@
     "tabReviewsCount": "Reviews (1.2K)",
     "tabQuestionsCount": "Q&A (126)",
     "noCoursesTitle": "No courses found",
-    "courseUnit": "courses"
+    "courseUnit": "courses",
+    "playPreview": "Play course preview",
+    "play": "Play"
   },
   "ai": {
     "title": "AI Learning Assistant",
@@ -269,7 +282,8 @@
     "prepareAssessment": "Help me prepare for the final assessment",
     "today": "Today",
     "viewAll": "View All",
-    "askLabel": "Ask the AI assistant"
+    "askLabel": "Ask the AI assistant",
+    "useContextLabel": "Use current course context"
   },
   "assessment": {
     "title": "Assessment",
@@ -344,7 +358,9 @@
     "thisWeek": "Upcoming This Week",
     "syncTitle": "Sync Your Calendar",
     "syncCopy": "Add ETripleSoft Learn events to Google Calendar, Outlook, or Apple.",
-    "syncAction": "Sync Calendar"
+    "syncAction": "Sync Calendar",
+    "noEventsMonth": "No events scheduled this month.",
+    "closeEvent": "Close event"
   },
   "certificates": {
     "title": "My Certificates",
@@ -365,7 +381,8 @@
     "recommendedNext": "Recommended Next Course",
     "completedOn": "Completed on",
     "downloadAction": "Download Certificate",
-    "shareAction": "Share Certificate"
+    "shareAction": "Share Certificate",
+    "editProfile": "Edit profile"
   },
   "settings": {
     "title": "Settings",
@@ -440,7 +457,7 @@
     "preferenceDescription": "Enable {item} for your learning experience."
   },
   "auth": {
-    "signUp": "Create your account",
+    "signUp": "Create Your Account",
     "welcome": "Start your learning journey today.",
     "login": "Log in",
     "signIn": "Sign in",
@@ -522,18 +539,24 @@
     "updatePassword": "Update password",
     "backToLogin": "Back to log in",
     "resendConfirmation": "Resend confirmation email",
+    "retryIn": "Try again in {seconds}s",
     "sending": "Please wait?",
     "errors": {
       "invalidName": "Enter a name between 1 and 120 characters.",
       "invalidEmail": "Enter a valid email address.",
+      "emailAddressRejected": "This email address was rejected. Use an active email address that can receive messages.",
       "weakPassword": "Use a password with at least 8 characters.",
       "passwordMismatch": "Passwords do not match.",
       "signupFailed": "We could not create the account. Try logging in or resetting your password.",
+      "rateLimited": "Too many emails have been requested right now. Wait a minute, then try again.",
       "unexpected": "Something went wrong. Please try again.",
       "required": "Enter your password.",
       "emailUnverified": "Confirm your email before logging in.",
       "invalidCredentials": "Email or password is incorrect.",
-      "recoveryExpired": "This recovery link is invalid or has expired. Request a new one."
+      "recoveryExpired": "This recovery link is invalid or has expired. Request a new one.",
+      "invalidLearnerType": "Choose a learner type.",
+      "studentFieldsRequired": "Enter your university and faculty.",
+      "invalidLearnerFields": "Check the learner details and try again."
     },
     "notices": {
       "verificationSent": "Check your email to confirm your account before logging in.",
@@ -545,7 +568,37 @@
       "expiredLink": "This link has expired. Request a new email and try again."
     },
     "logout": "Log out",
-    "learner": "Learner"
+    "learner": "Learner",
+    "learnerTypePrompt": "I am a...",
+    "birthYear": "Birth year",
+    "birthYearExample": "e.g. 2004",
+    "graduationYear": "Graduation year",
+    "graduationYearExample": "e.g. 2027",
+    "universityExample": "Enter your university",
+    "facultyExample": "Enter your faculty",
+    "jobTitle": "Job title",
+    "jobTitleExample": "e.g. Software Engineer",
+    "companyName": "Company name",
+    "companyNameExample": "Enter your company",
+    "yearsExperience": "Years of experience",
+    "yearsExperienceExample": "e.g. 5",
+    "invitationCode": "Company invitation code",
+    "invitationCodeExample": "Enter your invitation code",
+    "invitationUnavailable": "Company invitations are not available yet. A code will not be verified or grant organization access.",
+    "student": {
+      "label": "Student",
+      "description": "Currently enrolled at a university or a recent graduate (within 2 years)"
+    },
+    "professional": {
+      "label": "Professional",
+      "description": "Working professional investing in their own development"
+    },
+    "company_invited": {
+      "label": "My company enrolled me",
+      "description": "I received an enrollment invitation from my company"
+    },
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "checkout": {
     "title": "Checkout",
@@ -591,6 +644,86 @@
     "country": "Country",
     "phone": "Phone Number",
     "lessons": "Lessons",
-    "payWithKashier": "Pay with Kashier"
+    "payWithKashier": "Pay with Kashier",
+    "termsAgreement": "By completing this purchase, you agree to our",
+    "and": "and"
+  },
+  "admin": {
+    "shell": {
+      "title": "ETripleSoft Learn Admin"
+    },
+    "nav": {
+      "label": "Admin navigation",
+      "roles": "Roles",
+      "audit": "Audit log",
+      "exit": "Back to dashboard"
+    },
+    "roles": {
+      "title": "Role management",
+      "subtitle": "Grant and revoke elevated roles. Every change is recorded in the audit log.",
+      "admin": "Administrator",
+      "instructor": "Instructor"
+    },
+    "grant": {
+      "title": "Grant a role",
+      "hint": "Enter the email of an existing account. The instructor role is a label only and grants no additional permissions.",
+      "email": "Account email",
+      "role": "Role",
+      "submit": "Grant role"
+    },
+    "table": {
+      "title": "Role grants",
+      "empty": "No role grants yet.",
+      "user": "User",
+      "role": "Role",
+      "granted": "Granted",
+      "status": "Status",
+      "actions": "Actions",
+      "unnamed": "No display name",
+      "by": "by {name}",
+      "active": "Active",
+      "revokedOn": "Revoked {date}",
+      "revoke": "Revoke",
+      "revokeFor": "Revoke {role} role from {name}"
+    },
+    "audit": {
+      "title": "Audit log",
+      "subtitle": "Append-only record of administrative actions. Entries cannot be edited or deleted.",
+      "empty": "No audit entries yet.",
+      "when": "When (UTC)",
+      "action": "Action",
+      "actor": "Performed by",
+      "subject": "Affected user",
+      "actions": {
+        "granted": "Role granted",
+        "revoked": "Role revoked",
+        "lookedUp": "User looked up"
+      }
+    },
+    "pager": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "status": "Page {page} of {pages}"
+    },
+    "denied": {
+      "title": "Administrator access required",
+      "body": "Your account does not have permission to view this area.",
+      "back": "Back to dashboard"
+    },
+    "errors": {
+      "invalidEmail": "Enter a valid email address.",
+      "invalidRole": "Choose a valid role.",
+      "userNotFound": "No account was found with that email.",
+      "alreadyGranted": "This user already has that role.",
+      "lastAdmin": "The last active administrator cannot be revoked.",
+      "notFound": "That role grant is no longer active.",
+      "forbidden": "You no longer have permission to do this.",
+      "failed": "Something went wrong. Please try again."
+    },
+    "success": {
+      "granted": "Role granted.",
+      "revoked": "Role revoked."
+    }
   }
 }

@@ -1,0 +1,72 @@
+{
+  "slug": "odoo-system-admin",
+  "title": "Odoo System Admin",
+  "image": "/marketing/odoo-system-admin.png",
+  "tagline": "Learn to manage users, permissions, applications, company settings, data quality, and operational support.",
+  "description": [
+    "Odoo administrators keep the platform organized, secure, and usable across departments. Their decisions influence what users can see, how records are structured, and whether teams can follow the intended process.",
+    "This course focuses on operational administration rather than programming, preparing learners to manage access, settings, data, workflows, and day-to-day platform support."
+  ],
+  "status": "published",
+  "badge": "None",
+  "level": "Intermediate",
+  "language": "English",
+  "durationHours": 4.5,
+  "durationLabel": "4–6 Weeks",
+  "track": "System Administrator",
+  "format": "Online / Blended",
+  "externalCourseUrl": "https://etriple.odoo.com/slides/odoo-system-admin-6",
+  "price": null,
+  "roles": ["system-admin", "implementer"],
+  "moduleTags": ["Settings", "Deployment", "Security"],
+  "coveredModuleSlugs": ["human-resources", "sales", "inventory", "purchase"],
+  "learningOutcomes": [
+    "Manage users, roles, groups, and access permissions",
+    "Configure company and operational settings responsibly",
+    "Understand applications, module relationships, and change impact",
+    "Improve record structure and data quality",
+    "Support users and troubleshoot common administration issues"
+  ],
+  "whoItsFor": [
+    "Experienced end users taking on more responsibility for the system and its users",
+    "Office administrators managing internal structure, access, and operational settings",
+    "ERP support teams resolving common user, data, permission, and configuration issues",
+    "Operations leads maintaining reliable workflows across teams and departments"
+  ],
+  "requirements": [
+    "Basic Odoo navigation and end-user experience",
+    "Understanding of at least one business workflow",
+    "No programming experience is required"
+  ],
+  "curriculum": [
+    { "number": "01", "title": "System Admin Foundations", "description": "Understand administrator responsibilities and the impact of configuration decisions." },
+    { "number": "02", "title": "Users, Groups, and Access Rights", "description": "Create users, assign groups, control permissions, and separate departmental access." },
+    { "number": "03", "title": "Companies and Operational Settings", "description": "Configure companies, departments, sequences, languages, and shared settings." },
+    { "number": "04", "title": "Applications and Module Dependencies", "description": "Understand installed apps, dependencies, configuration flow, and safe change management." },
+    { "number": "05", "title": "Data Structure and Quality", "description": "Organize master data, prevent duplication, import carefully, and establish clear ownership." },
+    { "number": "06", "title": "Workflow Support and Monitoring", "description": "Support teams, monitor usage, diagnose permission problems, and improve adoption." },
+    { "number": "07", "title": "Administration Capstone", "description": "Configure a multi-role company environment and resolve a realistic set of admin issues." }
+  ],
+  "projects": [
+    { "title": "Multi-Role Access Design", "description": "Create users and permissions for Sales, Inventory, Accounting, and management roles." },
+    { "title": "Company Configuration Audit", "description": "Review settings, master data, access risks, and operational consistency." },
+    { "title": "Admin Support Simulation", "description": "Diagnose and resolve common access, configuration, and data-quality problems." }
+  ],
+  "relatedCourseSlugs": ["odoo-implementation", "odoo-automation"],
+  "faq": [
+    { "question": "Does this course teach server administration?", "answer": "The main focus is functional and operational Odoo administration. Hosting and advanced infrastructure are outside the core scope." },
+    { "question": "Do I need to know Python?", "answer": "No. This course focuses on users, access, settings, data, and operational support rather than development." },
+    { "question": "Is this a prerequisite for implementation?", "answer": "It is not always mandatory, but it provides a valuable foundation for learners moving into implementation work." },
+    { "question": "Will access-right scenarios be included?", "answer": "Yes. The exercises include designing and testing access for multiple business roles." }
+  ],
+  "instructor": {
+    "name": "Mahmoud Elfeky",
+    "role": "Chief Technology Officer",
+    "bio": "Specializes in business analysis, process mapping, and implementation strategy for companies adopting ERP systems.",
+    "initials": "ME"
+  },
+  "studentCount": 0,
+  "rating": 0,
+  "resourcesCount": 0,
+  "certificate": true
+}

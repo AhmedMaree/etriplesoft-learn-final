@@ -166,8 +166,6 @@ site_url = "http://127.0.0.1:3010"
 additional_redirect_urls = [
   "http://127.0.0.1:3010/en/auth/callback",
   "http://127.0.0.1:3010/ar/auth/callback",
-  "https://etriplesoft-learn-final.vercel.app/en/auth/callback",
-  "https://etriplesoft-learn-final.vercel.app/ar/auth/callback",
 ]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600

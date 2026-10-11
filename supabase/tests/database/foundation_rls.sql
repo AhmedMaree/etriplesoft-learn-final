@@ -1,6 +1,6 @@
 BEGIN;
 
-SELECT plan(39);
+SELECT plan(46);
 
 INSERT INTO auth.users (
   id,
@@ -17,7 +17,7 @@ VALUES
     'authenticated',
     'authenticated',
     'learner-a@example.test',
-    '{"role":"admin","display_name":"  New Learner  "}'::jsonb,
+    '{"role":"admin","display_name":"  New Learner  ","learner_profile":{"learner_type":"student","university":"Example University","faculty":"Engineering","birth_year":"2004","graduation_year":"2027"}}'::jsonb,
     pg_catalog.now(),
     pg_catalog.now()
   ),
@@ -64,6 +64,10 @@ SELECT ok(
   'user_roles has row level security enabled'
 );
 SELECT ok(
+  (SELECT relrowsecurity FROM pg_catalog.pg_class WHERE oid = 'public.learner_profiles'::regclass),
+  'learner_profiles has row level security enabled'
+);
+SELECT ok(
   (SELECT relrowsecurity FROM pg_catalog.pg_class WHERE oid = 'public.admin_audit_log'::regclass),
   'admin_audit_log has row level security enabled'
 );
@@ -97,6 +101,21 @@ SELECT is(
   (SELECT count(*)::integer FROM public.user_roles WHERE user_id = '11111111-1111-1111-1111-111111111111'),
   0,
   'signup metadata cannot grant elevated roles'
+);
+SELECT is(
+  (SELECT learner_type FROM public.learner_profiles WHERE user_id = '11111111-1111-1111-1111-111111111111'),
+  'student',
+  'the validated learner type is initialized separately from roles'
+);
+SELECT is(
+  (SELECT university FROM public.learner_profiles WHERE user_id = '11111111-1111-1111-1111-111111111111'),
+  'Example University',
+  'student onboarding details are persisted by the trusted initializer'
+);
+SELECT is(
+  (SELECT count(*)::integer FROM public.user_roles WHERE user_id = '11111111-1111-1111-1111-111111111111' AND role = 'admin'),
+  0,
+  'an admin role field alongside learner type is ignored'
 );
 SELECT is(
   (SELECT count(*)::integer FROM public.learner_preferences WHERE user_id = '33333333-3333-3333-3333-333333333333'),
@@ -186,6 +205,16 @@ SELECT is(
   0,
   'a learner cannot read another profile'
 );
+SELECT is(
+  (SELECT count(*)::integer FROM public.learner_profiles WHERE user_id = '11111111-1111-1111-1111-111111111111'),
+  1,
+  'a learner can read their own onboarding profile'
+);
+SELECT is(
+  (SELECT count(*)::integer FROM public.learner_profiles WHERE user_id = '22222222-2222-2222-2222-222222222222'),
+  0,
+  'a learner cannot read another onboarding profile'
+);
 SELECT lives_ok(
   $$UPDATE public.profiles SET display_name = 'Updated Learner A' WHERE id = '11111111-1111-1111-1111-111111111111'$$,
   'a learner can update their own display name'
@@ -195,16 +224,14 @@ SELECT is(
   'Updated Learner A',
   'the permitted profile update is persisted'
 );
+WITH changed AS (
+    UPDATE public.profiles
+    SET display_name = 'Cross-user edit'
+    WHERE id = '22222222-2222-2222-2222-222222222222'
+    RETURNING id
+)
 SELECT is(
-  (
-    WITH changed AS (
-      UPDATE public.profiles
-      SET display_name = 'Cross-user edit'
-      WHERE id = '22222222-2222-2222-2222-222222222222'
-      RETURNING id
-    )
-    SELECT count(*)::integer FROM changed
-  ),
+  (SELECT count(*)::integer FROM changed),
   0,
   'a learner cannot update another profile'
 );
@@ -237,16 +264,14 @@ SELECT is(
   'ar',
   'the permitted preference update is persisted'
 );
+WITH changed AS (
+    UPDATE public.learner_preferences
+    SET preferred_locale = 'ar'
+    WHERE user_id = '22222222-2222-2222-2222-222222222222'
+    RETURNING user_id
+)
 SELECT is(
-  (
-    WITH changed AS (
-      UPDATE public.learner_preferences
-      SET preferred_locale = 'ar'
-      WHERE user_id = '22222222-2222-2222-2222-222222222222'
-      RETURNING user_id
-    )
-    SELECT count(*)::integer FROM changed
-  ),
+  (SELECT count(*)::integer FROM changed),
   0,
   'a learner cannot update another users preferences'
 );
@@ -278,6 +303,12 @@ SELECT throws_ok(
   '42501',
   'permission denied for table admin_audit_log',
   'learners cannot read privileged audit records'
+);
+SELECT throws_ok(
+  $$INSERT INTO public.learner_profiles (user_id, learner_type) VALUES ('11111111-1111-1111-1111-111111111111', 'professional')$$,
+  '42501',
+  'permission denied for table learner_profiles',
+  'learners cannot forge learner classification through direct table inserts'
 );
 RESET ROLE;
 

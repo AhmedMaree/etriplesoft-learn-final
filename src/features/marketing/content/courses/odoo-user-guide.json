@@ -1,0 +1,72 @@
+{
+  "slug": "odoo-user-guide",
+  "title": "Odoo User Guide",
+  "image": "/marketing/odoo-user-guide.png",
+  "tagline": "Learn to navigate Odoo and complete everyday CRM, Sales, Inventory, Accounting, activity, and reporting tasks.",
+  "description": [
+    "A practical beginner guide for employees and business users who need to use Odoo in their daily work — not a deep technical course, but a reference-style walkthrough of the screens and workflows you'll touch every day.",
+    "Built from the questions real end users ask most: how do I find this record, why did that field lock, what does this button actually do."
+  ],
+  "status": "published",
+  "badge": "None",
+  "level": "Beginner",
+  "language": "English",
+  "durationHours": 4.4,
+  "durationLabel": "2–4 Weeks",
+  "track": "End User",
+  "format": "Online",
+  "externalCourseUrl": "https://etriple.odoo.com/slides/odoo-user-guide-5",
+  "price": null,
+  "roles": ["end-user"],
+  "moduleTags": ["CRM", "Sales", "Inventory", "Accounting"],
+  "coveredModuleSlugs": ["crm", "sales", "inventory", "accounting", "purchase", "human-resources"],
+  "learningOutcomes": [
+    "Navigate Odoo applications and records confidently",
+    "Manage CRM leads, opportunities, and follow-ups",
+    "Create quotations and turn them into sales orders",
+    "Track products, inventory, deliveries, and receipts",
+    "Handle invoices and payments correctly",
+    "Use activities, filters, and reports to stay on top of your work"
+  ],
+  "whoItsFor": [
+    "Employees using Odoo for daily sales, purchasing, accounting, HR, or operational work",
+    "Business teams that need to create consistent records and collaborate through shared workflows",
+    "Business owners who want to understand how departments and transactions connect inside one ERP",
+    "Complete beginners building a clear foundation before a role-based Odoo course"
+  ],
+  "requirements": [
+    "No previous Odoo or ERP experience required",
+    "Basic computer and web-browser skills",
+    "Access to an Odoo instance (trial or company account)"
+  ],
+  "curriculum": [
+    { "number": "01", "title": "Odoo Navigation and Records", "description": "Understand apps, dashboards, menus, views, records, search, filters, grouping, and favorites." },
+    { "number": "02", "title": "CRM and Customer Follow-Up", "description": "Manage leads, opportunities, customer communication, activities, and pipeline progress." },
+    { "number": "03", "title": "Sales Workflow", "description": "Create quotations, confirm sales orders, manage customers, and follow the sales process." },
+    { "number": "04", "title": "Inventory Essentials", "description": "Work with products, stock levels, deliveries, receipts, warehouses, and stock movements." },
+    { "number": "05", "title": "Invoices and Payment Flow", "description": "Create invoices, register payments, and understand how commercial documents connect." },
+    { "number": "06", "title": "Activities, Dashboards, and Reports", "description": "Schedule follow-ups and use filters, dashboards, and reports to understand performance." }
+  ],
+  "projects": [
+    { "title": "Customer-to-Invoice Workflow", "description": "Complete a connected scenario from a new customer enquiry to quotation, delivery, invoice, and payment." },
+    { "title": "Clean Data Challenge", "description": "Find and correct duplicate, incomplete, or inconsistent records using good ERP habits." },
+    { "title": "Personal Work Dashboard", "description": "Build useful filters, favorites, activities, and reports for a daily role." }
+  ],
+  "relatedCourseSlugs": ["crash-course-odoo-erp", "odoo-system-admin"],
+  "faq": [
+    { "question": "Is this suitable for someone with no ERP experience?", "answer": "Yes. The guide starts with the interface and shared Odoo concepts before moving into connected business workflows." },
+    { "question": "Does this course require programming?", "answer": "No. It focuses entirely on practical end-user work and business operations." },
+    { "question": "Which Odoo apps are included?", "answer": "The scope covers CRM, Sales, Inventory, basic Accounting, Activities, and Reports." },
+    { "question": "What should I study next?", "answer": "After this guide, choose the Crash Course, System Admin, Implementation, Automation, or Development track according to your role." }
+  ],
+  "instructor": {
+    "name": "Ahmed Emad",
+    "role": "Odoo Consultant",
+    "bio": "Transforms complex workflows into clear learning journeys that help students understand systems with confidence.",
+    "initials": "AE"
+  },
+  "studentCount": 0,
+  "rating": 0,
+  "resourcesCount": 0,
+  "certificate": true
+}

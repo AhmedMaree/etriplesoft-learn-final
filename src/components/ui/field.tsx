@@ -18,8 +18,14 @@ export type FieldProps = {
   autoComplete?: string;
   minLength?: number;
   maxLength?: number;
+  min?: number;
+  max?: number;
   dir?: 'ltr' | 'rtl' | 'auto';
   readOnly?: boolean;
+  showPasswordLabel?: string;
+  hidePasswordLabel?: string;
+  invalid?: boolean;
+  errorId?: string;
 };
 
 export function Field({
@@ -35,8 +41,14 @@ export function Field({
   autoComplete,
   minLength,
   maxLength,
+  min,
+  max,
   dir,
   readOnly = false,
+  showPasswordLabel = "Show password",
+  hidePasswordLabel = "Hide password",
+  invalid = false,
+  errorId,
 }: FieldProps) {
   const [show, setShow] = useState(false);
   const initial = value;
@@ -51,6 +63,8 @@ export function Field({
         {options ? (
           <select
             aria-label={label}
+            aria-invalid={invalid || undefined}
+            aria-describedby={invalid ? errorId : undefined}
             name={name || label}
             defaultValue={initial || ""}
             required={required}
@@ -68,13 +82,16 @@ export function Field({
         ) : (
           <input
             aria-label={label}
+            aria-invalid={invalid || undefined}
+            aria-describedby={invalid ? errorId : undefined}
             name={name || label}
             dir={dir ?? (["email", "url", "tel", "password"].includes(type) ? "ltr" : undefined)}
             type={type === "password" && show ? "text" : type}
             defaultValue={initial}
             placeholder={placeholder}
             required={required}
-            min={type === "number" ? 1 : undefined}
+            min={type === "number" ? min : undefined}
+            max={type === "number" ? max : undefined}
             autoComplete={autoComplete}
             minLength={minLength}
             maxLength={maxLength}
@@ -84,7 +101,7 @@ export function Field({
         {type === "password" && (
           <button
             type="button"
-            aria-label={show ? "Hide password" : "Show password"}
+            aria-label={show ? hidePasswordLabel : showPasswordLabel}
             onClick={() => setShow(!show)}
           >
             {show ? <Eye size={18} /> : <EyeOff size={18} />}

@@ -120,7 +120,7 @@ export function CalendarPage() {
                 </button>
               ))
             ) : (
-              <p>No events scheduled this month.</p>
+              <p>{messages("noEventsMonth")}</p>
             )}
           </Panel>
         ) : (
@@ -291,7 +291,7 @@ export function CalendarPage() {
           >
             <button
               className="modal-close icon-button"
-              aria-label="Close event"
+              aria-label={messages("closeEvent")}
               onClick={() => setSelected(null)}
             >
               <X />

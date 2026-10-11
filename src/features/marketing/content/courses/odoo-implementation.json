@@ -1,0 +1,73 @@
+{
+  "slug": "odoo-implementation",
+  "title": "Odoo Implementation",
+  "image": "/marketing/odoo-implementation.png",
+  "tagline": "Learn requirement gathering, process mapping, solution design, configuration planning, testing, go-live, and handover.",
+  "description": [
+    "An Odoo implementor must understand people, processes, priorities, and system behavior. The role is not limited to configuring applications — it requires discovering what the business truly needs and guiding the organization through change.",
+    "This course follows the implementation lifecycle from first discovery meeting to a tested solution, trained users, go-live plan, and handover package."
+  ],
+  "status": "published",
+  "badge": "None",
+  "level": "Advanced",
+  "language": "English",
+  "durationHours": 12.9,
+  "durationLabel": "6–8 Weeks",
+  "track": "Implementer",
+  "format": "Blended / Bootcamp",
+  "externalCourseUrl": "https://etriple.odoo.com/slides/odoo-implementation-4",
+  "price": null,
+  "roles": ["implementer"],
+  "moduleTags": ["Implementation", "Discovery", "Configuration"],
+  "coveredModuleSlugs": ["sales", "crm", "accounting", "inventory", "manufacturing", "purchase", "human-resources", "website-ecommerce"],
+  "learningOutcomes": [
+    "Gather and document clear business requirements",
+    "Map current and future business processes",
+    "Design an Odoo solution aligned with operational priorities",
+    "Plan configuration, testing, and user acceptance",
+    "Support training, go-live, handover, and early adoption"
+  ],
+  "whoItsFor": [
+    "System admins progressing from platform management into implementation delivery",
+    "Business analysts turning business pain points into clear requirements and solution maps",
+    "Functional consultants structuring configuration, testing, and client-facing delivery",
+    "Project and operations leads connecting operational knowledge with ERP project execution"
+  ],
+  "requirements": [
+    "Confident Odoo usage across multiple applications",
+    "Understanding of common business workflows",
+    "System administration or ERP support experience is helpful",
+    "Strong communication and analytical interest"
+  ],
+  "curriculum": [
+    { "number": "01", "title": "Implementation Role and Project Mindset", "description": "Understand responsibilities, stakeholders, scope, communication, and implementation success factors." },
+    { "number": "02", "title": "Business Discovery and Requirements", "description": "Ask effective questions, document processes, identify pain points, and clarify priorities." },
+    { "number": "03", "title": "Process Mapping and Solution Design", "description": "Translate current and future workflows into Odoo modules, roles, decisions, and data structures." },
+    { "number": "04", "title": "Configuration Planning", "description": "Plan companies, applications, settings, approvals, master data, and cross-department dependencies." },
+    { "number": "05", "title": "Testing and User Acceptance", "description": "Design scenarios, validate results, document issues, and manage user acceptance." },
+    { "number": "06", "title": "Training, Go-Live, and Handover", "description": "Prepare users, launch operations, manage early support, and transfer knowledge responsibly." },
+    { "number": "07", "title": "Capstone Implementation Scenario", "description": "Analyze a realistic company, define requirements, design the solution, and present an implementation roadmap." }
+  ],
+  "projects": [
+    { "title": "Discovery Workshop", "description": "Plan and conduct a structured requirements session for a multi-department company." },
+    { "title": "Solution Blueprint", "description": "Map processes, modules, roles, data, integrations, risks, and acceptance criteria." },
+    { "title": "Go-Live Readiness Plan", "description": "Prepare testing, training, migration, support, and handover activities." }
+  ],
+  "relatedCourseSlugs": ["odoo-system-admin", "odoo-automation"],
+  "faq": [
+    { "question": "Is this a technical development course?", "answer": "No. It is primarily a functional implementation track focused on business analysis, solution design, configuration planning, testing, and delivery." },
+    { "question": "Do I need client experience?", "answer": "No, but prior operations, support, administration, or business-analysis experience will help." },
+    { "question": "Will the course cover project documentation?", "answer": "Yes. The work includes requirements, process maps, solution structure, test scenarios, and handover planning." },
+    { "question": "What roles can this support?", "answer": "The skills align with Odoo Implementor, Functional Consultant, ERP Business Analyst, and implementation-support responsibilities." }
+  ],
+  "instructor": {
+    "name": "Maram",
+    "role": "Odoo Implementer Instructor",
+    "bio": "Analyzes operational challenges and helps translate business requirements into clear ERP learning and implementation concepts.",
+    "initials": "MR"
+  },
+  "studentCount": 0,
+  "rating": 0,
+  "resourcesCount": 0,
+  "certificate": true
+}

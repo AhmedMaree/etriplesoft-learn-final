@@ -78,11 +78,11 @@ export function SiteFooter() {
             />
           </Link>
           <p>{t("footerDescription")}</p>
-          <p className="site-footer-quote">â€œ{t("footerQuote")}â€</p>
+          <p className="site-footer-quote">“{t("footerQuote")}”</p>
           <ul className="site-footer-contact">
             <li>
               <MapPin size={17} />
-              <span>New Cairo, Egypt</span>
+              <span>{t("location")}</span>
             </li>
             <li>
               <Phone size={17} />
@@ -131,10 +131,10 @@ export function SiteFooter() {
         </nav>
       </div>
       <div className="site-footer-bottom">
-        <small>Â© 2026 ETripleSoft Learn. {t("copyright")}</small>
+        <small>© 2026 ETripleSoft Learn. {t("copyright")}</small>
         <span className="partner-badge">
           <Star size={13} />
-          Odoo Gold Partner Â· MENA Region
+          Odoo Gold Partner · MENA Region
         </span>
         <LocaleSwitcher className="site-footer-lang" />
       </div>

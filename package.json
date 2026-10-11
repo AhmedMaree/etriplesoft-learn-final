@@ -15,7 +15,11 @@
     "db:test": "supabase test db",
     "db:push": "supabase db push --linked",
     "db:types": "supabase gen types typescript --linked --schema public > src/types/database.ts",
+    "storage:orphans": "node --env-file=.env.local scripts/cleanup-orphan-avatars.mjs",
+    "admin:bootstrap": "node --env-file=.env.local scripts/bootstrap-admin.mjs",
     "db:test:hosted": "node --env-file=.env.local scripts/validate-hosted-rls.mjs",
+    "db:test:hosted:course": "node scripts/validate-hosted-course-domain.mjs",
+    "db:test:hosted:curriculum": "node scripts/validate-hosted-curriculum-domain.mjs",
     "test": "playwright test"
   },
   "keywords": [],

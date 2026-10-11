@@ -9,11 +9,13 @@ import { LegacyHashRedirect } from "@/components/layout/legacy-hash-redirect";
 import { ToastViewport } from "@/components/shared/toast-viewport";
 import "../../styles.css";
 import "../../refinements.css";
+import "../../arabic-font.css";
 
 const learnFont = localFont({
   src: "../../../public/assets/learn-font.woff2",
   display: "swap",
   weight: "100 900",
+  variable: "--font-learn",
 });
 
 type LocaleLayoutProps = Readonly<{
@@ -49,7 +51,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
-      <body className={learnFont.className}>
+      <body className={`${learnFont.className} ${learnFont.variable}`}>
         <NextIntlClientProvider>
           <LegacyHashRedirect />
           {children}

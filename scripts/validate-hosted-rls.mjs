@@ -62,6 +62,9 @@ async function createValidationUser(label) {
       codex_hosted_rls_validation: true,
       run_id: runId,
       display_name: `Validation ${label}`,
+      learner_profile: label === 'a'
+        ? { learner_type: 'student', university: 'Validation University', faculty: 'Engineering', birth_year: '2004' }
+        : { learner_type: 'professional', job_title: 'Validation Engineer', years_experience: '5' },
       role: 'admin',
       permissions: { admin: true },
     },
@@ -84,6 +87,7 @@ try {
   const anonymousCases = [
     ['anonymous cannot read profiles', anonymous.from('profiles').select('id').limit(1)],
     ['anonymous cannot read learner preferences', anonymous.from('learner_preferences').select('user_id').limit(1)],
+    ['anonymous cannot read learner profiles', anonymous.from('learner_profiles').select('user_id').limit(1)],
     ['anonymous cannot read role assignments', anonymous.from('user_roles').select('id').limit(1)],
     ['anonymous cannot read role audit records', anonymous.from('admin_audit_log').select('id').limit(1)],
     ['anonymous cannot update profiles', anonymous.from('profiles').update({ display_name: 'Blocked anonymous update' }).eq('id', userA.id)],
@@ -111,6 +115,11 @@ try {
     record(`${label} preferences update refreshes updated_at`, 'timestamp changes', preferencesUpdatedAt !== previousPreferencesUpdatedAt ? 'changed' : 'unchanged', Boolean(preferencesUpdatedAt && previousPreferencesUpdatedAt && preferencesUpdatedAt !== previousPreferencesUpdatedAt))
     await checkQuery(`${label} cannot read other preferences`, owner.client.from('learner_preferences').select('user_id').eq('user_id', other.id), 0)
     await checkQuery(`${label} cannot update other preferences`, owner.client.from('learner_preferences').update({ preferred_locale: 'en' }).eq('user_id', other.id).select('user_id'), 0)
+    const ownLearnerProfile = await checkQuery(`${label} reads own learner profile`, owner.client.from('learner_profiles').select('learner_type, university, job_title').eq('user_id', owner.id), 1)
+    record(`${label} trigger persists non-authorizing learner type`, label === 'User A' ? 'student' : 'professional', ownLearnerProfile.data?.[0]?.learner_type, ownLearnerProfile.data?.[0]?.learner_type === (label === 'User A' ? 'student' : 'professional'))
+    await checkQuery(`${label} cannot read other learner profile`, owner.client.from('learner_profiles').select('user_id').eq('user_id', other.id), 0)
+    const forgedLearnerProfile = await owner.client.from('learner_profiles').insert({ user_id: owner.id, learner_type: 'company_invited' })
+    record(`${label} cannot forge learner profile directly`, 'request rejected', forgedLearnerProfile.error ? `rejected (${forgedLearnerProfile.error.code ?? forgedLearnerProfile.error.status ?? 'error'})` : 'insert accepted', Boolean(forgedLearnerProfile.error))
     await checkQuery(`${label} sees no role grants for self`, owner.client.from('user_roles').select('role').eq('user_id', owner.id), 0)
 
     for (const role of ['admin', 'instructor', 'organization_manager']) {

@@ -1,10 +1,11 @@
 # Route map
 
-The learner and authentication routes are shared beneath `[locale]`. Route groups remain URL-neutral. `/` redirects to `/en`; `/overview` resolves to `/en/overview`. `/en` and `/ar` are authenticated learner dashboards, as are `/en/overview` and `/ar/overview`. Legacy fragment URLs such as `/#courses` resolve to their English localized equivalent after hydration.
+The learner and authentication routes are shared beneath `[locale]`. Route groups remain URL-neutral. `/` redirects to `/en`; `/overview` resolves to `/en/overview`. `/en` and `/ar` are the public marketing landing page (route group `(site)`, styles in `src/features/marketing/`). The authenticated learner dashboard lives at `/en/overview` and `/ar/overview`. Legacy fragment URLs such as `/#courses` resolve to their English localized equivalent after hydration.
 
 | Screen | URL |
 | --- | --- |
-| Dashboard | `/en`, `/ar`, `/en/overview`, and `/ar/overview` (authentication required) |
+| Landing (public) | `/en` and `/ar` |
+| Dashboard | `/en/overview` and `/ar/overview` (authentication required) |
 | All Courses | `/en/courses` and `/ar/courses` |
 | AI Assistant | `/en/ai-page` and `/ar/ai-page` |
 | Community | `/en/community` and `/ar/community` |
@@ -19,6 +20,8 @@ The learner and authentication routes are shared beneath `[locale]`. Route group
 | Course details | `/en/detail-course` and `/ar/detail-course` |
 | Assessment | `/en/assessment` and `/ar/assessment` |
 | Checkout demo | `/en/payment` and `/ar/payment` |
+| Admin roles (admin role required) | `/en/admin` and `/ar/admin` |
+| Admin audit log (admin role required) | `/en/admin/audit` and `/ar/admin/audit` |
 
 Course catalog and detail routes remain public. Other LMS demo routes remain available without an auth guarantee until their data and authorization workflows are implemented. Unauthenticated visits to protected routes go to the matching locale login page with a validated `next` destination.
 
@@ -30,7 +33,7 @@ Application pages live beneath `src/app/[locale]/`. Supported locales are `en` a
 
 | Legacy URL | English route | Arabic route |
 | --- | --- | --- |
-| `/` | `/en` | `/ar` |
+| `/` | `/en` (landing) | `/ar` (landing) |
 | `/overview` | `/en/overview` | `/ar/overview` |
 | `/courses` | `/en/courses` | `/ar/courses` |
 | `/ai-page` | `/en/ai-page` | `/ar/ai-page` |
@@ -48,3 +51,21 @@ Application pages live beneath `src/app/[locale]/`. Supported locales are `en` a
 | `/reset-password` | `/en/reset-password` | `/ar/reset-password` |
 
 Legacy unprefixed paths remain usable and resolve to their English localized equivalents (for example `/courses` to `/en/courses`, `/settings` to `/en/settings`, and `/overview` to `/en/overview`). Query parameters are preserved. Legacy fragment names are allowlisted before mapping to an English route.
+
+## Public marketing site
+
+Pages live under `src/app/[locale]/(site)/` (shared header/footer, styles in `src/features/marketing/styles/`, all classes prefixed `mk-`). All are static and available in `en` and `ar`:
+
+| Page | URL |
+| --- | --- |
+| Landing | `/en`, `/ar` |
+| Public course catalog (`?role=` filter) | `/en/catalog`, `/ar/catalog` |
+| Course detail | `/en/catalog/[slug]`, `/ar/catalog/[slug]` |
+| Learning paths (`#role` deep links) | `/en/learning-paths`, `/ar/learning-paths` |
+| Odoo modules (`?module=` selection) | `/en/odoo-modules`, `/ar/odoo-modules` |
+| About, Contact, Help Center | `/en/about`, `/en/contact`, `/en/help` (and `/ar/...`) |
+| Privacy, Terms, Refund and Course Exchange policy | `/en/privacy`, `/en/terms`, `/en/refund-policy` (and `/ar/...`) |
+
+The public catalog is `/catalog`, not `/courses`, because `/courses` is the learner All Courses demo screen. Course records (`src/features/marketing/content/courses/*.json`) and Odoo module data are English editorial content, rendered with `lang="en" dir="ltr"` inside Arabic pages; localized LMS content is a later database concern (see I18N.md).
+
+Marketing UI copy is in `messages/marketing/{en,ar}.json` and `pages-{en,ar}.json`, read through `src/features/marketing/lib/messages.ts` (not the global next-intl catalog). Arabic is type-checked against English, so the two cannot drift. Privacy and Terms are ported from the standalone odoo-learn site, predate user accounts, and need legal review before launch.

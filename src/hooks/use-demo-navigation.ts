@@ -5,5 +5,5 @@ import type { DemoRoute } from "@/lib/routes";
 
 export function useDemoNavigation() {
   const router = useRouter();
-  return (route: DemoRoute) => router.push(route === "overview" ? "/" : `/${route}`);
+  return (route: DemoRoute) => router.push(`/${route}`);
 }

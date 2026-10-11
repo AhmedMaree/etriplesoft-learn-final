@@ -94,7 +94,7 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
         </button>
         {notification && (
           <div className="popover">
-            <strong>You’re making progress!</strong>
+            <strong>{t("common.makingProgress")}</strong>
             <p>{t("dashboard.continueCourse")}</p>
             <button
               className="text-link"
@@ -124,7 +124,7 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
               {t("navigation.settings")}
             </Link>
             {authenticated ? <form action={logoutAction.bind(null, locale)}>
-              <button type="submit" onClick={() => setMenu(false)}><LogOut size={16} />{t("auth.logout")}</button>
+              <button type="submit"><LogOut size={16} />{t("auth.logout")}</button>
             </form> : <Link href="/login" onClick={() => setMenu(false)}>
               {t("auth.login")}
             </Link>}

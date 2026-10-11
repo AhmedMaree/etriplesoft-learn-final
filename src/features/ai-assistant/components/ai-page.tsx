@@ -178,7 +178,7 @@ export function AIPage() {
               <button
                 role="switch"
                 aria-checked={context}
-                aria-label="Use current course context"
+                aria-label={t("useContextLabel")}
                 className={"switch " + (context ? "on" : "")}
                 onClick={() => setContext(!context)}
               />

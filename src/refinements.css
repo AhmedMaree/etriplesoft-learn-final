@@ -228,6 +228,7 @@
 .signup-photo {
   width: 100%;
   height: 100%;
+  object-fit: cover;
   object-position: 64% 50%;
   mask-image: linear-gradient(0deg, #000 72%, transparent 100%);
 }
@@ -1329,6 +1330,46 @@
   font-size: 13px;
 }
 
+.signup-form .learner-type-group {
+  margin: 19px 0 12px;
+}
+.signup-form .learner-type-group legend {
+  margin-bottom: 8px;
+  font-size: 17px;
+}
+.signup-form .learner-type-group .role-option {
+  min-height: 50px;
+  margin-bottom: 7px;
+  padding: 9px 13px;
+}
+.signup-form .role-option:focus-within {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+.learner-type-description {
+  font-weight: 400;
+}
+.learner-fields {
+  animation: learner-fields-enter 180ms ease-out both;
+}
+.learner-fields-company {
+  grid-template-columns: minmax(0, 1fr);
+}
+.invitation-note {
+  grid-column: 1 / -1;
+  margin: -7px 0 0;
+  color: #53678f;
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: normal;
+}
+@keyframes learner-fields-enter {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .learner-fields { animation: none; }
+}
 /* ── Shared site footer ── */
 .site-footer {
   background: #fff;
@@ -1579,5 +1620,22 @@
 @media (max-width: 420px) {
   .site-footer-nav {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Auth header: let logo and actions wrap on very narrow screens (Arabic labels are longer). */
+@media (max-width: 400px) {
+  .signup-page > header {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 14px 16px;
+  }
+  .signup-page > header > a > img {
+    width: 130px;
+    height: 44px;
+  }
+  .signup-page > header > div {
+    gap: 12px;
+    min-width: 0;
   }
 }

@@ -117,7 +117,7 @@ export function CourseDetail() {
           </div>
           <button
             className="big-play"
-            aria-label="Play course preview"
+            aria-label={t("playPreview")}
             onClick={() => setPlaying(!playing)}
           >
             {playing ? <X /> : <Play fill="white" />}
@@ -137,7 +137,7 @@ export function CourseDetail() {
             </div>
           )}
           <div className="video-controls">
-            <button aria-label="Play" onClick={() => setPlaying(!playing)}>
+            <button aria-label={t("play")} onClick={() => setPlaying(!playing)}>
               <Play fill="white" size={20} />
             </button>
             <Progress value={22} />
@@ -248,7 +248,7 @@ export function CourseDetail() {
                 <h2>{t("learnerReviews")}</h2>
                 <p>
                   <Star className="star" size={18} /> 4.7 {t("averageRating")}
-                  Â· 1.2K reviews
+                  · 1.2K reviews
                 </p>
                 <p>
                   {t("reviewsPlaceholder")}

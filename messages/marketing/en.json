@@ -1,0 +1,263 @@
+{
+  "meta": {
+    "homeTitle": "Master Odoo ERP with Practical Courses",
+    "homeDescription": "Learn Odoo through structured courses, hands-on projects, and real business scenarios. Role-based learning paths for functional consultants, developers, and business users."
+  },
+  "shell": {
+    "homeLabel": "ETripleSoft Learn home",
+    "logoAlt": "ETripleSoft Learn",
+    "mainNavigation": "Main navigation",
+    "mobileMenu": "Mobile menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "toggleCoursesMenu": "Toggle courses menu",
+    "skipToContent": "Skip to main content",
+    "partner": "Odoo Gold Partner · MENA Region",
+    "logIn": "Log in",
+    "signUp": "Sign up",
+    "nav": {
+      "home": "Home",
+      "courses": "Courses",
+      "learningPaths": "Learning Paths",
+      "modules": "Odoo Modules",
+      "about": "About Us"
+    },
+    "coursesMenu": {
+      "all": "All Courses"
+    }
+  },
+  "roles": {
+    "end-user": "End User",
+    "system-admin": "System Administrator",
+    "implementer": "Implementer",
+    "developer": "Developer",
+    "automation": "Automation Specialist"
+  },
+  "levels": {
+    "Beginner": "Beginner",
+    "Intermediate": "Intermediate",
+    "Advanced": "Advanced",
+    "Inter-Advanced": "Intermediate–Advanced"
+  },
+  "badges": {
+    "Best Seller": "Best Seller",
+    "New": "New",
+    "comingSoon": "Coming Soon"
+  },
+  "footer": {
+    "about": "Providing highly intuitive, role-based Odoo & ERP training models globally. Empowering enterprise teams toward absolute efficiency.",
+    "quote": "“Empower your future with real-world tech skills. Learn. Build. Grow.”",
+    "address": "New Cairo, Egypt",
+    "social": "Social links",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "linkedin": "LinkedIn",
+    "learn": "Learn",
+    "company": "Company",
+    "support": "Support",
+    "courses": "Courses",
+    "learningPaths": "Learning Paths",
+    "modules": "Odoo Modules",
+    "aboutUs": "About",
+    "contact": "Contact",
+    "help": "Help Center",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "refund": "Refund & Course Exchange Policy",
+    "rights": "© {year} ETripleSoft Learn. All rights reserved."
+  },
+  "home": {
+    "hero": {
+      "titleLead": "Master Odoo.",
+      "titleTail": "Build",
+      "titleAccent": "Real ERP Skills",
+      "lead": "Learn Odoo through structured courses, hands-on projects, and real business scenarios designed for beginners and aspiring ERP professionals.",
+      "benefits": "Self-paced learning • Practical projects • Progress tracking",
+      "explore": "Explore Courses",
+      "paths": "View Learning Paths",
+      "mockup": {
+        "course": "Course",
+        "courseName": "Odoo ERP Fundamentals",
+        "section": "Section: Sales and CRM",
+        "lessonTitle": "Configure the Sales Pipeline",
+        "lessons": [
+          "ERP Foundations",
+          "Configure the Sales Pipeline",
+          "Products and Pricelists",
+          "Customer Workflow",
+          "Knowledge Check"
+        ],
+        "knowledgeCheck": "Knowledge Check",
+        "knowledgeTopic": "Inventory Valuation",
+        "completed": "75% Completed",
+        "moduleActive": "Module Active",
+        "moduleConnected": "Sales & CRM Connected",
+        "currentLesson": "Current Lesson",
+        "modulesProgress": "2 / 12 Modules",
+        "lessonCount": "5 lessons",
+        "playPreview": "Play preview",
+        "previewLabel": "Course preview illustration"
+      }
+    },
+    "trust": {
+      "label": "Learning benefits",
+      "items": ["Clear learning paths", "Practical projects", "Team training", "Learn at your pace"]
+    },
+    "courses": {
+      "eyebrow": "Start learning",
+      "title": "Explore Our Courses",
+      "lead": "Build practical Odoo skills through focused courses, guided exercises, and real business scenarios.",
+      "browseAll": "Browse All Courses",
+      "filterLabel": "Filter popular courses by role",
+      "all": "All Courses",
+      "previous": "Previous courses",
+      "next": "Next courses",
+      "carousel": "Popular courses",
+      "slide": "{current} of {total}",
+      "goToSlide": "Go to slide {number}",
+      "chooseSlide": "Choose a course slide",
+      "emptyTitle": "No courses for this role yet",
+      "emptyHint": "Try a different role, or browse everything we offer.",
+      "showAll": "Show All Courses",
+      "exploreAll": "Explore all courses",
+      "view": "View Course",
+      "viewNamed": "View {title}",
+      "modules": "{n, plural, one {{count} Module} other {{count} Modules}}",
+      "hours": "{hours}h",
+      "defaultInstructor": "ETripleSoft Instructor"
+    },
+    "paths": {
+      "eyebrow": "Role-Based Learning",
+      "title": "Choose Your Odoo Learning Path",
+      "lead": "Follow a structured roadmap designed for your specific career goals in the Odoo ecosystem.",
+      "career": "Career",
+      "profiles": "Profiles",
+      "list": "Learning paths",
+      "tabs": "Career profiles",
+      "explore": "Explore path",
+      "viewFull": "View full path",
+      "helpTitle": "Not sure where to begin?",
+      "helpText": "Compare the five role-based paths to find the right one for you.",
+      "helpCta": "Find My Learning Path"
+    },
+    "pathMeta": {
+      "end-user": {
+        "level": "Beginner",
+        "duration": "2–4 Weeks",
+        "description": "Suitable for Sales, HR, and Accounting professionals. Focused on navigating Odoo and executing daily business workflows efficiently.",
+        "tags": ["Sales Staff", "HR Teams", "Purchasing", "Operations", "Accounting"]
+      },
+      "system-admin": {
+        "level": "Intermediate",
+        "duration": "4–6 Weeks",
+        "description": "For IT staff responsible for keeping an existing instance secure, backed up, and upgraded.",
+        "tags": ["IT Personnel", "Ops Leads", "DB Managers", "System Owners"]
+      },
+      "implementer": {
+        "level": "Advanced",
+        "duration": "6–8 Weeks",
+        "description": "For consultants and analysts responsible for configuring Odoo for clients end to end.",
+        "tags": ["Consultants", "Project Managers", "Business Analysts", "ERP Leads"]
+      },
+      "developer": {
+        "level": "Advanced",
+        "duration": "8–12 Weeks",
+        "description": "For engineers extending Odoo with custom modules and integrations.",
+        "tags": ["Python Devs", "Backend Engineers", "Full-Stack", "Module Builders"]
+      },
+      "automation": {
+        "level": "Inter-Advanced",
+        "duration": "4–6 Weeks",
+        "description": "For teams automating repetitive workflows across Odoo with rules, triggers, and integrations.",
+        "tags": ["Process Owners", "Ops Analysts", "Low-Code Builders", "Workflow Designers"]
+      }
+    },
+    "ecosystem": {
+      "eyebrow": "Explore",
+      "title": "The Ecosystem",
+      "lead": "Learn the Odoo Modules Businesses Use — dive deep into specific business functions with targeted training.",
+      "list": "Odoo modules",
+      "details": "Selected module details",
+      "moduleTitle": "{name} Module",
+      "workflow": "Core Workflow",
+      "skills": "Skills Acquired",
+      "relatedPath": "Related Path",
+      "featuredCourse": "Featured Course",
+      "comingSoon": "Coming Soon",
+      "viewCourse": "View Course",
+      "exploreCourses": "Explore Courses",
+      "intro": "Every module maps to a real business function inside Odoo. Pick one to see its core workflow, the skills it builds, and the course that teaches it end to end.",
+      "coreModules": "{count} Core Modules",
+      "workflowMapping": "Real Workflow Mapping",
+      "handsOn": "Hands-On Skill Building",
+      "exploreAll": "Explore All Modules"
+    },
+    "framework": {
+      "title": "How You’ll Learn",
+      "imageAlt": "How You'll Learn - Practical Odoo Education Framework",
+      "steps": [
+        {
+          "title": "Understand the Concepts",
+          "description": "Master the theoretical foundations of Odoo applications and ERP principles."
+        },
+        {
+          "title": "Practice Step by Step",
+          "description": "Follow guided tutorials in a realistic Odoo environment to solidify your knowledge."
+        },
+        {
+          "title": "Build Real Solutions",
+          "description": "Apply your skills to capstone projects mimicking actual business requirements."
+        },
+        {
+          "title": "Track Your Progress",
+          "description": "Monitor your growth, earn certificates, and showcase your new capabilities."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Frequently Asked Questions",
+      "lead": "Everything you need to know about learning Odoo with ETripleSoft Learn.",
+      "stillTitle": "Still have a question?",
+      "stillText": "Browse the full Help Center or reach out and our team will point you in the right direction.",
+      "help": "Help Center",
+      "contact": "Contact Us",
+      "items": [
+        {
+          "question": "What is Odoo and why should I learn it?",
+          "answer": "Odoo is an open-source ERP suite that connects Sales, CRM, Inventory, Accounting, HR, Manufacturing, and more in one system. Learning Odoo lets you configure and run the business processes companies depend on every day, which makes it a practical, in-demand skill for ERP consultants, developers, administrators, and business users."
+        },
+        {
+          "question": "Do I need prior Odoo or ERP experience to start?",
+          "answer": "No. Our beginner tracks — the Odoo User Guide and Crash Course Odoo ERP — assume no prior experience and start from how ERP systems work. More advanced tracks such as Odoo Development list their recommended preparation directly on each course page."
+        },
+        {
+          "question": "Which Odoo learning path is right for my role?",
+          "answer": "We offer five role-based paths: End User, System Administrator, Implementer, Developer, and Automation Specialist. Each maps to a real job role and sequences courses in the order you would actually learn them on the job. Visit the Learning Paths page to compare levels, durations, and the courses included in each."
+        },
+        {
+          "question": "Are the courses self-paced?",
+          "answer": "Yes. Every course is broken into modules and lessons you can work through at your own pace, with an estimated duration shown on each course page so you can plan your schedule."
+        },
+        {
+          "question": "Do the courses include hands-on practice and projects?",
+          "answer": "Yes. Our method moves from understanding the business requirement, to configuring it in Odoo, to practicing with guided exercises, to building a capstone project based on realistic business scenarios — so you finish with skills you can demonstrate, not just theory."
+        },
+        {
+          "question": "Will I receive a certificate of completion?",
+          "answer": "Yes. Every course ends with a certificate of completion, awarded once you finish all modules in the curriculum."
+        },
+        {
+          "question": "Who teaches the courses?",
+          "answer": "Courses are built and delivered by working Odoo implementation professionals — consultants, developers, and implementers at ETripleSoft, an Odoo Gold Partner in the MENA region — using experience from real client projects across construction, manufacturing, retail, cosmetics, and real estate."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Start learning solo, or build skills across your team.",
+      "lead": "Choose a practical Odoo path for yourself, or equip your organization with a common foundation.",
+      "browse": "Browse courses",
+      "create": "Create free account"
+    }
+  }
+}

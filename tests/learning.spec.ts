@@ -76,6 +76,8 @@ test("signup validates passwords and does not persist identity in local storage"
   await page.goto("/en/sign-up");
   await page.getByLabel("Email address").fill("learner@example.com");
   await page.getByLabel("Your name").fill("Demo Learner");
+  await page.getByRole("textbox", { name: "University" }).fill("Example University");
+  await page.getByRole("textbox", { name: "Faculty" }).fill("Engineering");
   await page.getByLabel("Password", { exact: true }).fill("test-pass-123");
   await page
     .getByLabel("Confirm password", { exact: true })
@@ -86,7 +88,35 @@ test("signup validates passwords and does not persist identity in local storage"
   await expect(page.locator(".auth-message[role='alert']")).toContainText(
     "Passwords do not match",
   );
+  await expect(page.locator('[name="confirm_password"]')).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator('[name="confirm_password"]')).toHaveAttribute("aria-describedby", "auth-error");
   expect(await page.evaluate(() => localStorage.getItem("learner-name"))).toBeNull();
+});
+test("signup learner fields switch without submitting stale values", async ({ page }) => {
+  await page.goto("/en/sign-up");
+  await expect(page.getByRole("textbox", { name: "University" })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Faculty" })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Job title" })).toHaveCount(0);
+
+  await page.getByRole("radio", { name: /Professional/ }).check();
+  await expect(page.getByRole("textbox", { name: "Job title" })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Company name" })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "University" })).toHaveCount(0);
+  await page.getByRole("textbox", { name: "Job title" }).fill("Engineer");
+
+  await page.getByRole("radio", { name: /My company enrolled me/ }).check();
+  await expect(page.getByRole("textbox", { name: "Company invitation code" })).toBeVisible();
+  await expect(page.getByText(/will not be verified or grant organization access/)).toBeVisible();
+  expect(await page.locator("form").evaluate((form) => {
+    if (!(form instanceof HTMLFormElement)) return false;
+    return new FormData(form).has("job_title");
+  })).toBe(false);
+
+  await page.goto("/ar/sign-up");
+  await expect(page.getByRole("radio", { name: /طالب/ })).toBeVisible();
+  await page.getByRole("radio", { name: /متخصص/ }).check();
+  await expect(page.getByRole("textbox", { name: "المسمى الوظيفي" })).toBeVisible();
+  await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
 });
 test("anonymous dashboard and settings access redirects to localized login", async ({ page }) => {
   await page.goto("/ar/overview");
@@ -94,6 +124,14 @@ test("anonymous dashboard and settings access redirects to localized login", asy
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
   await page.goto("/en/settings");
   await expect(page).toHaveURL(/\/en\/login\?next=%2Fen%2Fsettings$/);
+});
+test("auth callback rejects invalid links and external return destinations", async ({ page }) => {
+  await page.goto("/ar/auth/callback?error=access_denied&next=https%3A%2F%2Fevil.example");
+  await expect(page).toHaveURL(/\/ar\/login\?notice=invalidLink$/);
+  expect(new URL(page.url()).origin).toBe("http://127.0.0.1:3010");
+
+  await page.goto("/en/auth/callback?error=access_denied&next=%2Fen%2Freset-password");
+  await expect(page).toHaveURL(/\/en\/reset-password\?notice=recoveryExpired$/);
 });
 test("assessment saves answers, changes questions and scores submission", async ({
   page,

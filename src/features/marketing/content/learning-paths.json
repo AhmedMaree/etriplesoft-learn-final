@@ -1,0 +1,49 @@
+[
+  {
+    "role": "end-user",
+    "title": "End User Path",
+    "description": "Suitable for Sales, HR, and Accounting professionals. Focused on navigating Odoo and executing daily business workflows efficiently.",
+    "stages": [
+      "crash-course-odoo-erp",
+      "odoo-user-guide"
+    ]
+  },
+  {
+    "role": "system-admin",
+    "title": "System Admin Path",
+    "description": "For IT staff responsible for keeping an existing instance secure, backed up, and upgraded.",
+    "stages": [
+      "crash-course-odoo-erp",
+      "odoo-system-admin"
+    ]
+  },
+  {
+    "role": "implementer",
+    "title": "Implementer Path",
+    "description": "For consultants and analysts responsible for configuring Odoo for clients end to end.",
+    "stages": [
+      "crash-course-odoo-erp",
+      "odoo-system-admin",
+      "odoo-implementation"
+    ]
+  },
+  {
+    "role": "developer",
+    "title": "Developer Path",
+    "description": "For engineers extending Odoo with custom modules and integrations.",
+    "stages": [
+      "crash-course-odoo-erp",
+      "odoo-development",
+      "python-development-for-odoo"
+    ]
+  },
+  {
+    "role": "automation",
+    "title": "Automation Specialist Path",
+    "description": "For teams automating repetitive workflows across Odoo with rules, triggers, and integrations.",
+    "stages": [
+      "crash-course-odoo-erp",
+      "odoo-automation"
+    ]
+  }
+]

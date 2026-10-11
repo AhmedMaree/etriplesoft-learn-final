@@ -21,7 +21,7 @@ export function Certificates() {
             <h2>
               Ahmed Salah{" "}
               <Link
-                aria-label="Edit profile"
+                aria-label={t("editProfile")}
                 className="icon-button"
                 href="/settings"
               >
@@ -130,7 +130,7 @@ export function Certificates() {
                   <div>
                     <strong>{c.name}</strong>
                     <small>
-                      <span>Completed</span> Â·{" "}
+                      <span>Completed</span> ·{" "}
                       {["Mar 10, 2024", "Feb 12, 2024", "Jan 20, 2024"][i]}
                     </small>
                   </div>

@@ -51,6 +51,7 @@ export function LearnerSidebar({
   onClose: () => void;
 }) {
   const t = useTranslations("navigation");
+  const common = useTranslations("common");
   const notify = useDemoToast();
 
   return (
@@ -58,12 +59,12 @@ export function LearnerSidebar({
       {mobileOpen && (
         <button
           className="scrim"
-          aria-label="Close navigation"
+          aria-label={common("closeNavigation")}
           onClick={onClose}
         />
       )}
       <aside className={`sidebar ${mobileOpen ? "open" : ""}`}>
-        <Link className="brand" href="/">
+        <Link className="brand" href="/overview">
           <Image
             src="/assets/logo-display.svg"
             alt="ETripleSoft Learn"
@@ -73,7 +74,7 @@ export function LearnerSidebar({
         </Link>
         <button
           className="mobile-close icon-button"
-          aria-label="Close navigation"
+          aria-label={common("closeNavigation")}
           onClick={onClose}
         >
           <X />
@@ -99,7 +100,7 @@ export function LearnerSidebar({
           <p>{t("appCopy")}</p>
           <button
             className="store"
-            onClick={() => notify("The mobile app is not available in this demo.")}
+            onClick={() => notify(common("mobileAppUnavailable"))}
           >
             <svg viewBox="0 0 24 28" aria-hidden="true">
               <path
@@ -113,7 +114,7 @@ export function LearnerSidebar({
           </button>
           <button
             className="store"
-            onClick={() => notify("The mobile app is not available in this demo.")}
+            onClick={() => notify(common("mobileAppUnavailable"))}
           >
             <Play fill="#00d591" color="#00b7ff" />
             <span>

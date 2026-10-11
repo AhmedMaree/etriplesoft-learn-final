@@ -13,6 +13,7 @@ import { useTranslations, useFormatter } from 'next-intl';
 
 export function Payment() {
   const t = useTranslations("checkout");
+  const common = useTranslations("common");
   const format = useFormatter();
   const usd = (amount: number) => format.number(amount, {
     style: "currency", currency: "USD", minimumFractionDigits: 2,
@@ -235,27 +236,27 @@ export function Payment() {
         </Panel>
         <Button type="submit" className="pay-button">
           <Lock />
-          Pay with Kashier <ArrowRight />
+          {t("payWithKashier")} <ArrowRight />
         </Button>
         <p className="terms">
-          By completing this purchase, you agree to our
+          {t("termsAgreement")}
           <br />
           <button
             type="button"
             onClick={() =>
-              notify("Terms of Service are not configured for this local demo.")
+              notify(common("termsUnavailable"))
             }
           >
-            Terms of Service
+            {common("footerTerms")}
           </button>{" "}
-          and{" "}
+          {t("and")}{" "}
           <button
             type="button"
             onClick={() =>
-              notify("Privacy Policy is not configured for this local demo.")
+              notify(common("privacyUnavailable"))
             }
           >
-            Privacy Policy
+            {common("footerPrivacy")}
           </button>
         </p>
       </aside>

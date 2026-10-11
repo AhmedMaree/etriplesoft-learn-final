@@ -10,7 +10,7 @@ export function LegacyHashRedirect() {
   useEffect(() => {
     const legacyPage = window.location.hash.slice(1);
     if (isDemoRoute(legacyPage)) {
-      const target = legacyPage === "overview" ? "/" : `/${legacyPage}`;
+      const target = `/${legacyPage}`;
       const query = new URLSearchParams(window.location.search);
       query.delete("next");
       const search = query.size > 0 ? `?${query.toString()}` : "";

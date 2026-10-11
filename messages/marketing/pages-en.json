@@ -1,0 +1,464 @@
+{
+  "catalog": {
+    "metaTitle": "Courses",
+    "metaDescription": "Browse practical Odoo and ERP courses, filterable by the role you actually work in.",
+    "eyebrow": "All Courses",
+    "title": "Find the Right Odoo Course for Your Role",
+    "lead": "Explore practical Odoo and ERP training designed for end users, system administrators, implementors, automation specialists, and developers.",
+    "imageAlt": "Illustration of the ETripleSoft Learn Odoo course ecosystem",
+    "searchPlaceholder": "Search by course, role, Odoo module, or skill",
+    "searchLabel": "Search courses",
+    "sortBy": "Sort by:",
+    "sortLabel": "Sort courses",
+    "sort": {
+      "relevant": "Most Relevant",
+      "beginner-first": "Beginner First",
+      "advanced-first": "Advanced First",
+      "shortest-duration": "Shortest Duration",
+      "name": "Course Name"
+    },
+    "results": "{n, plural, one {{count} Course} other {{count} Courses}}",
+    "noResults": "No Courses Found",
+    "newTitle": "New to Odoo?",
+    "newText": "Start with the Odoo User Guide or Crash Course Odoo ERP to understand the platform and its connected business workflows.",
+    "newCta": "View Beginner Courses",
+    "chooseRole": "Choose Your Role",
+    "allRoles": "All Roles",
+    "filterByRole": "Filter by role",
+    "emptyTitle": "No courses found",
+    "emptyText": "Try another keyword or clear the selected role filter.",
+    "clear": "Clear Filters",
+    "view": "View Course",
+    "preview": "Preview Course",
+    "certificate": "Certificate"
+  },
+  "course": {
+    "notFound": "Course Not Found",
+    "available": "Available",
+    "comingSoon": "Coming Soon",
+    "level": "Level",
+    "duration": "Duration",
+    "format": "Format",
+    "instructor": "Instructor",
+    "language": "Language",
+    "modules": "Modules",
+    "certificate": "Certificate",
+    "included": "Included",
+    "viewCurriculum": "View Curriculum",
+    "thumbnailAlt": "{title} course thumbnail",
+    "sections": "Course sections",
+    "nav": {
+      "overview": "Overview",
+      "outcomes": "Outcomes",
+      "curriculum": "Curriculum",
+      "who": "Who It’s For",
+      "certificate": "Certificate",
+      "instructor": "Instructor",
+      "faq": "FAQ"
+    },
+    "overview": "Overview",
+    "outcomes": "What You Will Be Able to Do",
+    "curriculum": "Curriculum",
+    "moduleCount": "{n, plural, one {{count} module} other {{count} modules}}",
+    "whoFor": "Who This Course Is For",
+    "prerequisites": "Prerequisites",
+    "practical": "Practical Work Included",
+    "certificateTitle": "Certificate of Completion",
+    "certificateLaunch": "When {title} launches, every learner who finishes the full course receives an ETripleSoft Learn certificate of completion.",
+    "certificateNow": "Finish {title} and you receive an ETripleSoft Learn certificate of completion for the track.",
+    "certificatePoints": [
+      "Awarded after you complete every module in the curriculum",
+      "Confirms the practical work and capstone scenario you finished",
+      "Lists the Odoo areas the course covered, so employers see the scope",
+      "Shareable on your CV and professional profiles"
+    ],
+    "certificateSidebar": "Certificate of completion when you finish the course",
+    "instructorTitle": "Instructor",
+    "faq": "Frequently Asked Questions",
+    "related": "Related Courses",
+    "modulesCovered": "Odoo Modules Covered",
+    "guarantee": "7-working-day course-fit guarantee. Request a refund or one-time course exchange if the course is not suitable for you and has not been fully completed.",
+    "viewPolicy": "View policy",
+    "opensNewTab": "(opens in a new tab)",
+    "startLearning": "Start Learning",
+    "exploreCourse": "Explore Course",
+    "askLaunch": "Ask About Launch",
+    "finalKicker": "Go Further. Go Technical.",
+    "finalTitle": "Build {title} Skills You Can Apply in the Real World",
+    "finalText": "Contact ETripleSoft Learn for the latest course schedule, final curriculum, delivery format, and enrollment information.",
+    "exploreAll": "Explore All Courses"
+  },
+  "paths": {
+    "metaTitle": "Learning Paths",
+    "metaDescription": "Role-based Odoo learning paths — a sequence of courses built for how you actually work.",
+    "eyebrow": "Role-Based Learning",
+    "title": "Find the Odoo Path That Matches Your Role",
+    "lead": "From your first Odoo login to building custom modules and automated workflows, choose a learning direction based on the work you want to do.",
+    "tabs": "Learning path roles",
+    "list": "Learning paths",
+    "summary": "{level} • {hours}+ Hours • {courses}",
+    "courses": "{n, plural, one {{count} Course} other {{count} Courses}}",
+    "fullPath": "The Full Path",
+    "viewCourse": "View Course",
+    "note": "Choose the role that matches your goals. You do not need to complete every path.",
+    "explore": "Explore path",
+    "pathAlt": "{title} learning path",
+    "details": "{title} details"
+  },
+  "modules": {
+    "metaTitle": "Explore Odoo Modules",
+    "metaDescription": "Explore Odoo business modules, understand their core workflows and discover practical ETripleSoft Learn courses related to Sales, CRM, Accounting, Inventory and more.",
+    "eyebrow": "Explore Odoo",
+    "title": "Understand the Odoo Business Ecosystem",
+    "lead": "Explore the business workflows behind Odoo’s core applications and discover the courses and learning roles connected to each module.",
+    "explorerEyebrow": "Module Explorer",
+    "explorerTitle": "Explore Odoo by Business Function",
+    "explorerLead": "Select a module to understand its workflow, practical skills and related ETripleSoft Learn courses.",
+    "list": "Odoo modules",
+    "details": "Selected module details",
+    "bigPictureTitle": "See how each module fits into the bigger picture",
+    "bigPictureText": "Begin with the area closest to your day-to-day work, then follow its workflow to see what happens next. Odoo carries information between teams, turning customer conversations into orders, deliveries and invoices without repeated data entry.",
+    "workflow": "Core Workflow",
+    "skills": "Skills You Will Develop",
+    "roles": "Related Roles",
+    "courses": "Related Courses",
+    "exploreRelated": "Explore Related Courses"
+  },
+  "about": {
+    "metaTitle": "About Us",
+    "metaDescription": "Learn how ETripleSoft Learn turns real Odoo implementation experience into practical, role-based education for future ERP professionals.",
+    "eyebrow": "About ETripleSoft Learn",
+    "title": "We Build Practical Odoo Skills for Real Careers",
+    "lead": "ETripleSoft Learn is built by working Odoo implementation professionals. We transform practical experience from real business systems into structured, role-based learning for aspiring ERP professionals.",
+    "exploreCourses": "Explore Our Courses",
+    "meetTeam": "Meet the Team",
+    "ecosystem": {
+      "label": "How the ETripleSoft Learn ecosystem fits together",
+      "center": "Odoo",
+      "analysis": "Analysis",
+      "implementation": "Implementation",
+      "development": "Development",
+      "content": "Content"
+    },
+    "partner": "Odoo Gold Partner • MENA Region",
+    "storyTitle": "Born From the Gap Between the Classroom and the Client Site",
+    "storyLead": "ETripleSoft Learn exists because traditional technology education often stops before learners understand what real ERP implementation requires.",
+    "storySteps": ["Requirement", "Implementation", "Content", "Practice", "Skills"],
+    "pillars": [
+      "Mission: Bridge Theory and Deployment",
+      "Vision: Become a Leading MENA Learning Destination",
+      "Approach: Learn Through Practice and Simulation"
+    ],
+    "whyTitle": "Why Learn With Us",
+    "benefits": [
+      "Built by Professionals",
+      "Role-Based Learning",
+      "Hands-On Practice",
+      "Industry-Relevant Scenarios",
+      "Career-Focused Progression",
+      "Regional Experience"
+    ],
+    "footprintTitle": "Our Regional Footprint",
+    "regions": [
+      { "title": "Egypt", "note": "(foundation)" },
+      { "title": "United Arab Emirates", "note": "(context)" },
+      { "title": "Saudi Arabia", "note": "(workflows)" }
+    ],
+    "teamTitle": "Meet the Team",
+    "leadershipTitle": "Leadership",
+    "professionalTitle": "Professional Team",
+    "leadership": [
+      {
+        "name": "Khaled Ahmed",
+        "role": "Chief Executive Officer",
+        "bio": "Leads the learning vision and ensures every training track is aligned with real business outcomes and career growth."
+      },
+      {
+        "name": "Mahmoud Elfeky",
+        "role": "Chief Technology Officer",
+        "bio": "Specializes in business analysis, process mapping, and implementation strategy for companies adopting ERP systems."
+      },
+      {
+        "name": "Toka Ahmed",
+        "role": "Learning and Development Officer",
+        "bio": "Designs the learning experience end to end — course structure, learner progression, and content quality — so every track stays clear, practical, and aligned with real career goals."
+      }
+    ],
+    "professionals": [
+      {
+        "name": "Ahmed Emad",
+        "role": "Odoo Consultant",
+        "bio": "Transforms complex workflows into clear learning journeys that help students understand systems with confidence."
+      },
+      {
+        "name": "Ibrahim",
+        "role": "Odoo Developer Instructor",
+        "bio": "Builds and extends custom Odoo modules, and teaches the framework end to end — models, views, actions, integrations, and the debugging habits that keep code maintainable."
+      },
+      {
+        "name": "Emad",
+        "role": "Odoo Developer Instructor",
+        "bio": "Designs course flow, learner engagement, and content structure to make every track smooth, focused, and practical."
+      },
+      {
+        "name": "Hassan",
+        "role": "Odoo Developer Instructor",
+        "bio": "Guides project delivery, client workflows, and implementation standards based on real company operations."
+      },
+      {
+        "name": "Hager",
+        "role": "Odoo Implementer Instructor",
+        "bio": "Works on approvals, workflow logic, notifications, and process optimization for smarter ERP operations."
+      },
+      {
+        "name": "Maram",
+        "role": "Odoo Implementer Instructor",
+        "bio": "Analyzes operational challenges and helps translate business requirements into clear ERP learning and implementation concepts."
+      },
+      {
+        "name": "Menna",
+        "role": "Content Editor",
+        "bio": "Supports learners throughout their journey and helps them stay engaged, guided, and connected to the right learning path."
+      }
+    ],
+    "valuesTitle": "Our Core Values",
+    "values": ["Practicality", "Clarity", "Professional Relevance", "Continuous Growth"],
+    "ctaTitle": "Ready to Learn From Professionals Working in the Real Market?",
+    "ctaButton": "Start Learning Now"
+  },
+  "contact": {
+    "metaTitle": "Contact Us",
+    "metaDescription": "Get in touch with ETripleSoft Learn about courses, learning paths, or partnering with our team on Odoo training.",
+    "eyebrow": "Get in Touch",
+    "title": "Contact ETripleSoft Learn",
+    "lead": "Questions about a course, a learning path, or training your team? Reach out and we’ll point you in the right direction.",
+    "office": "Office",
+    "phone": "Phone",
+    "email": "Email",
+    "response": "Response Time",
+    "responseValue": "We typically reply within 1–2 business days",
+    "quickEyebrow": "Looking for something specific?",
+    "quickTitle": "Here’s the fastest way to find it",
+    "quick": [
+      { "before": "Browse our full course catalog on the", "link": "Courses", "after": "page." },
+      { "before": "Not sure where to start? Check", "link": "Learning Paths", "after": "for a role-based roadmap." },
+      { "before": "Common questions about enrollment and course access are answered on our", "link": "Help Center", "after": "." }
+    ],
+    "emailCta": "Email Our Team"
+  },
+  "help": {
+    "metaTitle": "Help Center",
+    "metaDescription": "Answers to common questions about enrolling in, accessing, and completing ETripleSoft Learn courses.",
+    "eyebrow": "Support",
+    "title": "Help Center",
+    "lead": "Answers to the questions learners ask most about enrolling in and completing ETripleSoft Learn courses.",
+    "items": [
+      {
+        "question": "How do I start a course?",
+        "answer": "Open any course page and select “Start Learning.” Published courses open directly in our course platform where you can begin the lessons right away."
+      },
+      {
+        "question": "Do I need any prior Odoo experience?",
+        "answer": "It depends on the course. Beginner courses like the Odoo User Guide and Crash Course Odoo ERP assume no prior experience. Advanced tracks list their recommended preparation on each course page."
+      },
+      {
+        "question": "Are courses self-paced?",
+        "answer": "Yes. Each course is organized into modules and lessons you can work through at your own pace, with a clear estimated duration shown on the course page."
+      },
+      {
+        "question": "Do courses include a certificate?",
+        "answer": "Yes. Every course ends with a certificate of completion, awarded once you finish all modules in the curriculum."
+      },
+      {
+        "question": "What if a course is marked “Coming Soon”?",
+        "answer": "Coming-soon courses are still in development. You can preview the planned curriculum on the course page and contact us to ask about the launch."
+      },
+      {
+        "question": "I have a question about a specific lesson. Who do I contact?",
+        "answer": "Reach out to our team through the Contact page and mention the course and lesson — we’ll route your question to the right instructor."
+      },
+      {
+        "question": "How do I know which course or path is right for me?",
+        "answer": "Visit Learning Paths for a role-based roadmap (End User, System Administrator, Implementer, Developer, or Automation Specialist), or use the role filter on the Courses page."
+      }
+    ],
+    "stillTitle": "Still need help?",
+    "stillText": "Our team is happy to answer questions we haven’t covered here.",
+    "stillCta": "Contact Our Team"
+  },
+  "legal": {
+    "eyebrow": "Legal",
+    "updated": "Last updated: {date}",
+    "contactTitle": "Contact Us",
+    "related": "Related policies",
+    "privacy": {
+      "metaTitle": "Privacy Policy",
+      "metaDescription": "How ETripleSoft Learn collects, uses, and protects your information.",
+      "title": "Privacy Policy",
+      "lead": "This policy explains how ETripleSoft Learn handles information collected through this website.",
+      "sections": [
+        {
+          "title": "Information We Collect",
+          "body": "When you contact us, subscribe for updates, or start a course, we may collect information such as your name, email address, and any details you choose to share with us. If a course is hosted on a third-party platform (such as our Odoo-based course platform), that platform’s own privacy practices also apply to your activity there."
+        },
+        {
+          "title": "How We Use Information",
+          "body": "We use the information we collect to respond to inquiries, provide access to course content, improve our courses and website, and send updates about new courses or learning paths — only where you’ve asked to hear from us."
+        },
+        {
+          "title": "Cookies and Similar Technologies",
+          "body": "Our website may use basic cookies or similar local storage to remember preferences and understand how the site is used. You can control cookies through your browser settings at any time."
+        },
+        {
+          "title": "Third-Party Services",
+          "body": "Course content is delivered through our Odoo-based learning platform, and some pages may link to third-party services (such as social media). We are not responsible for the privacy practices of external sites you visit from links on our website."
+        },
+        {
+          "title": "Data Security",
+          "body": "We take reasonable steps to protect the information you share with us. No method of transmission or storage is completely secure, but we work to use practices appropriate to the type of information we handle."
+        },
+        {
+          "title": "Your Rights",
+          "body": "You can ask us to access, correct, or delete personal information we hold about you at any time by contacting us directly."
+        },
+        {
+          "title": "Changes to This Policy",
+          "body": "We may update this policy as our courses and platform evolve. Continued use of the site after changes are posted means you accept the updated policy."
+        }
+      ],
+      "contact": "Questions about this policy can be sent to"
+    },
+    "terms": {
+      "metaTitle": "Terms of Service",
+      "metaDescription": "The terms that govern your use of the ETripleSoft Learn website and courses.",
+      "title": "Terms of Service",
+      "lead": "These terms govern your use of the ETripleSoft Learn website.",
+      "sections": [
+        {
+          "title": "Acceptance of Terms",
+          "body": "By using this website you agree to these terms. If you do not agree, please do not use the site."
+        },
+        {
+          "title": "Use of the Site",
+          "body": "You may browse courses, learning paths, and related content for your own personal or organizational learning purposes. You agree not to misuse the site, attempt to disrupt its operation, or copy course content for redistribution."
+        },
+        {
+          "title": "Course Content and Access",
+          "body": "Course lessons are delivered through our Odoo-based course platform. Selecting “Start Learning” on a course page will take you to that platform to begin the course. Access, availability, and any course-specific terms on that platform are governed by its own terms of use."
+        },
+        {
+          "title": "Intellectual Property",
+          "body": "All course materials, text, graphics, and branding on this website are the property of ETripleSoft Learn or its licensors, unless otherwise noted, and may not be reproduced without permission."
+        },
+        {
+          "title": "Coming-Soon Courses",
+          "body": "Courses marked “Coming Soon” are in development. Curriculum details shown for these courses are a planned preview and may change before launch."
+        },
+        {
+          "title": "Disclaimers",
+          "body": "Courses are provided for educational purposes. While we aim for accuracy, we make no guarantee that course content is error-free or that it will meet every learner’s specific requirements."
+        },
+        {
+          "title": "Limitation of Liability",
+          "body": "To the extent permitted by law, ETripleSoft Learn is not liable for indirect or incidental damages arising from your use of this website or its linked course platform."
+        },
+        {
+          "title": "Changes to These Terms",
+          "body": "We may update these terms from time to time. Continued use of the site after changes are posted means you accept the updated terms."
+        }
+      ],
+      "contact": "Questions about these terms can be sent to"
+    },
+    "refund": {
+      "metaTitle": "Refund and Course Exchange Policy",
+      "metaDescription": "Read ETripleSoft Learn’s seven-working-day course-fit guarantee, refund process, course exchange terms, and customer rights.",
+      "title": "Refund and Course Exchange Policy",
+      "updated": "Last updated: September 6, 2026",
+      "intro": "A clear seven-working-day course-fit guarantee for online course purchases, alongside every mandatory right available under Egyptian law.",
+      "summary": [
+        { "title": "7 working days", "text": "Request a refund or one-time exchange." },
+        { "title": "A fair course-fit review", "text": "Partial viewing alone does not block a request." },
+        { "title": "Legal rights preserved", "text": "Mandatory Egyptian consumer rights still apply." }
+      ],
+      "contents": "On this page",
+      "sections": [
+        {
+          "title": "Seven-Working-Day Course-Fit Guarantee",
+          "paragraphs": [
+            "A learner may request a full refund or a one-time course exchange within seven working days from the purchase date, provided the learner has not fully benefited from or completed the course.",
+            "A course may be considered fully used when all or substantially all course content has been completed or accessed, the final assessment has been completed, or a completion certificate has been issued.",
+            "Watching only part of a course does not automatically prevent a learner from submitting a request. ETripleSoft Learn may review available course activity to determine whether the course was fully consumed or whether the policy was misused. Where reliable activity evidence is unavailable, the request will be reviewed manually and will not be rejected on an assumed viewing percentage."
+          ]
+        },
+        {
+          "title": "Course Exchange",
+          "paragraphs": [
+            "Within the seven-working-day guarantee period, a learner may request a one-time exchange for another available course. Access to the original course ends after the exchange is completed.",
+            "If the replacement course costs more, the learner pays the difference. If it costs less, our support team will confirm in writing how the difference will be handled before completing the exchange; the current platform does not publish an automated credit process.",
+            "An exchange is an additional option. It does not replace a refund where the learner is legally entitled to one."
+          ]
+        },
+        {
+          "title": "Defective, Inaccessible or Misdescribed Courses",
+          "intro": "The normal time and completion limitations do not apply when:",
+          "bullets": [
+            "The learner did not receive course access.",
+            "The course is inaccessible because of a platform problem.",
+            "Essential advertised course content is missing.",
+            "The course is materially different from its published description.",
+            "ETripleSoft Learn cancelled the course.",
+            "The customer was charged more than once.",
+            "A refund or another remedy is required under applicable Egyptian law."
+          ],
+          "paragraphs": [
+            "In these situations, ETripleSoft Learn may restore access, correct the problem, provide the course again, exchange the course, or issue a refund as appropriate."
+          ]
+        },
+        {
+          "title": "Refund Method and Timing",
+          "paragraphs": [
+            "Eligible refunds are returned through the original payment method used with Kashier. ETripleSoft Learn reviews and decides refund requests; Kashier processes the payment refund.",
+            "ETripleSoft Learn does not charge the learner an administrative refund fee. An approved refund will be initiated within seven calendar days after the request is reviewed and approved. The learner’s bank or card issuer may need additional processing time before the amount appears in the account."
+          ]
+        },
+        {
+          "title": "How to Submit a Request",
+          "intro": "Email our support team and include:",
+          "bullets": [
+            "Your full name.",
+            "Your account email address.",
+            "The order or transaction number.",
+            "The course name.",
+            "The purchase date.",
+            "Whether you are requesting a refund or an exchange.",
+            "A short explanation of the problem, when applicable."
+          ],
+          "paragraphs": [
+            "The website does not currently have a request-submission backend, so email is the working request channel. Sending an email does not mean the request has already been approved."
+          ]
+        },
+        {
+          "title": "Statutory Rights",
+          "callout": "Nothing in this policy excludes or limits any mandatory rights available to customers under Egyptian consumer-protection law. Requests submitted outside the seven-working-day course-fit guarantee will still be reviewed where the purchased service was defective, unavailable, not as described, or where another remedy is required by applicable law."
+        },
+        {
+          "title": "Business Contact Information",
+          "paragraphs": []
+        }
+      ],
+      "emailCta": "Email a refund or exchange request",
+      "emailSubject": "Refund or course exchange request",
+      "business": {
+        "registeredBusinessName": "Registered business name",
+        "tradingName": "Platform / trading name",
+        "address": "Business address",
+        "supportEmail": "Support email",
+        "telephone": "Telephone",
+        "website": "Website",
+        "commercialRegistration": "Commercial registration",
+        "taxRegistration": "Tax registration",
+        "notPublished": "Not currently published"
+      }
+    }
+  }
+}

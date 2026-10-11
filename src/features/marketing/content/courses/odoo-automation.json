@@ -1,0 +1,73 @@
+{
+  "slug": "odoo-automation",
+  "title": "Odoo Automation",
+  "image": "/marketing/odoo-automation.png",
+  "tagline": "Learn to reduce repetitive work with automated actions, approvals, alerts, scheduled tasks, n8n, and APIs.",
+  "description": [
+    "This course is designed for learners who want to reduce repetitive work, improve operational speed, and build more dependable processes inside Odoo. It connects native Odoo automation with external workflow tools and practical integration thinking.",
+    "You will explore how triggers, conditions, approvals, scheduled actions, notifications, APIs, and n8n can work together without losing control of the underlying business process."
+  ],
+  "status": "coming-soon",
+  "badge": "None",
+  "level": "Intermediate",
+  "levelLabel": "Intermediate–Advanced",
+  "language": "English",
+  "durationHours": 0,
+  "durationLabel": "4–6 Weeks",
+  "track": "Automation Specialist",
+  "format": "Online / Blended",
+  "externalCourseUrl": null,
+  "price": null,
+  "roles": ["automation", "implementer", "system-admin"],
+  "moduleTags": ["Automation", "Workflows"],
+  "coveredModuleSlugs": ["sales", "crm", "inventory", "purchase", "human-resources"],
+  "learningOutcomes": [
+    "Identify which processes are suitable for automation and which require human control",
+    "Configure Odoo triggers, automated actions, approvals, alerts, and recurring tasks",
+    "Map and build a basic integration between Odoo, n8n, and an external service",
+    "Document, test, troubleshoot, and present a complete automation workflow"
+  ],
+  "whoItsFor": [
+    "System admins improving internal workflows, rules, permissions, and recurring system tasks",
+    "Implementors designing smarter processes that match real requirements and approval structures",
+    "Operations teams reducing repetitive work and making cross-team handoffs more reliable",
+    "ERP support automating follow-ups, alerts, task routing, and recurring support operations"
+  ],
+  "requirements": [
+    "Comfortable navigation across common Odoo applications and records",
+    "Basic understanding of CRM, Sales, Inventory, or another connected business workflow",
+    "Familiarity with users, activities, notifications, and system settings",
+    "No advanced AI knowledge is required; API basics are helpful but introduced in the course"
+  ],
+  "curriculum": [
+    { "number": "01", "title": "Automation Foundations in Odoo", "description": "Understand what should be automated, how automation affects business control, and how to map a manual process before changing it." },
+    { "number": "02", "title": "Automated Actions and Trigger Logic", "description": "Configure record-based triggers, conditions, field updates, task creation, emails, and controlled server actions." },
+    { "number": "03", "title": "Approvals and Business Routing", "description": "Design multi-step approvals, ownership rules, escalation paths, and dependable routing between teams and departments." },
+    { "number": "04", "title": "Scheduled Actions and Recurring Operations", "description": "Automate reminders, recurring checks, follow-ups, synchronizations, and time-based operational tasks." },
+    { "number": "05", "title": "n8n and API Integration Foundations", "description": "Connect Odoo to external services, understand webhooks and REST APIs, and build readable multi-system workflows in n8n." },
+    { "number": "06", "title": "Introductory AI-Assisted Workflows", "description": "Use AI carefully for classification, summarization, and routing while keeping validation, privacy, and human review in the workflow." },
+    { "number": "07", "title": "Capstone Automation Scenario", "description": "Redesign a complete operational process using Odoo actions, approval logic, notifications, an n8n connection, and an appropriate AI-assisted step." }
+  ],
+  "curriculumNotice": "Planned curriculum — module titles and lesson order may change before release.",
+  "projects": [
+    { "title": "Purchase Approval Flow", "description": "Route purchase requests according to value, department, and approval responsibility, with alerts and escalation." },
+    { "title": "Smart Support Routing", "description": "Classify incoming requests, assign the correct owner, schedule follow-up activities, and keep users informed." }
+  ],
+  "relatedCourseSlugs": ["odoo-system-admin", "odoo-implementation"],
+  "faq": [
+    { "question": "Is this course available now?", "answer": "Not yet. The course is in development, and the final release date will be announced when the curriculum and training environment are ready." },
+    { "question": "Do I need programming experience?", "answer": "Advanced programming is not required for the planned foundation track. Comfort with Odoo workflows is more important. API and integration concepts will be introduced progressively." },
+    { "question": "Is this an AI development course?", "answer": "No. AI is introduced as one optional workflow component for tasks such as classification and summarization. The main focus remains reliable Odoo process automation." },
+    { "question": "Will the curriculum change before release?", "answer": "It may. The modules shown on this page are a planned preview and can be refined based on technical testing, learner needs, and the final delivery format." }
+  ],
+  "instructor": {
+    "name": "Hager",
+    "role": "Odoo Implementer Instructor",
+    "bio": "Works on approvals, workflow logic, notifications, and process optimization for smarter ERP operations.",
+    "initials": "HG"
+  },
+  "studentCount": 0,
+  "rating": 0,
+  "resourcesCount": 0,
+  "certificate": true
+}

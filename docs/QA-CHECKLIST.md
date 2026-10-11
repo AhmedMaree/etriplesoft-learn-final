@@ -41,3 +41,9 @@ Representative locale routes covered by the route matrix: `/en`, `/ar`, `/en/cou
 - Manual locale switch checks passed in both directions for overview, courses, settings, assessment, and signup; the courses query string was preserved.
 - Typecheck, lint, and production build passed.
 - This run checked responsive overflow and route rendering, not screenshot parity at every width. Arabic font fallback/glyph coverage is not verified, and a hardcoded-string sweep found English UI copy remaining on settings, calendar, checkout, certificate summary, and some accessible control labels. Keep the related visual and translation checklist items open until those are reviewed.
+
+## Dynamic signup verification (2026-10-07)
+
+- Playwright passed 15 tests. The localized route matrix checked both `/en/sign-up` and `/ar/sign-up` at 320, 375, 430, 768, 1024, 1280, 1440, and 1920px for direction, rendering, and horizontal overflow; signup tests covered student/professional/company field switching, hidden-field omission, password validation, and Arabic interaction.
+- Visual review covered the English desktop card and English/Arabic mobile forms. Typecheck, lint, and production build passed.
+- `learner_profiles` migration `20261007110000` was applied to linked DEV and database types regenerated. Hosted RLS behavior remains pending because this workspace lacks the service-role key; local pgTAP could not connect to a local Supabase database, and linked DEV lacks pgTAP.
