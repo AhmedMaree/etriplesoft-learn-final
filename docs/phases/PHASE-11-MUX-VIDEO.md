@@ -2,9 +2,9 @@
 
 ## 1. Status
 
-PLANNED
+IN PROGRESS
 
-Evidence: No Mux dependency, asset metadata table or signing endpoint exists. Current course detail uses static artwork.
+Evidence (2026-10-12): Phase 08 and Phase 10 are VERIFIED. The user approved a company-owned Mux account, separate Development and Production environments, signed playback for protected lessons, uploads by authorized admins/assigned instructors, and reviewed English/Arabic captions when required. Local Mux credentials and signing key validate without displaying values. A signed test-mode direct upload was created and cancelled successfully. Application routes, a local migration and focused signature tests are implemented. Local PostgreSQL currently accepts health checks but Supabase CLI migration connections terminate unexpectedly; database tests, real asset ready/error/webhook receipts, hosted DEV review, and deployment settings remain pending. Hosted DEV and deployment settings have not been changed.
 
 ## 2. Goal
 
@@ -24,13 +24,14 @@ Dependencies are mandatory verification gates, not implementation suggestions. H
 
 ## 5. Current Repository State
 
-No Mux dependency, asset metadata table or signing endpoint exists. Current course detail uses static artwork.
+The current course detail still uses static artwork. Phase 11 adds Mux server integration and metadata only; the learner player remains Phase 12.
 
 ## 6. In Scope
 
-- Store locale-specific or explicitly neutral video metadata
-- Process authenticated provider asset lifecycle events
-- Issue short-lived signed playback after authoritative entitlement checks
+- Store explicitly language-neutral lesson video metadata
+- Process authenticated, idempotent provider upload/asset lifecycle events
+- Issue five-minute signed playback tokens after authoritative entitlement checks
+- Require configured English/Arabic captions to be reviewed before issuing playback
 
 ## 7. Out of Scope
 
@@ -40,11 +41,11 @@ Progress credit, learner player UI and Supabase video-byte storage.
 
 APPROVED: follow repository requirements and the accepted domain architecture, not assumptions from demo UI.
 
-OPEN / DEFERRED: D13; D15 — see [decision register](OPEN-DECISIONS.md). The user confirmed on 2026-10-11 that English and Arabic course versions use the same video assets; model shared assets as explicitly language-neutral while keeping playback authorization server-side.
+APPROVED: D13. Mux decisions under D15 were approved 2026-10-12: company-owned account; separate Development and Production environments; signed protected playback; uploads by current admins and assigned instructors; and reviewed English/Arabic captions when required. English and Arabic lessons share a language-neutral video asset. Kashier/OpenAI decisions under D15 remain open for their phases. Phase 11 uses five-minute playback tokens; an issued token stays usable until expiry, so the maximum ordinary revocation delay is five minutes.
 
 ## 9. Database Work
 
-lesson_videos with lesson FK, provider asset uniqueness, exact-locale/neutral exclusivity, states and durations; provider metadata server-only. Restrict deletion with progress history.
+`lesson_videos` stores a lesson FK, explicit neutral locale, unique Mux upload/asset/signed-playback IDs, lifecycle state and safe technical metadata. `lesson_video_captions` stores only English/Arabic track IDs and review state. `mux_webhook_events` stores event IDs/types for idempotency without retaining raw payloads. Direct table access is denied; use narrow authenticated RPCs and a service-role-only webhook RPC. Restrict deletion with history.
 
 ## 10. RLS / Authorization
 
@@ -52,7 +53,7 @@ Anonymous: published, non-sensitive exact-locale catalog/verification projection
 
 ## 11. Backend / Server Work
 
-Server-only provider adapter, authenticated upload workflow and verified idempotent webhook handling; short-lived token issuance and revocation policy.
+Server-only Mux adapter, authenticated direct upload workflow, five-minute signed token issuance, and raw-body signature-verified idempotent webhook handling. The learner player and progress tracking are explicitly excluded.
 
 ## 12. Frontend Work
 
@@ -95,11 +96,12 @@ Bound list queries and paginate; measure query counts and avoid per-record N+1. 
 
 ## 19. Automated Verification
 
-- Provider sandbox asset upload/ready/error and duplicate-event tests
-- Signed playback succeeds only for entitled published locale
-- Token expiry, revocation window and unsupported locale asset tests
+- Provider Development asset upload/ready/error and duplicate-event tests
+- Signed playback succeeds only for actively enrolled users and published exact locales
+- Token expiry, five-minute revocation window and unsupported locale asset tests
+- Required captions block playback until matching English/Arabic track review is recorded
 
-Implementation baseline: `npm run typecheck`, `npm run lint`, `npm run build`; UI behavior: `npm test -- tests/learning.spec.ts` plus new targeted cases. These commands exist today; future cases described here do not yet exist. No standalone unit-test script exists: add focused cases using the agreed repository test approach, and document the exact command when added.
+Implementation baseline: `npm run typecheck`, `npm run lint`, `npm run build`; run `npm run test:mux-signatures` and `npm run db:test` for the new signature/DB cases. Real Mux Development upload and webhook receipts remain required for provider verification.
 
 Database/RLS: extend `supabase/tests/database/foundation_rls.sql` or new domain SQL suites and run `npm run db:test` in disposable local/CI Supabase. Extend `scripts/validate-hosted-rls.mjs` or a domain validator for hosted DEV and run the documented command; today `npm run db:test:hosted` covers identity only, so it cannot certify a new domain. Verify DEV target and supply credentials securely before any mutating test. Both policy behavior and constraint/transaction coverage are mandatory; environment unavailability is a blocker, not a pass.
 
@@ -136,6 +138,17 @@ Verify uniqueness, parent/owner relationships, ordering, exact-locale translatio
 
 Record date, operator, commit plus dirty diff/artifact hash, environment, exact commands, exit codes and test counts. Attach phase-specific results from sections 19–22; for UI attach EN/AR screenshots at all eight widths and manual reviewer sign-off. For data attach migration IDs, generated-type comparison and anonymous/owner/cross-user/admin/RPC/storage results. For providers attach redacted sandbox/production receipts, replay/recovery outcomes and configuration evidence. Never include credentials or real learner PII.
 
+### Implementation checkpoint (2026-10-12; not VERIFIED)
+
+- Environment: local Windows workspace, Mux Development credentials; `.env.local` is ignored and contains secrets that are not copied into logs/docs. Mux account read-only API access and local JWT generation/claims both validated. Hosted DEV and deployment settings were not changed.
+- `npm run mux:validate-config` — exit 0; API credentials accepted, signing key accepted, five-minute JWT claims checked. Secret values withheld.
+- `npm run test:mux-dev-upload` — exit 0; test-mode signed direct upload created and cancelled. Provider upload ID and URL withheld; no video bytes uploaded.
+- `npm run test:mux-signatures` — exit 0; 4/4 pass (valid signature, forged signature, modified raw body and stale timestamp).
+- `npm run typecheck` — exit 0. `npm run lint` — exit 0. `npm run build` — exit 0; all four new API routes compiled.
+- `npm.cmd run db:test` — exit 1; Supabase CLI could not connect to local Postgres (`Connection terminated unexpectedly`). Earlier `npx supabase migration up --local` and `migration list --local` attempts failed the same way. The local DB container reports healthy on its health probe, but SQL connections from Supabase CLI/psql did not complete. Therefore the migration is not applied locally and `supabase/tests/database/mux_video.sql` is not run.
+- No real asset-ready/error or signed Mux webhook delivery/replay receipt has been collected. No migration has been applied to Hosted DEV.
+- Revision-bound evidence: Git HEAD `d6ed23a16e0e9709175cee558af36cef72958d22`; SHA-256 `a214f7e3cb9266636e26affd3374b19130ad82842721e8fcf7ef592920a5cf22` over the 14 Phase 11 implementation artifacts (explicit manifest: `.env.example`, package manifests, Mux routes/adapter, generated DB types, migration, pgTAP suite, and three Mux scripts; excludes `.env.local`). The worktree remains dirty with pre-existing user changes; no commit was created.
+
 ## 25. Rollback / Recovery
 
 Disable the affected entry point, preserve records and evidence, and revert only the reviewed application change. Use a forward corrective migration for persisted data; never reset a shared database.
@@ -147,22 +160,22 @@ Update this phase, ../PROJECT-ROADMAP.md, VERIFICATION-MATRIX.md, OPEN-DECISIONS
 ## 27. Completion Gate
 
 PHASE IMPLEMENTED:
-NO
+PARTIAL — local routes and migration authored; local migration application is pending database connectivity
 
 AUTOMATED VERIFICATION:
-NOT RUN
+PARTIAL — Mux configuration validation PASS; test-mode upload/cancel PASS; webhook signature tests 4/4 PASS; TypeScript/lint/build PASS; database suite and asset webhook lifecycle pending
 
 MANUAL VERIFICATION:
 NOT RUN
 
 SECURITY VERIFICATION:
-FAIL
+PARTIAL — route/database authorization and signature tests implemented; DB/RLS execution pending
 
 EN/AR VERIFICATION:
 NOT APPLICABLE
 
 READY TO MARK VERIFIED:
-NO
+NO — provider lifecycle, DB/RLS, hosted DEV approval, and retained revision-bound evidence remain outstanding
 
 READY FOR NEXT PHASE:
 NO

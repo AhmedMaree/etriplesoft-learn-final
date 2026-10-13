@@ -66,8 +66,8 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
               {page === "payment"
                 ? t("checkout.title")
                 : page === "detail-course"
-                  ? `All Courses  ›  ${featuredCourse.name}`
-                  : "All Courses"}
+                  ? `${t("courses.allCourses")}  ›  ${featuredCourse.name}`
+                  : t("courses.allCourses")}
             </span>
           </div>
         ) : (

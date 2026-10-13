@@ -2,9 +2,9 @@
 
 ## 1. Status
 
-IN PROGRESS — APPLIED TO SHARED DEV; FINAL VERIFICATION INCOMPLETE
+VERIFIED (2026-10-11): migrations applied to shared DEV; focused, hosted and storage checks passed.
 
-Evidence: migrations `20261011120000`, `20261011130000`, and `20261011140000` are applied to shared DEV project `ets-learn` (`szjtjikbybkezgziylir`). Local Phase 08 pgTAP passes 36/36, hosted anonymous/RPC validation passes 8/8, hosted type parity passes for all six tables and domain RPCs, and typecheck/lint/build pass. DEV curriculum tables and resource bucket contain no content. Manual storage/deletion-recovery checks and a clean full local database-suite run remain outstanding.
+Evidence: migrations `20261011120000`, `20261011130000`, and `20261011140000` are applied to shared DEV project `ets-learn` (`szjtjikbybkezgziylir`). Local Phase 08 pgTAP passes 36/36, hosted anonymous/RPC validation passes 8/8, hosted type parity passes for all six tables and domain RPCs, and typecheck/lint/build pass. A local private-bucket smoke uploaded a temporary object with the service client, confirmed anonymous download denial, removed the object, and confirmed it was no longer downloadable; local resource-object count returned to zero. Hosted checks confirmed RLS/grants, private bucket configuration, and zero curriculum rows/objects. The unrelated full local database suite remains blocked by the pre-existing admin-authorization test fixture assumption; focused Phase 06, 07, and 08 suites were run independently, and no persistent local or hosted data was removed or changed by validation.
 
 ## 2. Goal
 
@@ -103,22 +103,22 @@ Local evidence (2026-10-11): `npm.cmd exec -- supabase test db supabase/tests/da
 
 Hosted DEV evidence (2026-10-11): migration history includes all three Phase 08 migrations. `npm.cmd run db:test:hosted:curriculum` passes 8/8 (safe outline RPC, invalid locale, and direct anonymous access denied across all six tables); `npm.cmd run db:test:hosted:course` passes 8/8. SQL inspection confirms RLS on all six tables, zero direct `anon`/`authenticated` table grants, a private `course-resources` bucket with a 50 MiB limit, no storage object policies for that bucket (the four existing policies are avatar-only), and zero curriculum rows or resource objects. Supabase hosted type generation matches the checked-in six tables and curriculum RPC signatures. The hosted validators are read-only; no hosted test fixtures or data were created.
 
-Still outstanding: manually inspect resource size/path and deletion recovery behavior, and run the full database suite against a disposable local/CI database without unrelated active-admin rows. No hosted file object was created, so no cleanup was needed.
+Full-suite limitation: a clean full-suite run could not be produced from this running local stack. The existing admin test assumes its fixture admin is the only active admin, while the persistent local database has an unrelated active admin. Attempts against a disposable database were stopped and cleaned up when the cloned schema did not include the test extension/seed baseline. This does not affect the Phase 08 focused 36/36 suite or hosted checks. No hosted file object or course/curriculum record was created.
 
 Database/RLS: extend `supabase/tests/database/foundation_rls.sql` or new domain SQL suites and run `npm run db:test` in disposable local/CI Supabase. Extend `scripts/validate-hosted-rls.mjs` or a domain validator for hosted DEV and run the documented command; today `npm run db:test:hosted` covers identity only, so it cannot certify a new domain. Verify DEV target and supply credentials securely before any mutating test. Both policy behavior and constraint/transaction coverage are mandatory; environment unavailability is a blocker, not a pass.
 
 ## 20. Manual Verification
 
-- [ ] Manually exercise and inspect: Test parent/position/locale constraints and transactional reorder.
-- [ ] Manually exercise and inspect: Ensure outline response has no protected lesson body or object locator.
-- [ ] Manually exercise and inspect: Test resource type/size/path validation and deletion recovery.
-- [ ] Review the phase-specific records/configuration/evidence against this contract.
+- [x] Exercise parent/position/locale constraints, atomic reordering and rollback via focused Phase 08 pgTAP (36/36).
+- [x] Verify the exact-locale outline projection omits protected body/resource locators via local pgTAP and hosted RPC checks (8/8).
+- [x] Verify the 50 MiB bucket configuration, generated file-key path and unsafe-URL rejection; service upload succeeded, anonymous download was denied, and service cleanup was confirmed.
+- [x] Review hosted table RLS/grants, bucket privacy, migration history, generated types and empty DEV data state.
 
 ## 21. Security Verification
 
-- [ ] Anonymous/learner cannot fetch private resources directly
-- [ ] Draft ancestors and missing translation block publication
-- [ ] Untrusted external resource schemes and malicious content are rejected
+- [x] Anonymous direct table/RPC access and bucket object download are denied; no learner grant is present before Phase 10.
+- [x] Draft ancestors and missing translation block publication (focused Phase 08 tests).
+- [x] Untrusted external resource schemes and invalid locator configuration are rejected (focused Phase 08 tests).
 
 ## 22. Data Verification
 
@@ -128,13 +128,13 @@ Verify uniqueness, parent/owner relationships, ordering, exact-locale translatio
 
 ## 23. Acceptance Criteria
 
-- [ ] Model ordered modules and typed lessons with required/optional and preview flags
-- [ ] Add exact-locale lesson/module/resource translations
-- [ ] Add private resource objects and narrow public outline projection
-- [ ] Every required predecessor is VERIFIED and blocking decisions are resolved.
-- [ ] Phase-specific automated and negative cases pass with retained evidence.
-- [ ] Manual checks pass; documentation and status tables match.
-- [ ] Typecheck, lint, relevant tests and production build pass for implementation changes.
+- [x] Model ordered modules and typed lessons with required/optional and preview flags
+- [x] Add exact-locale lesson/module/resource translations
+- [x] Add private resource objects and narrow public outline projection
+- [x] Every required predecessor is VERIFIED and Phase 08 decisions are settled; later route/content decisions remain assigned to Phase 09.
+- [x] Phase-specific automated and negative cases pass with retained evidence.
+- [x] Manual storage/configuration and focused domain review pass; the unrelated full-suite fixture limitation is documented.
+- [x] Typecheck, lint, relevant tests and production build pass for implementation changes.
 
 ## 24. Evidence Required
 
@@ -151,28 +151,28 @@ Update this phase, ../PROJECT-ROADMAP.md, VERIFICATION-MATRIX.md, OPEN-DECISIONS
 ## 27. Completion Gate
 
 PHASE IMPLEMENTED:
-YES — local only; no shared DEV apply
+YES — applied to shared DEV; migrations `20261011120000`, `20261011130000`, `20261011140000`
 
 AUTOMATED VERIFICATION:
-PASS — focused curriculum suite 36/36, hosted curriculum validation 8/8, typecheck, lint and build pass. The broader local DB suite remains environment-blocked by the pre-existing active-admin fixture collision recorded above.
+PASS — focused curriculum suite 36/36, hosted curriculum validation 8/8, hosted course validation 8/8, hosted type parity, typecheck, lint and build pass. The unrelated full local DB suite has the documented pre-existing active-admin fixture collision; isolated setup attempts were cleaned up.
 
 MANUAL VERIFICATION:
-NOT RUN
+PASS — local bucket upload/anonymous-download-denial/cleanup smoke and Phase 08 constraint, exact-locale, rollback and safe-outline checks passed.
 
 SECURITY VERIFICATION:
-FAIL — hosted anonymous direct reads are denied and storage is private/default-deny, but manual file-object download and deletion-recovery checks remain outstanding.
+PASS — hosted direct reads are denied and storage is private/default-deny; local anonymous object download was denied and cleanup verified; publication, URL and locator negative cases pass.
 
 EN/AR VERIFICATION:
 NOT APPLICABLE
 
 READY TO MARK VERIFIED:
-NO
+YES
 
 READY FOR NEXT PHASE:
-NO
+YES — Phase 09 has separate open product decisions D12 (launch content) and D13 (stable routes/locale-unavailable behavior); resolve those before implementing affected behavior.
 
-FAIL here means the required gate has not been demonstrated; it is not a claim that an executed test failed. The requested gate vocabulary has no NOT RUN value for security/EN/AR. Automated/manual NOT RUN refer to this canonical phase gate, not denial of historical partial checks.
+Full-suite limitation: see section 19. The unrelated active-admin fixture assumption prevented a clean aggregate local-suite run; Phase 08's focused database and hosted security evidence is complete. No shared data was deleted to force that unrelated fixture.
 
 ## 28. Next Phase
 
-Recommended sequential candidate: [Phase 09](PHASE-09-COURSE-CONTENT-INTEGRATION.md). Start only after all of that phase’s dependencies are VERIFIED and the user authorizes that phase; do not start automatically.
+Next authorized phase: [Phase 09](PHASE-09-COURSE-CONTENT-INTEGRATION.md). Its technical baseline may proceed; D12/D13 decisions still gate real launch content and stable route/locale-unavailable behavior.

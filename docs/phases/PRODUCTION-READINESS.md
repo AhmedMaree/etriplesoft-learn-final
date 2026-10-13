@@ -4,12 +4,12 @@ Overall: **NOT READY**. Foundation is PARTIAL; no defensible completion percenta
 
 | Launch gate | Readiness | Owning phases | Evidence / remaining gate |
 |---|---|---|---|
-| Database | PARTIAL | 04, 07–21 | Identity, Phase 07 and Phase 08 schemas are applied to DEV; course and curriculum data are empty. Phase 08 manual/security completion remains open. Enrollment, progress, assessment and commerce schemas remain future phases. |
+| Database | PARTIAL | 04, 07–21 | Identity and Phases 07–08 schemas are on DEV. Phase 10 enrollment/entitlement migrations are applied locally (pgTAP 263/263, concurrency 8/8) and on Hosted DEV (hosted suite 32/32). The 28 temporary Phase 09 verification courses are archived; the six approved-for-DEV demo courses imported during Phase 10 remain visible (6 EN / 5 AR). Progress, assessment and commerce schemas remain future phases. |
 | Authentication | PARTIAL | 05 | Real server actions/callbacks exist; live email/session/signup evidence incomplete. |
-| RLS | PARTIAL | 04 and every data phase | Identity and course-domain policies have local negative tests and hosted read-only checks; future learner/content domains remain absent. |
-| Storage | PARTIAL | 04, 08, 11, 18 | Private avatars and the private 50 MiB course-resources bucket are configured on DEV. Resource upload/delivery and video authorization remain pending. |
-| Courses | NOT READY | 07–09, 27 | Course identity/translation/attribution schema exists in DEV, but its tables are empty; the catalog still uses six fixtures and one demo detail route until Phase 09. |
-| Learning/video | NOT READY | 10–12 | No entitlement/player/Mux backend. |
+| RLS | PARTIAL | 04 and every data phase | Phase 10 local tests cover owner isolation, non-preview denial, entitlement, revoke/expiry history and explicit previews. Hosted DEV entitlement/RPC negative checks pass (32/32). |
+| Storage | PARTIAL | 04, 08, 11, 18 | Private avatars and the private 50 MiB course-resources bucket are configured on DEV; local anonymous denial and service cleanup smoke passed. Entitled resource delivery and video authorization remain pending. |
+| Courses | NOT READY | 07–09, 27 | Phase 09 is VERIFIED: catalog, learner course list and detail integration pass local and Hosted DEV checks, responsive review, and user-approved Arabic typography review; all 28 temporary courses are archived and absent from public projections. Approved real launch content (courses, prices, categories and Arabic copy, D12) remains open. |
+| Learning/video | NOT READY | 10–12 | Phase 10 enrollment/entitlement gates are VERIFIED (local and Hosted DEV security suites pass; user EN/AR review recorded). Phase 11 Mux-specific decisions are approved and local implementation is underway; DB/RLS and real provider verification remain incomplete. No learning player exists. |
 | Progress/completion | NOT READY | 13, 17 | Static progress; no authoritative completion. |
 | Assessments | NOT READY | 14–16 | Client answers/timer/scoring and localStorage only. |
 | Certificates | NOT READY | 18 | Fixed name/date print UI; no issue/revoke/public verification. |
@@ -26,7 +26,7 @@ Overall: **NOT READY**. Foundation is PARTIAL; no defensible completion percenta
 | Domains/TLS | NOT READY | 30, 37 | Hardcoded metadata hostname is not provisioning evidence. |
 | Environment variables | PARTIAL | 37 | DEV names configured; no production secret/env validation. |
 | Production Supabase | NOT READY | 37, 38 | No separate production project evidence. |
-| Production Mux | NOT READY | 11, 37 | No protected provider implementation/config evidence. |
+| Production Mux | NOT READY | 11, 37 | Production credentials, environment validation, deployment settings and Hosted DEV review remain pending; no Production environment has been configured. |
 | Production Kashier | NOT READY | 20, 37 | No merchant production/sandbox transition evidence. |
 | Production OpenAI | NOT READY | 25, 37 | No authorized real integration or budget controls. |
 | Legal pages | NOT READY | 34, 36 | Checkout terms/privacy are demo toasts. |

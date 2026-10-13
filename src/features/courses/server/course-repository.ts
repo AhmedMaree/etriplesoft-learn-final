@@ -31,6 +31,27 @@ export type CatalogCourse = {
 
 export type CatalogCourseDetail = CatalogCourse & { description: string | null }
 
+export type CourseEnrollment = {
+  status: "active" | "completed" | "revoked" | "expired";
+  expiresAt: string | null;
+}
+
+export type CatalogOutlineLesson = {
+  courseSlug: string;
+  moduleId: string;
+  modulePosition: number;
+  moduleTitle: string;
+  moduleDescription: string | null;
+  lessonId: string;
+  lessonPosition: number;
+  lessonType: string;
+  lessonTitle: string;
+  lessonSummary: string | null;
+  isRequired: boolean;
+  isPreview: boolean;
+  durationSeconds: number | null;
+}
+
 export type AdminCourseSummary = {
   id: string
   slug: string
@@ -68,17 +89,19 @@ function fail(error: PostgrestError): never {
   }
 }
 
-function toCatalogCourse(row: Database['public']['Functions']['catalog_list_courses']['Returns'][number]): CatalogCourse {
+function toCatalogCourse(
+  row: Omit<Database['public']['Functions']['catalog_list_courses']['Returns'][number], 'total_count'>,
+): CatalogCourse {
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
     summary: row.summary,
-    category: row.category,
-    level: row.level,
+    category: row.category || null,
+    level: row.level || null,
     priceMinor: Number(row.price_minor),
     currency: row.currency,
-    thumbnailObjectKey: row.thumbnail_object_key,
+    thumbnailObjectKey: row.thumbnail_object_key || null,
     publishedAt: row.published_at,
     instructors: row.instructors,
   }
@@ -88,18 +111,33 @@ function toCatalogCourse(row: Database['public']['Functions']['catalog_list_cour
 
 export async function listCatalogCourses(
   client: Client,
-  options: { locale: Locale; category?: string; level?: CourseLevel; limit?: number; offset?: number },
+  options: { locale: Locale; search?: string; category?: string; level?: CourseLevel; limit?: number; offset?: number },
 ): Promise<{ courses: CatalogCourse[]; total: number }> {
-  const { data, error } = await client.rpc('catalog_list_courses', {
-    p_locale: options.locale,
-    p_category: options.category,
-    p_level: options.level,
-    p_limit: options.limit ?? CATALOG_PAGE_SIZE,
-    p_offset: options.offset ?? 0,
-  })
+  const [listResult, countResult] = await Promise.all([
+    client.rpc('catalog_search_courses', {
+      p_locale: options.locale,
+      p_search: options.search,
+      p_category: options.category,
+      p_level: options.level,
+      p_limit: options.limit ?? CATALOG_PAGE_SIZE,
+      p_offset: options.offset ?? 0,
+    }),
+    client.rpc('catalog_count_courses', {
+      p_locale: options.locale,
+      p_search: options.search,
+      p_category: options.category,
+      p_level: options.level,
+    }),
+  ])
+  if (listResult.error) fail(listResult.error)
+  if (countResult.error) fail(countResult.error)
+  return { courses: (listResult.data ?? []).map(toCatalogCourse), total: Number(countResult.data ?? 0) }
+}
+
+export async function listCatalogCategories(client: Client, locale: Locale): Promise<string[]> {
+  const { data, error } = await client.rpc('catalog_list_categories', { p_locale: locale })
   if (error) fail(error)
-  const rows = data ?? []
-  return { courses: rows.map(toCatalogCourse), total: Number(rows[0]?.total_count ?? 0) }
+  return (data ?? []).map((row) => row.category)
 }
 
 export async function getCatalogCourse(client: Client, locale: Locale, slug: string): Promise<CatalogCourseDetail | null> {
@@ -113,15 +151,90 @@ export async function getCatalogCourse(client: Client, locale: Locale, slug: str
     slug: row.slug,
     title: row.title,
     summary: row.summary,
-    description: row.description,
-    category: row.category,
-    level: row.level,
+    description: row.description || null,
+    category: row.category || null,
+    level: row.level || null,
     priceMinor: Number(row.price_minor),
     currency: row.currency,
-    thumbnailObjectKey: row.thumbnail_object_key,
+    thumbnailObjectKey: row.thumbnail_object_key || null,
     publishedAt: row.published_at,
     instructors: row.instructors,
   }
+}
+
+export async function getCatalogCourseOutline(
+  client: Client,
+  locale: Locale,
+  slug: string,
+): Promise<CatalogOutlineLesson[]> {
+  if (!COURSE_SLUG_PATTERN.test(slug)) return []
+  const { data, error } = await client.rpc('catalog_get_course_outline', {
+    p_course_slug: slug,
+    p_locale: locale,
+    p_limit: 200,
+    p_offset: 0,
+  })
+  if (error) fail(error)
+  return (data ?? []).map((row) => ({
+    courseSlug: row.course_slug,
+    moduleId: row.module_id,
+    modulePosition: row.module_position,
+    moduleTitle: row.module_title,
+    moduleDescription: row.module_description,
+    lessonId: row.lesson_id,
+    lessonPosition: row.lesson_position,
+    lessonType: row.lesson_type,
+    lessonTitle: row.lesson_title,
+    lessonSummary: row.lesson_summary,
+    isRequired: row.is_required,
+    isPreview: row.is_preview,
+    durationSeconds: row.duration_seconds,
+  }))
+}
+
+export async function getCourseEnrollment(client: Client, courseId: string): Promise<CourseEnrollment | null> {
+  const { data, error } = await client
+    .from("enrollments")
+    .select("status, expires_at")
+    .eq("course_id", courseId)
+    .order("granted_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) fail(error);
+  if (!data) return null;
+  const status = data.status as CourseEnrollment["status"];
+  return {
+    status: status !== "revoked" && data.expires_at && Date.parse(data.expires_at) <= Date.now()
+      ? "expired"
+      : status,
+    expiresAt: data.expires_at,
+  };
+}
+
+/** The signed-in learner's latest enrollment per course (RLS limits rows to the owner; anonymous gets none). */
+export async function listMyEnrollments(client: Client): Promise<Record<string, CourseEnrollment>> {
+  const { data, error } = await client
+    .from("enrollments")
+    .select("course_id, status, expires_at")
+    .order("granted_at", { ascending: false })
+    .limit(500);
+  if (error) fail(error);
+  const result: Record<string, CourseEnrollment> = {};
+  for (const row of data ?? []) {
+    if (result[row.course_id]) continue; // newest first: keep the latest history row only
+    const status = row.status as CourseEnrollment["status"];
+    result[row.course_id] = {
+      status: status !== "revoked" && row.expires_at && Date.parse(row.expires_at) <= Date.now() ? "expired" : status,
+      expiresAt: row.expires_at,
+    };
+  }
+  return result;
+}
+
+export async function grantFreeEnrollment(client: Client, courseId: string): Promise<string> {
+  const { data, error } = await client.rpc("learner_grant_free_enrollment", { p_course_id: courseId });
+  if (error) fail(error);
+  return data;
 }
 
 // ---- Admin operations (the database re-checks the current admin role on every call) -----------

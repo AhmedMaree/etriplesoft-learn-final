@@ -13,6 +13,7 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:test": "supabase test db",
+    "db:test:concurrency": "node scripts/test-concurrent-free-enrollment.mjs",
     "db:push": "supabase db push --linked",
     "db:types": "supabase gen types typescript --linked --schema public > src/types/database.ts",
     "storage:orphans": "node --env-file=.env.local scripts/cleanup-orphan-avatars.mjs",
@@ -20,6 +21,10 @@
     "db:test:hosted": "node --env-file=.env.local scripts/validate-hosted-rls.mjs",
     "db:test:hosted:course": "node scripts/validate-hosted-course-domain.mjs",
     "db:test:hosted:curriculum": "node scripts/validate-hosted-curriculum-domain.mjs",
+    "db:test:hosted:enrollment": "node scripts/validate-hosted-enrollment.mjs",
+    "mux:validate-config": "node scripts/validate-mux-config.mjs",
+    "test:mux-dev-upload": "node scripts/test-mux-dev-upload.mjs",
+    "test:mux-signatures": "node --test scripts/test-mux-webhook-signatures.mjs",
     "test": "playwright test"
   },
   "keywords": [],
@@ -27,6 +32,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@mux/ts": "^15.6.1",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.2",
     "lucide-react": "^1.45.0",

@@ -2,9 +2,9 @@
 
 ## 1. Status
 
-PLANNED
+VERIFIED — 2026-10-12
 
-Evidence: No enrollment table or entitlement helper exists. Current course detail actions are demo navigation. Only selected learner routes require authentication.
+Evidence (2026-10-12): Required predecessors 05, 07 and 08 are VERIFIED. D14 is APPROVED: completed learners retain access until revoked/expired; re-enrollment after completion creates a new history row; active learners use the current published curriculum while progress for unchanged lesson IDs is preserved. Local and Hosted DEV implementation/security checks pass (see section 24 and the verification matrix). The user reviewed the Phase 10 captures and explicitly approved the manual EN/AR visual/accessibility checklist on 2026-10-12. A simulated transient network/RPC retry and a pre-migration logical backup remain absent and are recorded limitations; they do not change the approved phase gate result.
 
 ## 2. Goal
 
@@ -24,7 +24,7 @@ Dependencies are mandatory verification gates, not implementation suggestions. H
 
 ## 5. Current Repository State
 
-No enrollment table or entitlement helper exists. Current course detail actions are demo navigation. Only selected learner routes require authentication.
+Phase 10 enrollment history/RLS, trusted free grant and audited revoke RPCs, exact-locale lesson/resource entitlement RPCs, and free course detail enrollment UI are implemented locally and on Hosted DEV. A learner player/lesson route remains owned by later Phase 12; Phase 10 exposes the narrow authorized lesson/resource data operations for that consumer.
 
 ## 6. In Scope
 
@@ -40,19 +40,19 @@ Payment processing, completion computation and organization enrollment.
 
 APPROVED: follow repository requirements and the accepted domain architecture, not assumptions from demo UI.
 
-OPEN / DEFERRED: D13; D14 — see [decision register](OPEN-DECISIONS.md).
+APPROVED: D14 — see [decision register](OPEN-DECISIONS.md). D13 is APPROVED.
 
 ## 9. Database Work
 
-enrollments with user/course/grantor FKs, lifecycle checks, one active user/course and history retention. Do NOT reference absent order_items; Phase 19 adds paid-source FK and uniqueness. Add owner/status and course indexes.
+`enrollments` uses user/course/grantor/revoker FKs, explicit lifecycle timestamps, one active row per user/course, nullable expiry with no V1 default, and retained history. Completed enrollments remain entitled until revoked/expired; completed re-enrollment creates a new row. Do NOT reference absent `order_items`; Phase 19 adds paid-source FK and uniqueness. Owner/status, course/status and expiry access paths are indexed.
 
 ## 10. RLS / Authorization
 
-Anonymous: published, non-sensitive exact-locale catalog/verification projections only; otherwise denied. Learner: own data and entitled content only. Instructor: attribution grants no additional permission; separate authoring rights are not approved. Admin: current protected role plus purpose-specific server operation, audited. Service-side: narrowly authorized operations with explicit grants, caller/target validation and no browser secrets. Test direct Data API/RPC access, not only routes. Use this phase’s domain rules above and ../DATABASE-ARCHITECTURE.md. Protected translations require parent publication AND entitlement; catalog translations require publication but not enrollment. Locale selection alone never grants access.
+Anonymous: published, non-sensitive exact-locale catalog/verification projections and explicitly published lesson previews only; enrollment rows remain invisible under RLS. Learner: own enrollment data and entitled exact-locale content only. Instructor: attribution grants no additional permission; separate authoring rights are not approved. Admin: current protected role plus purpose-specific server operation, audited. Service-side: narrowly authorized operations with explicit grants, caller/target validation and no browser secrets. Test direct Data API/RPC access, not only routes. Use this phase’s domain rules above and ../DATABASE-ARCHITECTURE.md. Protected translations require parent publication AND entitlement, unless the lesson is an explicit preview; catalog translations require publication but not enrollment; locale never grants access.
 
 ## 11. Backend / Server Work
 
-Atomic free grant and trusted revoke operations; entitlement helper used by bodies, resources and future video/assessments. Decide completed-enrollment access explicitly.
+Atomic free grant and trusted audited revoke operations; entitlement helper used by bodies, resources and future video/assessments. Completed access remains valid until revoked or expired, including after completion.
 
 ## 12. Frontend Work
 
@@ -85,7 +85,7 @@ Bound list queries and paginate; measure query counts and avoid per-record N+1. 
 ## 18. Implementation Steps
 
 1. Read canonical roadmap, this contract, current diff and relevant project skills; confirm every required predecessor is VERIFIED.
-2. Resolve the referenced OPEN decisions that affect this phase; record approval and chosen test expectations before implementation.
+2. Resolve the referenced OPEN decisions that affect this phase; record approval and chosen test expectations before implementation. D14 was approved 2026-10-12.
 3. Review constraints, indexes, FKs/deletion, grants/RLS and transaction boundaries for section 9. Only where this phase owns schema changes, create ordered migrations, add necessary DEV-only fixtures and regenerate types. Verification/infrastructure phases must not introduce new schema outside their stated scope.
 4. Implement individual free enrollment and current entitlement checks
 5. Preserve revoked/expired/re-enrolled history with no default V1 expiry
@@ -136,7 +136,11 @@ Verify uniqueness, parent/owner relationships, ordering, exact-locale translatio
 
 ## 24. Evidence Required
 
-Record date, operator, commit plus dirty diff/artifact hash, environment, exact commands, exit codes and test counts. Attach phase-specific results from sections 19–22; for UI attach EN/AR screenshots at all eight widths and manual reviewer sign-off. For data attach migration IDs, generated-type comparison and anonymous/owner/cross-user/admin/RPC/storage results. For providers attach redacted sandbox/production receipts, replay/recovery outcomes and configuration evidence. Never include credentials or real learner PII.
+Record date, operator, commit plus dirty diff/artifact hash, environment, exact commands, exit codes and test counts. Local migrations applied: `20261012120000_enrollment_entitlements.sql`, `20261012123000_allow_completed_enrollment_revocation.sql`, `20261012130000_enable_anonymous_enrollment_denial.sql`, and `20261012140000_typed_enrollment_audit_target.sql`; the same four were applied to Hosted DEV on 2026-10-12. Local commands/results: project-pinned `supabase test db` passed 263/263; `npm run db:test:concurrency` passed 8/8 concurrent calls with one active row and owned row cleaned; `npm run typecheck`, `npm run lint`, and `npm run build` exit 0; focused pending/detail responsive Playwright checks passed, and local authenticated lifecycle UI passed. The service-role table grant is absent from the migration and local SELECT/INSERT/UPDATE/DELETE checks pass. Hosted anonymous/owner/cross-user/admin/RPC results and the user's 2026-10-12 manual EN/AR approval are recorded in `PHASE-10-HOSTED-DEV-PREFLIGHT.md`. Never include credentials or real learner PII.
+
+Hosted DEV execution (2026-10-12, operator: Claude Code on the user's instruction to apply to hosted DEV and continue to manual review): the four reviewed migrations were applied to `ets-learn` (`szjtjikbybkezgziylir`) with the project-pinned CLI after confirming the ref, that exactly these four were pending, and that the file SHA-256 values match the preflight table. Remote and local migration history now match (15 versions). Hosted types differ from `src/types/database.ts` only in member ordering/formatting. No full logical backup was taken before the push (it was not separately approved and needs a secure destination); the migrations are additive, so this is a recorded process deviation from the preflight, not a claim that a backup exists. `npm run db:test:hosted:enrollment` (`scripts/validate-hosted-enrollment.mjs`) passed 32/32 against Hosted DEV with real role-scoped sessions: anonymous denial, paid-course self-grant rejected, direct INSERT/UPDATE/DELETE denied, 8 concurrent grants gave 1 id and 1 active row, exact-locale EN/AR body access, no fallback for unpublished locale/draft lesson, cross-user isolation, learner and forged-`user_metadata` admin revoke denied, completed stays entitled, re-enrollment adds a history row, expired and revoked deny, preview stays public, authorized admin revoke audited against the exact enrollment id. Expiry/completion states were set with SQL through the linked CLI because the API intentionally does not expose them; in the hosted run the expired row and a revoked row belonged to the same learner, so the hosted result does not isolate expiry-only denial (the local pgTAP suite does). Retained test history: 3 archived `p10-*` courses (two come from aborted earlier runs of the script), 6 banned `@example.test` users, 6 enrollment rows, 1 enrollment audit row; none belong to real users. Rows cannot be deleted because history FKs are RESTRICT. The six-course demonstration set from `supabase/seed.sql` and `supabase/fixtures/course-curriculum.seed.sql` was imported to Hosted DEV on the user's instruction: 6 courses / 26 modules / 98 lessons, 0 enrollments; the public catalog returns 6 (EN) and 5 (AR; `odoo-system-admin` is English-only by design). It was written directly as SQL (not through the audited admin RPCs), so no admin audit rows exist for it, and it adds one banned placeholder author `seed-author@etriplesoft.invalid`. Typecheck, lint and production build pass; a production server against Hosted DEV served `/en|ar/courses` and `/en|ar/catalog` with 6/5 course links. Remaining before VERIFIED: human EN/AR visual, typography and accessibility sign-off.
+
+The target/migration reconciliation, migration hashes, Hosted DEV test plan, backup/recovery proposal, local screenshot inventory, and human-review record are in [the Phase 10 Hosted DEV preflight pack](PHASE-10-HOSTED-DEV-PREFLIGHT.md). The four migrations and Hosted DEV fixture tests were executed as recorded above. No pre-migration logical backup was taken. The user reviewed the local captures in `tmp/phase10-manual-review/` and approved the manual EN/AR visual/accessibility checklist on 2026-10-12.
 
 ## 25. Rollback / Recovery
 
@@ -149,28 +153,28 @@ Update this phase, ../PROJECT-ROADMAP.md, VERIFICATION-MATRIX.md, OPEN-DECISIONS
 ## 27. Completion Gate
 
 PHASE IMPLEMENTED:
-NO
+YES (local and Hosted DEV)
 
 AUTOMATED VERIFICATION:
-NOT RUN
+PASS — local project-pinned `supabase test db` 263/263; local concurrency 8/8; hosted `npm run db:test:hosted:enrollment` 32/32; EN/AR UI states and required-width responsive checks passed; typecheck, lint and production build pass.
 
 MANUAL VERIFICATION:
-NOT RUN
+PASS — user reviewed the Phase 10 screenshot pack and approved the EN/AR visual/accessibility checklist on 2026-10-12. A simulated transient network/RPC retry remains untested.
 
 SECURITY VERIFICATION:
-FAIL
+PASS — local negative cases and the Hosted DEV negative/RPC suite (32/32) pass. Residual: no pre-migration backup was taken (see section 24).
 
 EN/AR VERIFICATION:
-FAIL
+PASS — required-width EN/AR behavior was captured and checked; user reviewed the screenshots and approved the visual/accessibility checklist on 2026-10-12.
 
 READY TO MARK VERIFIED:
-NO
+YES — all required gates pass; limitations are recorded above.
 
 READY FOR NEXT PHASE:
-NO
+YES — Phase 08 and Phase 10 dependencies are VERIFIED. Phase 11 is selected but blocked by unresolved D15.
 
-FAIL here means the required gate has not been demonstrated; it is not a claim that an executed test failed. The requested gate vocabulary has no NOT RUN value for security/EN/AR. Automated/manual NOT RUN refer to this canonical phase gate, not denial of historical partial checks.
+Phase 10 is VERIFIED. The untested transient retry and missing pre-migration backup are recorded residual limitations; neither is represented as a passed test or as a backup having existed.
 
 ## 28. Next Phase
 
-Recommended sequential candidate: [Phase 11](PHASE-11-MUX-VIDEO.md). Start only after all of that phase’s dependencies are VERIFIED and the user authorizes that phase; do not start automatically.
+The user authorized progression to [Phase 11](PHASE-11-MUX-VIDEO.md) on 2026-10-12. Its required Phase 08 and Phase 10 dependencies are VERIFIED, but Phase 11 is BLOCKED until D15 provider ownership and operating-policy decisions are resolved.

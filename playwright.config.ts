@@ -1,5 +1,7 @@
 import { defineConfig } from "@playwright/test";
 import fs from "node:fs";
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3010";
+const appPort = new URL(baseURL).port || "3010";
 const bundled =
   "C:/Users/Ahmed/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe";
 export default defineConfig({
@@ -7,7 +9,7 @@ export default defineConfig({
   fullyParallel: true,
   workers: 1,
   use: {
-  baseURL: "http://127.0.0.1:3010",
+  baseURL,
     viewport: { width: 1448, height: 1086 },
     launchOptions: {
       executablePath:
@@ -16,8 +18,8 @@ export default defineConfig({
     },
   },
   webServer: {
-    command: "npm.cmd run dev",
-    url: "http://127.0.0.1:3010",
+    command: `npm.cmd exec -- next dev --hostname 127.0.0.1 --port ${appPort}`,
+    url: baseURL,
     reuseExistingServer: true,
   },
   reporter: "list",

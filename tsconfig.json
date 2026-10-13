@@ -33,9 +33,28 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "tmp/phase09-next-dist/types/**/*.ts",
+    "tmp/phase09-next-dist/dev/types/**/*.ts",
+    "tmp/phase09-loading-next/types/**/*.ts",
+    "tmp/phase09-loading-next/dev/types/**/*.ts",
+    "tmp/phase10-enrollment-next/types/**/*.ts",
+    "tmp/phase10-enrollment-next/dev/types/**/*.ts",
+    "tmp/phase10-enrollment-next2/types/**/*.ts",
+    "tmp/phase10-enrollment-next2/dev/types/**/*.ts",
+    "tmp/phase10-enrollment-next3/types/**/*.ts",
+    "tmp/phase10-enrollment-next3/dev/types/**/*.ts",
+    "tmp/phase10-enrollment-final/types/**/*.ts",
+    "tmp/phase10-enrollment-final/dev/types/**/*.ts",
+    "tmp/phase10-review-next/types/**/*.ts",
+    "tmp/phase10-review-next/dev/types/**/*.ts",
+    "tmp/phase10-local-next/types/**/*.ts",
+    "tmp/phase10-local-next/dev/types/**/*.ts",
+    "tmp/phase10-authenticated-next/types/**/*.ts",
+    "tmp/phase10-authenticated-next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "tmp"
   ]
 }

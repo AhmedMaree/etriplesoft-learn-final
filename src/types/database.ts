@@ -15,9 +15,11 @@ export type Database = {
           action: string;
           actor_id: string;
           course_id: string | null;
+          enrollment_id: string | null;
           id: string;
           lesson_id: string | null;
           lesson_resource_id: string | null;
+          lesson_video_id: string | null;
           module_id: string | null;
           occurred_at: string;
           request_id: string | null;
@@ -30,9 +32,11 @@ export type Database = {
           action: string;
           actor_id: string;
           course_id?: string | null;
+          enrollment_id?: string | null;
           id?: string;
           lesson_id?: string | null;
           lesson_resource_id?: string | null;
+          lesson_video_id?: string | null;
           module_id?: string | null;
           occurred_at?: string;
           request_id?: string | null;
@@ -45,9 +49,11 @@ export type Database = {
           action?: string;
           actor_id?: string;
           course_id?: string | null;
+          enrollment_id?: string | null;
           id?: string;
           lesson_id?: string | null;
           lesson_resource_id?: string | null;
+          lesson_video_id?: string | null;
           module_id?: string | null;
           occurred_at?: string;
           request_id?: string | null;
@@ -78,6 +84,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "admin_audit_log_enrollment_id_fkey";
+            columns: ["enrollment_id"];
+            isOneToOne: false;
+            referencedRelation: "enrollments";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "admin_audit_log_lesson_id_fkey";
             columns: ["lesson_id"];
             isOneToOne: false;
@@ -89,6 +102,13 @@ export type Database = {
             columns: ["lesson_resource_id"];
             isOneToOne: false;
             referencedRelation: "lesson_resources";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "admin_audit_log_lesson_video_id_fkey";
+            columns: ["lesson_video_id"];
+            isOneToOne: false;
+            referencedRelation: "lesson_videos";
             referencedColumns: ["id"];
           },
           {
@@ -153,6 +173,77 @@ export type Database = {
           {
             foreignKeyName: "course_instructors_profile_id_fkey";
             columns: ["profile_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      enrollments: {
+        Row: {
+          id: string;
+          user_id: string;
+          course_id: string;
+          grant_source: string;
+          status: string;
+          granted_by: string;
+          granted_at: string;
+          expires_at: string | null;
+          completed_at: string | null;
+          revoked_at: string | null;
+          revoked_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          course_id: string;
+          grant_source?: string;
+          status?: string;
+          granted_by: string;
+          granted_at?: string;
+          expires_at?: string | null;
+          completed_at?: string | null;
+          revoked_at?: string | null;
+          revoked_by?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          course_id?: string;
+          grant_source?: string;
+          status?: string;
+          granted_by?: string;
+          granted_at?: string;
+          expires_at?: string | null;
+          completed_at?: string | null;
+          revoked_at?: string | null;
+          revoked_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "enrollments_course_id_fkey";
+            columns: ["course_id"];
+            isOneToOne: false;
+            referencedRelation: "courses";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "enrollments_granted_by_fkey";
+            columns: ["granted_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "enrollments_revoked_by_fkey";
+            columns: ["revoked_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "enrollments_user_id_fkey";
+            columns: ["user_id"];
             isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
@@ -496,6 +587,123 @@ export type Database = {
           },
         ];
       };
+      lesson_videos: {
+        Row: {
+          aspect_ratio: string | null;
+          created_at: string;
+          created_by: string;
+          duration_seconds: number | null;
+          id: string;
+          lesson_id: string;
+          locale: string | null;
+          mux_asset_id: string | null;
+          mux_playback_id: string | null;
+          mux_upload_id: string | null;
+          required_caption_locales: string[];
+          resolution_tier: string | null;
+          status: string;
+          updated_at: string;
+        };
+        Insert: {
+          aspect_ratio?: string | null;
+          created_at?: string;
+          created_by: string;
+          duration_seconds?: number | null;
+          id?: string;
+          lesson_id: string;
+          locale?: string | null;
+          mux_asset_id?: string | null;
+          mux_playback_id?: string | null;
+          mux_upload_id?: string | null;
+          required_caption_locales?: string[];
+          resolution_tier?: string | null;
+          status?: string;
+          updated_at?: string;
+        };
+        Update: {
+          aspect_ratio?: string | null;
+          created_at?: string;
+          created_by?: string;
+          duration_seconds?: number | null;
+          id?: string;
+          lesson_id?: string;
+          locale?: string | null;
+          mux_asset_id?: string | null;
+          mux_playback_id?: string | null;
+          mux_upload_id?: string | null;
+          required_caption_locales?: string[];
+          resolution_tier?: string | null;
+          status?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "lesson_videos_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lesson_videos_lesson_id_fkey";
+            columns: ["lesson_id"];
+            isOneToOne: false;
+            referencedRelation: "lessons";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      lesson_video_captions: {
+        Row: {
+          created_at: string;
+          id: string;
+          locale: string;
+          mux_track_id: string;
+          review_status: string;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          updated_at: string;
+          video_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          locale: string;
+          mux_track_id: string;
+          review_status?: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          updated_at?: string;
+          video_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          locale?: string;
+          mux_track_id?: string;
+          review_status?: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          updated_at?: string;
+          video_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "lesson_video_captions_reviewed_by_fkey";
+            columns: ["reviewed_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lesson_video_captions_video_id_fkey";
+            columns: ["video_id"];
+            isOneToOne: false;
+            referencedRelation: "lesson_videos";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       lesson_translations: {
         Row: {
           body: string | null;
@@ -630,6 +838,24 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      mux_webhook_events: {
+        Row: {
+          event_type: string;
+          id: string;
+          processed_at: string;
+        };
+        Insert: {
+          event_type: string;
+          id: string;
+          processed_at?: string;
+        };
+        Update: {
+          event_type?: string;
+          id?: string;
+          processed_at?: string;
+        };
+        Relationships: [];
       };
       profiles: {
         Row: {
@@ -816,6 +1042,7 @@ export type Database = {
         Returns: undefined;
       };
       admin_revoke_role: { Args: { p_role_id: string }; Returns: undefined };
+      admin_revoke_enrollment: { Args: { p_enrollment_id: string }; Returns: undefined };
       admin_save_lesson_translation: {
         Args: {
           p_body?: string;
@@ -947,6 +1174,19 @@ export type Database = {
           module_title: string;
         }[];
       };
+      catalog_count_courses: {
+        Args: {
+          p_category?: string;
+          p_level?: string;
+          p_locale: string;
+          p_search?: string;
+        };
+        Returns: number;
+      };
+      catalog_list_categories: {
+        Args: { p_locale: string };
+        Returns: { category: string }[];
+      };
       catalog_list_courses: {
         Args: {
           p_category?: string;
@@ -968,6 +1208,72 @@ export type Database = {
           thumbnail_object_key: string;
           title: string;
           total_count: number;
+        }[];
+      };
+      learner_grant_free_enrollment: { Args: { p_course_id: string }; Returns: string };
+      mux_begin_lesson_upload: { Args: { p_lesson_id: string }; Returns: string };
+      mux_attach_upload: { Args: { p_upload_id: string; p_video_id: string }; Returns: undefined };
+      mux_fail_lesson_upload: { Args: { p_video_id: string }; Returns: undefined };
+      mux_get_lesson_playback: {
+        Args: { p_lesson_id: string; p_locale: string };
+        Returns: { mux_playback_id: string }[];
+      };
+      mux_process_webhook: {
+        Args: { p_data: Json; p_event_id: string; p_event_type: string };
+        Returns: boolean;
+      };
+      mux_review_caption: {
+        Args: { p_locale: string; p_track_id: string; p_video_id: string };
+        Returns: undefined;
+      };
+      mux_set_caption_requirements: {
+        Args: { p_locales: string[]; p_video_id: string };
+        Returns: undefined;
+      };
+      learner_get_lesson: {
+        Args: { p_lesson_id: string; p_locale: string };
+        Returns: {
+          body: string;
+          course_id: string;
+          is_preview: boolean;
+          lesson_id: string;
+          lesson_type: string;
+          summary: string;
+          title: string;
+        }[];
+      };
+      learner_get_lesson_resources: {
+        Args: { p_lesson_id: string; p_locale: string };
+        Returns: {
+          description: string;
+          external_url: string;
+          kind: string;
+          label: string;
+          resource_id: string;
+          storage_object_key: string;
+        }[];
+      };
+      catalog_search_courses: {
+        Args: {
+          p_category?: string;
+          p_level?: string;
+          p_limit?: number;
+          p_locale: string;
+          p_offset?: number;
+          p_search?: string;
+        };
+        Returns: {
+          category: string;
+          currency: string;
+          id: string;
+          instructors: string[];
+          level: string;
+          price_minor: number;
+          published_at: string;
+          slug: string;
+          summary: string;
+          thumbnail_object_key: string;
+          title: string;
         }[];
       };
       course_is_published: { Args: { p_course_id: string }; Returns: boolean };

@@ -17,15 +17,26 @@ The learner and authentication routes are shared beneath `[locale]`. Route group
 | Signup | `/en/sign-up` and `/ar/sign-up` |
 | Password recovery | `/en/forgot-password`, `/ar/forgot-password`, `/en/reset-password`, and `/ar/reset-password` |
 | Auth callback | `/en/auth/callback` and `/ar/auth/callback` |
-| Course details | `/en/detail-course` and `/ar/detail-course` |
+| Course details | `/en/catalog/[slug]` and `/ar/catalog/[slug]` |
 | Assessment | `/en/assessment` and `/ar/assessment` |
 | Checkout demo | `/en/payment` and `/ar/payment` |
 | Admin roles (admin role required) | `/en/admin` and `/ar/admin` |
 | Admin audit log (admin role required) | `/en/admin/audit` and `/ar/admin/audit` |
 
-Course catalog and detail routes remain public. Other LMS demo routes remain available without an auth guarantee until their data and authorization workflows are implemented. Unauthenticated visits to protected routes go to the matching locale login page with a validated `next` destination.
+Phase 11 infrastructure endpoints are locale-neutral App Router handlers:
 
-The route-name union lives in `src/lib/routes.ts` for typed client navigation. App Router files define route handling directly; no catch-all page or static route generator is used. Course details remain a single demo route until course identifiers are designed.
+| Operation | URL / method | Authorization |
+| --- | --- | --- |
+| Create a direct Mux upload | `POST /api/mux/uploads` | Signed-in current admin or instructor assigned to the lesson's course; allowed browser Origin required |
+| Issue protected playback token | `POST /api/mux/playback-token` | Signed-in user with active enrollment, published course/module/lesson translations for requested `en` or `ar` locale |
+| Update required captions or mark a track reviewed | `PATCH /api/mux/videos/[videoId]/captions` | Signed-in current admin or instructor assigned to the lesson's course |
+| Receive Mux events | `POST /api/webhooks/mux` | Mux signature verification over the raw request body |
+
+Playback JWTs expire after five minutes. These endpoints do not implement a player or progress tracking.
+
+Course catalog and canonical slug detail routes remain public. Other LMS demo routes remain available without an auth guarantee until their data and authorization workflows are implemented. Unauthenticated visits to protected routes go to the matching locale login page with a validated `next` destination.
+
+The route-name union lives in `src/lib/routes.ts` for typed client navigation. App Router files define route handling directly; no catch-all page or static route generator is used. Public course detail uses the canonical `/{locale}/catalog/{slug}` route; the legacy `/{locale}/detail-course?slug=...` route redirects when the slug resolves unambiguously and otherwise shows a localized chooser.
 
 ## Localized route mapping
 
@@ -54,18 +65,18 @@ Legacy unprefixed paths remain usable and resolve to their English localized equ
 
 ## Public marketing site
 
-Pages live under `src/app/[locale]/(site)/` (shared header/footer, styles in `src/features/marketing/styles/`, all classes prefixed `mk-`). All are static and available in `en` and `ar`:
+Pages live under `src/app/[locale]/(site)/` (shared header/footer, styles in `src/features/marketing/styles/`, all classes prefixed `mk-`). They are available in `en` and `ar`; course catalog and detail are server-rendered from exact-locale Supabase projections:
 
 | Page | URL |
 | --- | --- |
 | Landing | `/en`, `/ar` |
-| Public course catalog (`?role=` filter) | `/en/catalog`, `/ar/catalog` |
+| Public course catalog (`?q=`, `?category=`, `?level=`, `?page=` filters) | `/en/catalog`, `/ar/catalog` |
 | Course detail | `/en/catalog/[slug]`, `/ar/catalog/[slug]` |
 | Learning paths (`#role` deep links) | `/en/learning-paths`, `/ar/learning-paths` |
 | Odoo modules (`?module=` selection) | `/en/odoo-modules`, `/ar/odoo-modules` |
 | About, Contact, Help Center | `/en/about`, `/en/contact`, `/en/help` (and `/ar/...`) |
 | Privacy, Terms, Refund and Course Exchange policy | `/en/privacy`, `/en/terms`, `/en/refund-policy` (and `/ar/...`) |
 
-The public catalog is `/catalog`, not `/courses`, because `/courses` is the learner All Courses demo screen. Course records (`src/features/marketing/content/courses/*.json`) and Odoo module data are English editorial content, rendered with `lang="en" dir="ltr"` inside Arabic pages; localized LMS content is a later database concern (see I18N.md).
+The public catalog is `/catalog`; `/courses` is the learner course list and both read published exact-locale database records. Catalog listing supports server-side search, category/level filters and pagination. `/{locale}/catalog/{slug}` shows public detail, instructor attribution and the published outline only; missing translations render a localized unavailable state and link only to another published locale. A valid `/detail-course?slug=...` redirects to the canonical route; ambiguous or invalid legacy links remain on a localized chooser. Local seed rows are demo placeholders. Migration `20261011150000_catalog_search_and_facets.sql` is applied to Hosted DEV; no course rows or fixtures have been added there. Odoo modules, learning paths and other editorial data remain English content rendered with `lang="en" dir="ltr"` inside Arabic pages (see I18N.md).
 
 Marketing UI copy is in `messages/marketing/{en,ar}.json` and `pages-{en,ar}.json`, read through `src/features/marketing/lib/messages.ts` (not the global next-intl catalog). Arabic is type-checked against English, so the two cannot drift. Privacy and Terms are ported from the standalone odoo-learn site, predate user accounts, and need legal review before launch.

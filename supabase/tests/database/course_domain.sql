@@ -3,7 +3,7 @@
 -- Own fixtures use the 'pgtap-' slug prefix; the seeded demo courses are only read, never changed.
 BEGIN;
 
-SELECT plan(72);
+SELECT plan(84);
 
 INSERT INTO auth.users (id, aud, role, email, raw_user_meta_data, created_at, updated_at)
 VALUES
@@ -116,6 +116,23 @@ SELECT is((SELECT instructors FROM public.catalog_get_course('pgtap-course-one',
 SELECT throws_ok($$SELECT * FROM public.catalog_list_courses('fr')$$, '22023', NULL, 'an unsupported locale is rejected, not defaulted');
 SELECT throws_ok($$SELECT * FROM public.catalog_list_courses(NULL)$$, '22023', NULL, 'a missing locale is rejected, not defaulted');
 SELECT ok((SELECT count(*) FROM public.catalog_list_courses('en', NULL, NULL, 1000, 0)) <= 50, 'catalog page size is bounded to 50');
+SELECT is((SELECT count(*)::integer FROM public.catalog_search_courses('en', 'English Title') WHERE slug = 'pgtap-course-one'), 1, 'catalog search matches exact-locale course titles');
+SELECT is((SELECT count(*)::integer FROM public.catalog_search_courses('en', 'First Person') WHERE slug = 'pgtap-course-one'), 1, 'catalog search includes published instructor attribution');
+SELECT is((SELECT count(*)::integer FROM public.catalog_search_courses('en', NULL, 'functional', 'beginner') WHERE slug = 'pgtap-course-one'), 1, 'catalog category and level filters compose');
+SELECT is(public.catalog_count_courses('en', 'English Title', 'functional', 'beginner'), 1::bigint, 'catalog counts match active search and filters');
+SELECT is(public.catalog_count_courses('en', 'no matching course'), 0::bigint, 'catalog count handles empty results');
+SELECT is((SELECT count(*)::integer FROM public.catalog_list_categories('en') WHERE category = 'functional'), 1, 'category facets include published courses');
+SELECT is((SELECT count(*)::integer FROM public.catalog_search_courses('en', 'pgtap-course-two')), 0, 'search does not expose a draft course');
+SELECT throws_ok($$SELECT public.catalog_count_courses('fr')$$, '22023', NULL, 'catalog count rejects unsupported locales');
+SELECT throws_ok($$SELECT * FROM public.catalog_search_courses('en', repeat('x', 101))$$, '22023', NULL, 'catalog search rejects oversized input');
+SELECT ok((SELECT count(*) FROM public.catalog_search_courses('en', NULL, NULL, NULL, 1000, 0)) <= 50, 'catalog search page size is bounded');
+SELECT is((SELECT count(*)::integer FROM public.catalog_search_courses('en', NULL, NULL, NULL, 2, 0)), 2, 'catalog page limit returns the requested bounded page');
+SELECT ok(
+  (SELECT slug FROM public.catalog_search_courses('en', NULL, NULL, NULL, 2, 0) ORDER BY published_at DESC, id LIMIT 1)
+  IS DISTINCT FROM
+  (SELECT slug FROM public.catalog_search_courses('en', NULL, NULL, NULL, 2, 2) ORDER BY published_at DESC, id LIMIT 1),
+  'catalog offset advances to a different page'
+);
 RESET ROLE;
 
 -- ===== Arabic publication is independent ================================================

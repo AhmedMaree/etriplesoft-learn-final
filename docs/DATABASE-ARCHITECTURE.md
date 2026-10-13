@@ -28,9 +28,9 @@ auth.users
 courses -- course_translations [publication per locale]
   +-- course_instructors -- optional profiles (attribution only)
   +-- course_modules -- module_translations
-       +-- lessons -- lesson_translations
+  +-- lessons -- lesson_translations
             +-- lesson_resources -- lesson_resource_translations
-            +-- lesson_videos [localized or explicitly language-neutral]
+            +-- lesson_videos [explicitly language-neutral] -- lesson_video_captions [en/ar review]
             +-- quizzes -- quiz_versions -- quiz_translations
                  +-- questions -- question_translations
                       +-- question_options -- option_translations
@@ -46,6 +46,7 @@ profiles -- enrollments -- courses
        +-- payments -- payment_webhook_events
             verified payment grants one enrollment per item transactionally
 
+mux_webhook_events (server-only event idempotency)
 admin_audit_log -- profiles (actor and typed action targets)
 ```
 
@@ -70,7 +71,9 @@ RLS is enabled on every exposed application table. “Private” means owner-sco
 | `lesson_translations` | Localized lesson title, summary, and article body | V1 | Enrolled learner | Course admin |
 | `lesson_resources` | File/external resource identity, kind, locale, and storage/link reference | V1 | Entitled learner or authorized preview | Course admin |
 | `lesson_resource_translations` | Localized resource label/description | V1 | Entitled learner or authorized preview | Course admin |
-| `lesson_videos` | Provider asset/playback reference with locale-specific or explicitly neutral mapping | V1 | Server-only metadata | Video service |
+| `lesson_videos` | Mux upload/asset/signed playback references, lifecycle, and required caption locales | V1 | Server-only metadata | Video service |
+| `lesson_video_captions` | English/Arabic Mux text-track identity and review status | V1 | Server-only metadata | Authorized admin/assigned instructor |
+| `mux_webhook_events` | Provider event IDs and types for idempotent processing | V1 | Server-only, minimal event metadata | Mux webhook service |
 | `learning_paths` | Language-independent path identity and publication state | V1 | Catalog when published | Course admin |
 | `path_translations` | Localized path title/description | V1 | Catalog when parent is published | Course admin |
 | `learning_path_courses` | Ordered path-to-course membership | V1 | Catalog when path is published | Course admin |
@@ -178,7 +181,7 @@ Use explicit `position` fields for modules, lessons, path courses, questions, op
 
 ### Enrollment and progress
 
-Enrollment states are `active`, `completed`, `revoked`, `expired`; `expires_at` is nullable and V1 has no default expiry. Re-enrollment after revocation/expiry creates a new row and preserves prior history. Partial uniqueness allows only one active enrollment per user/course. Free courses grant enrollment directly without a fake payment; paid enrollment references a unique `order_item_id`.
+Enrollment states are `active`, `completed`, `revoked`, `expired`; `expires_at` is nullable and V1 has no default expiry. D14 (approved 2026-10-12): completed learners retain access until revoked/expired; re-enrollment after completion, revocation, or expiry creates a new row and preserves prior history; active learners use the current published curriculum and progress for unchanged lesson IDs is retained. Partial uniqueness allows only one active enrollment per user/course. Free courses grant enrollment directly without a fake payment; paid enrollment references a unique `order_item_id` added with the commerce phase.
 
 Progress is scoped to the enrollment, not only the user/course, so re-enrollment preserves separate learning history. All progress mutations are validated by a trusted server operation. Required lessons and required assessments must be complete/passed; optional content does not block. Video completion defaults to at least 90% watched or a verified ended event; server validation prevents simple client forgery.
 
@@ -225,7 +228,7 @@ RLS and SQL privileges are separate gates: grant Data API/table access only to i
 | `learning_paths` | Read published path fields | Read published paths | No permission from attribution; own learner rights only | Later: published/allocated paths | Trusted authoring service |
 | `path_translations` | Exact-locale published row only | Exact-locale published row only | No permission from attribution; own learner rights only | Later: allocated path content | Trusted authoring service |
 | `learning_path_courses` | Read rows for published paths | Read published path membership | No permission from attribution; own learner rights only | Later: allocated path membership | Trusted authoring service |
-| `enrollments` | No access | Read own; no direct grant/revoke | No permission from attribution; own learner rights only | Later: enrollment/completion/progress and aggregate only; never detailed answers | Trusted grant/revoke service |
+| `enrollments` | No access | Read own; free grant and access changes through trusted RPC only | No permission from attribution; own learner rights only | Later: enrollment/completion/progress and aggregate only; never detailed answers | Current admin role required for audited revocation |
 | `lesson_progress` | No access | Read own; update via constrained server operation | No permission from attribution; own learner rights only | Later: scoped completion/progress and aggregates only | Trusted support operation, audited |
 | `video_progress` | No access | Read own; checkpoint via constrained server operation | No permission from attribution; own learner rights only | Later: no individual checkpoint access by default | Trusted support operation, audited |
 | `quizzes` | No access | Read safe published fields with enrollment | No permission from attribution; own learner rights only | Later: no quiz results/keys | Trusted authoring and grading service |
@@ -262,7 +265,7 @@ The organization-manager column is explicitly future policy, not permission to i
 - **Identity/roles:** profile ID equals Auth UUID. Roles are protected `admin`/`instructor` grant records with grantor/revoker and retained history; no client self-write. Instructor attribution is not authorization.
 - **Localization:** every normalized translation uses unique `(entity_id,locale)` and locale check `en`/`ar`; locale publication status/time is independent. A published locale requires its own required text and published ancestors. No fallback across LMS content locales.
 - **Ordering/content:** positive unique positions for modules/course, lessons/module, path courses/path, questions/version, options/question, instructor attribution/course, and lesson resources/locale. Course slug unique; lifecycle checks and nonnegative price. Resources require exactly one object key or external URL. Videos support locale-specific assets; null locale requires an explicit language-neutral flag, at most one neutral mapping per lesson, and no ambiguous overlap with locale-specific rows.
-- **Enrollment/progress:** status `active/completed/revoked/expired`; nullable `expires_at`, no V1 default expiry; if set, after enrollment time. Completed time agrees with state. Re-enrollment creates history row. Partial unique active `(user_id,course_id)` and partial unique nonnull order item. Progress unique per enrollment/lesson or enrollment/video; percentage 0-100; seconds nonnegative and bounded; completion fields agree with status. Server verifies course and owner consistency.
+- **Enrollment/progress:** status `active/completed/revoked/expired`; nullable `expires_at`, no V1 default expiry. Completed records remain entitled until expiry/revocation; completion timestamps survive later expiry/revocation. Re-enrollment always creates history row. Partial unique active `(user_id,course_id)`; commerce later adds partial unique nonnull `order_item_id`. Current published curriculum applies to active learners; progress is keyed to stable lesson IDs per enrollment. Progress unique per enrollment/lesson or enrollment/video; percentage 0-100; seconds nonnegative and bounded; completion fields agree with status. Server verifies course and owner consistency.
 - **Assessment:** one quiz per lesson; unique positive version number per quiz; pass basis points 0-10000; nullable positive duration/max attempts (`NULL` means unlimited); question types limited to single choice/multiple choice/true-false; points nonnegative; unique ordered questions/options. Composite FKs ensure answers and protected answer keys belong to the same version/question. Published version content is immutable. Attempt binds exact version, attempt number positive, server timestamps ordered, score bounded by possible score, final state has submission/result. One active attempt per user/version. Validate required answer-key cardinality before publishing.
 - **Completion/certificates:** one immutable completion snapshot per enrollment; counts valid and completion time captured. Certificate references completion, has unique number and random token hash, locale `en`/`ar`, issue before revocation, and at most one unrevoked certificate per completion. Reissue is a new linked row.
 - **Commerce/audit:** amounts are nonnegative integer minor units; order totals reconcile to item snapshots; currency matches across confirmed order/items/payment. Unique `(order_id,course_id)`, provider/reference, and `(provider,provider_event_id)`. One enrollment per order item. Confirmed snapshots are immutable. Audit log is append-only, typed target FKs (no polymorphic target), safe metadata only, and high-value events only.
@@ -281,7 +284,7 @@ Primary and unique indexes are implicit. Add indexes for non-leading FK lookups 
 | Unique parent/position keys for modules, lessons, path items, resources, questions, options | Ordered reads and no duplicate positions; no extra index required |
 | `lesson_resources(lesson_id,locale,position)` and `lesson_videos(lesson_id,locale)` | Exact-locale ordered resources/media |
 | `learning_path_courses(course_id,path_id)` | Reverse path lookup |
-| Partial unique `enrollments(user_id,course_id) WHERE status='active'`; `(user_id,status,enrolled_at DESC)`; `(course_id,status)` | Entitlement uniqueness and dashboard/authorized roster |
+| Partial unique `enrollments(user_id,course_id) WHERE status='active'`; `(user_id,status,granted_at DESC)`; `(course_id,status,granted_at DESC)`; partial expiry index | Entitlement uniqueness, owner/course reads, and expiry checks |
 | Partial unique `enrollments(order_item_id) WHERE order_item_id IS NOT NULL` | Prevent duplicate grant from one paid item |
 | `lesson_progress(enrollment_id,updated_at DESC)`, `(lesson_id,enrollment_id)`; video equivalents | Dashboard/resume and parent FK/course joins |
 | Unique `quiz_versions(quiz_id,version_number)` | Resolve immutable version history |
@@ -383,6 +386,8 @@ The architecture is ready for initial migration design. Migration design must pr
 
 The initial identity foundation migration creates `profiles`, `learner_preferences`, `user_roles`, and role-grant audit records. It includes profile/preference update timestamps, safe profile/preference creation for new Auth users, protected elevated-role history, explicit grants, and owner-scoped RLS. There is no learner role row; ordinary learners receive no elevated grant.
 
-The current workflow connects local Next.js to the dedicated hosted Supabase DEV project. The migrations in `supabase/migrations/` are applied there, and the CLI reports local and remote migration histories in sync. Migration `20261007110000` adds owner-scoped `learner_profiles`; `npm run db:types` regenerated `src/types/database.ts` from the linked database. The hosted RLS validation script uses a server-only service key for tagged disposable test-user setup/cleanup, but this workspace did not have that key configured. The pgTAP suite in `supabase/tests/database/` was not run: local Supabase was unavailable, and the hosted project does not have pgTAP's `plan()` function installed. Behavioral RLS/trigger verification for `learner_profiles` remains outstanding. Local `supabase/config.toml`, `db:reset`, and `db:test` remain optional workflows. Never run remote reset/drop commands.
+The primary workflow connects local Next.js to the dedicated hosted Supabase DEV project. On 2026-10-11, migration `20261011150000_catalog_search_and_facets.sql` was applied to Hosted DEV after confirming the target and sole pending migration. Local and remote histories now agree through `20261011150000`. `npm run db:push` reported success. The three new catalog RPCs are SECURITY INVOKER with empty `search_path`, exact-locale/published filters, and execute grants for `anon` and `authenticated` but not PUBLIC. Anonymous EN/AR smoke checks returned empty results while the three course table counts remained zero. Fixture-backed filter/pagination/draft checks remain pending separate approval. Migration `20261007110000` adds owner-scoped `learner_profiles`; `npm run db:types` regenerated `src/types/database.ts` from the linked database. The hosted RLS validation script uses a server-only service key for tagged disposable test-user setup/cleanup. The full pgTAP suite now passes against a clean Local Supabase database. Never run remote reset/drop commands.
+
+Phase 09 migration `20261011150000_catalog_search_and_facets.sql` adds exact-locale published catalog search, counts and categories. It was applied to Hosted DEV (`ets-learn`, project ref `szjtjikbybkezgziylir`) on 2026-10-11 after explicit approval. The migration history matches local through `20261011150000`. Hosted course, translation and instructor tables are RLS-enabled and remain empty. The migration creates only three SECURITY INVOKER catalog RPCs and does not alter existing tables or data. Read-only anonymous smoke checks for EN/AR confirmed empty results and no row-count changes; fixture-backed draft/missing-locale/pagination checks remain unverified. The organization is on Supabase Free, so managed daily backups are not assumed. The schema-only read-only dump is retained locally under ignored `tmp/phase09-hosted-preflight-public-schema.sql` (117,925 bytes; SHA-256 `89E58CA7EA21EAA48F0C74855CF3D77F3B4A5743A93E5AD3DD8B3514F021E80C`); it contains no table data and is not a full backup. The user accepted a narrow recovery for this additive migration: if needed, apply a forward corrective migration that drops only the three new function signatures and preserves migration history. This is not a substitute for a full data backup.
 
 Signup, login, password recovery, email verification, and app-level role grants use server-side Supabase Auth actions. The signup trigger initializes `learner_profiles` from validated non-privileged raw signup metadata; RLS exposes only the owner's row, and no role is created. Company invitation codes are not persisted or validated, and organization membership/enrollment remains deferred. The localized Proxy refreshes Supabase sessions and composes its cookies with next-intl routing, but it does not gate routes. Courses, learning, assessments, certificates, commerce, and other later domains remain unimplemented.

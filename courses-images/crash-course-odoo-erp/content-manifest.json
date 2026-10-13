@@ -1,0 +1,23 @@
+{
+  "courseSlug": "crash-course-odoo-erp",
+  "items": [
+    {
+      "position": 1,
+      "title": "Session 1 - Agenda",
+      "video": {
+        "position": 1,
+        "sourceUrl": "https://drive.google.com/file/d/1__588N8jz1dI2gEN4FW0hHrANB_tpmQ3/view?usp=sharing",
+        "sourceType": "google-drive-video",
+        "mimeType": "video/mp4"
+      },
+      "documents": [
+        {
+          "position": 1,
+          "title": "Course Agenda",
+          "path": "Course Agenda.pdf",
+          "mimeType": "application/pdf"
+        }
+      ]
+    }
+  ]
+}

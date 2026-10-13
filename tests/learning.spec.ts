@@ -56,19 +56,20 @@ test("all localized routes render without overflow at required widths", async ({
   }
   expect(errors).toEqual([]);
 });
-test("course filtering and search work together", async ({ page }) => {
+test("published course filters and search work together", async ({ page }) => {
   await page.goto("/en/courses");
-  await expect(page.locator(".course-card")).toHaveCount(6);
-  await page.getByRole("button", { name: "Technical", exact: true }).click();
-  await expect(page.locator(".course-card")).toHaveCount(3);
-  await page.getByRole("textbox", { name: "Search courses" }).fill("Python");
-  await expect(page.locator(".course-card")).toHaveCount(1);
+  await expect(page.getByTestId("learner-course-card")).toHaveCount(6);
+  await page.getByRole("link", { name: "Technical", exact: true }).first().click();
+  await expect(page).toHaveURL(/category=technical/);
+  await expect(page.getByTestId("learner-course-card")).toHaveCount(3);
+  await page.locator('input[name="q"]').fill("Python");
+  await page.locator('input[name="q"]').press("Enter");
+  await expect(page.getByTestId("learner-course-card")).toHaveCount(1);
   await page.getByRole("link", { name: "View Course", exact: true }).click();
-  await expect(page).toHaveURL(/\/detail-course$/);
-  await page.getByRole("button", { name: "Curriculum", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Course Curriculum" }),
-  ).toBeVisible();
+  // The detail opens on the same learner route, not on the public catalog.
+  await expect(page).toHaveURL(/\/en\/courses\?course=python-fundamentals$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Python Fundamentals" })).toBeVisible();
+  await expect(page.getByRole("tab", { name: "Curriculum" })).toBeVisible();
 });
 test("signup validates passwords and does not persist identity in local storage", async ({
   page,
@@ -243,7 +244,7 @@ test("legacy fragment URLs resolve to the matching App Router page", async ({
 test("legacy routes, query strings, and language switching preserve the page", async ({ page }) => {
   const legacy = [
     ["/courses?q=Python", "/en/courses?q=Python"],
-    ["/detail-course", "/en/detail-course"],
+    ["/detail-course", "/en/courses"],
     ["/ai-page", "/en/ai-page"],
     ["/community", "/en/community"],
     ["/messages", "/en/messages"],

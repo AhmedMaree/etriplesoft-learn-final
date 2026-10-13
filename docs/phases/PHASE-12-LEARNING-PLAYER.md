@@ -40,7 +40,7 @@ Scoring, certificates and browser-authoritative completion.
 
 APPROVED: follow repository requirements and the accepted domain architecture, not assumptions from demo UI.
 
-OPEN / DEFERRED: D13; D15 — see [decision register](OPEN-DECISIONS.md).
+OPEN / DEFERRED: D13 and remaining D15 Kashier/OpenAI/production operating decisions — see [decision register](OPEN-DECISIONS.md). Mux-specific Phase 11 policy is approved.
 
 ## 9. Database Work
 
