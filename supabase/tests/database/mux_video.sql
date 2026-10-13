@@ -121,5 +121,27 @@ SELECT set_config('request.jwt.claims', '{"sub":"e1100000-0000-4000-8000-0000000
 SELECT is((SELECT mux_playback_id FROM public.mux_get_lesson_playback(current_setting('pgtap.lesson')::uuid, 'en')), 'playback_phase11_001', 'previous ready video remains available while replacement upload is processing');
 RESET ROLE;
 
+-- Preview lessons play for any signed-in user; turning preview off restores the enrollment gate.
+INSERT INTO auth.users (id, aud, role, email, raw_user_meta_data, created_at, updated_at) VALUES
+  ('e1100000-0000-4000-8000-000000000004', 'authenticated', 'authenticated', 'phase11-visitor@example.test', '{}'::jsonb, now(), now());
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub', 'e1100000-0000-4000-8000-000000000004', true);
+SELECT set_config('request.jwt.claims', '{"sub":"e1100000-0000-4000-8000-000000000004","role":"authenticated"}', true);
+SELECT is((SELECT count(*)::integer FROM public.mux_get_lesson_playback(current_setting('pgtap.lesson')::uuid, 'en')), 0, 'unenrolled user receives no playback for a non-preview lesson');
+RESET ROLE;
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub', 'e1100000-0000-4000-8000-000000000001', true);
+SELECT set_config('request.jwt.claims', '{"sub":"e1100000-0000-4000-8000-000000000001","role":"authenticated"}', true);
+SELECT lives_ok($$SELECT public.admin_update_lesson(current_setting('pgtap.lesson')::uuid, true, true, NULL)$$, 'admin marks the video lesson as a preview');
+RESET ROLE;
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub', 'e1100000-0000-4000-8000-000000000004', true);
+SELECT set_config('request.jwt.claims', '{"sub":"e1100000-0000-4000-8000-000000000004","role":"authenticated"}', true);
+SELECT is((SELECT mux_playback_id FROM public.mux_get_lesson_playback(current_setting('pgtap.lesson')::uuid, 'en')), 'playback_phase11_001', 'unenrolled signed-in user receives playback for a published preview lesson');
+RESET ROLE;
+SET LOCAL ROLE anon;
+SELECT throws_ok($$SELECT * FROM public.mux_get_lesson_playback(current_setting('pgtap.lesson')::uuid, 'en')$$, '42501', NULL, 'anonymous callers cannot request preview playback');
+RESET ROLE;
+
 SELECT * FROM finish();
 ROLLBACK;

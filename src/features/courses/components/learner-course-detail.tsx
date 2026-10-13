@@ -11,7 +11,7 @@ import { enrollFreeCourseAction } from "@/features/courses/server/enrollment-act
 import { EnrollmentSubmitButton } from "@/features/marketing/components/course/enrollment-submit-button";
 import { getMarketingMessages } from "@/features/marketing/lib/messages";
 import { courseImage } from "./learner-courses";
-import { courseHref } from "./course-links";
+import { courseHref, lessonHref } from "./course-links";
 import { CourseDetailActions } from "./course-detail-actions";
 import { CourseContentList, LearnerCourseTabs, type ModuleGroup } from "./learner-course-tabs";
 
@@ -82,7 +82,9 @@ export async function LearnerCourseDetail({ course, outline, locale, enrollment,
           <ol>
             {group.lessons.map((lesson) => (
               <li key={lesson.id}>
-                <span dir="auto">{lesson.title}</span>
+                {entitled || lesson.preview
+                  ? <Link href={lessonHref(course.slug, lesson.id)} dir="auto">{lesson.title}</Link>
+                  : <span dir="auto">{lesson.title}</span>}
                 {lesson.preview && <em className="badge">{lesson.previewLabel}</em>}
               </li>
             ))}
@@ -167,6 +169,11 @@ export async function LearnerCourseDetail({ course, outline, locale, enrollment,
           {enrollment?.status === "revoked" && <p role="status" className="enroll-note">{marketing.enrollmentRevoked}</p>}
           {enrollment?.status === "expired" && <p role="status" className="enroll-note">{marketing.enrollmentExpired}</p>}
           {!enrollment && !enrollmentError && <p className="enroll-note">{t("notEnrolledYet")}</p>}
+          {entitled && outline[0] && (
+            <Link className="btn" href={lessonHref(course.slug, outline[0].lessonId)} data-testid="course-start-learning">
+              {t("startLearning")} <ArrowRight size={18} className="flip-rtl" aria-hidden="true" />
+            </Link>
+          )}
           {course.priceMinor === 0 && enrollment?.status !== "active" && (
             signedIn ? (
               <form action={enrollFreeCourseAction.bind(null, course.id, locale, course.slug)}>

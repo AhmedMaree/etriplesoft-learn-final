@@ -46,8 +46,11 @@ export async function POST(request: Request) {
 
   try {
     const mux = getMuxClient()
-    const token = await mux.jwt.signPlaybackId(playbackId, { type: 'video', expiration: '5m' })
-    return response({ playbackId, token, expiresInSeconds: 300 }, 200)
+    // Signed assets also need their own tokens for the poster and scrubbing previews.
+    const [token, thumbnailToken, storyboardToken] = await Promise.all(
+      (['video', 'thumbnail', 'storyboard'] as const).map((type) => mux.jwt.signPlaybackId(playbackId, { type, expiration: '5m' })),
+    )
+    return response({ playbackId, token, thumbnailToken, storyboardToken, expiresInSeconds: 300 }, 200)
   } catch {
     return response({ error: 'Unable to issue playback access.' }, 503)
   }

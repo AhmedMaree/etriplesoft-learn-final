@@ -231,6 +231,33 @@ export async function listMyEnrollments(client: Client): Promise<Record<string, 
   return result;
 }
 
+export type LearnerLesson = {
+  lessonId: string;
+  courseId: string;
+  lessonType: string;
+  title: string;
+  summary: string | null;
+  body: string | null;
+  isPreview: boolean;
+}
+
+/** One lesson the caller may open: published in this exact locale and either a preview or covered by an active enrollment. */
+export async function getLearnerLesson(client: Client, lessonId: string, locale: Locale): Promise<LearnerLesson | null> {
+  const { data, error } = await client.rpc("learner_get_lesson", { p_lesson_id: lessonId, p_locale: locale });
+  if (error) fail(error);
+  const row = data?.[0];
+  if (!row) return null;
+  return {
+    lessonId: row.lesson_id,
+    courseId: row.course_id,
+    lessonType: row.lesson_type,
+    title: row.title,
+    summary: row.summary || null,
+    body: row.body || null,
+    isPreview: row.is_preview,
+  };
+}
+
 export async function grantFreeEnrollment(client: Client, courseId: string): Promise<string> {
   const { data, error } = await client.rpc("learner_grant_free_enrollment", { p_course_id: courseId });
   if (error) fail(error);

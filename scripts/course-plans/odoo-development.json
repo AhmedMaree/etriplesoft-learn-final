@@ -1,0 +1,24 @@
+{
+  "course": {
+    "slug": "odoo-development",
+    "existing": true
+  },
+  "modules": [
+    {
+      "translations": { "en": { "title": "Your First Addon" } },
+      "lessons": [
+        { "file": "CH_3/create_addon.mp4", "preview": true, "translations": { "en": { "title": "Create an Addon" } } },
+        { "file": "CH_3/add-on_module_manifest.mp4", "preview": true, "translations": { "en": { "title": "The Module Manifest" } } },
+        { "file": "CH_3/Adding_Model.mp4", "preview": true, "translations": { "en": { "title": "Adding a Model" } } },
+        { "file": "CH_3/Adding_menu_items_and_views.mp4", "preview": true, "translations": { "en": { "title": "Menu Items and Views" } } }
+      ]
+    },
+    {
+      "translations": { "en": { "title": "Models and Fields in Depth" } },
+      "lessons": [
+        { "file": "CH_4/Recap_And_type_of_fields.mp4", "preview": true, "translations": { "en": { "title": "Recap and Field Types" } } },
+        { "file": "CH_4/Model_representation_and_order.mp4", "preview": true, "translations": { "en": { "title": "Model Representation and Ordering" } } }
+      ]
+    }
+  ]
+}
