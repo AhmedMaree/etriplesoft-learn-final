@@ -1,5 +1,9 @@
 # Production readiness
 
+## Learning checkpoint — 2026-10-14
+
+Overall remains NOT READY. Video learning is now PARTIAL: six signed DEV assets, protected five/preview one, a real player, private PDF delivery, audited manual access and saved video progress are implemented. Three new migrations are applied to DEV after a public schema/data backup. Local DB checks pass 347/347 and focused browser checks 7/7, with 48 EN/AR all-width captures. Course completion, broader progress/activity aggregation, payments, actual Arabic content/captions, fresh provider recovery checks, user sign-off and production infrastructure remain open. Older rows reporting no player/static-only progress are superseded by this checkpoint, not by a launch approval.
+
 Overall: **NOT READY**. Foundation is PARTIAL; no defensible completion percentage exists. Status vocabulary: NOT READY / PARTIAL / READY. READY requires current environment/revision-bound evidence and all applicable phase gates; no row is READY merely because a document reports prior work.
 
 | Launch gate | Readiness | Owning phases | Evidence / remaining gate |
@@ -46,3 +50,5 @@ Before Phase 38, retain migration manifest, approved content manifest, artifact 
 ## Evidence hygiene
 
 Keep secrets, personal learner data, raw payment payloads and AI conversations out of evidence. Use redacted identifiers and approved disposable accounts. Record unresolved decisions by ID from OPEN-DECISIONS.md. Do not reset shared databases, delete historical purchases or weaken RLS to produce passing checks.
+
+2026-10-14 outcomes checkpoint: working DEV assessments, completion, certificate verification/print presentation and dashboard do not establish launch readiness. Missing media/questions, final EN/AR/certificate acceptance, payment/provider operations, full administration and release gates remain. See [the learning guide](../LEARNING-FEATURES-GUIDE.md).

@@ -2,9 +2,13 @@
 
 ## 1. Status
 
-PLANNED
+IN_PROGRESS
 
 Evidence: No course_completions table exists. Demo percentages and quiz success cannot establish completion. Database design requires immutable requirement snapshots.
+
+## DEV implementation checkpoint — 2026-10-14
+
+User-authorized learning continuation implements the relevant domain/services and UI described in [the learning guide](../LEARNING-FEATURES-GUIDE.md). Local automated evidence and hosted transactional checks exist. Full phase manual, content, operational and predecessor acceptance gates remain open; this is not VERIFIED. The earlier current-state descriptions below are baseline audit evidence, superseded by this checkpoint for implemented paths. Phase 27 is partial: quiz authoring, video management and audited operator resource/curriculum operations exist; full course/path/resource administration is not complete.
 
 ## 2. Goal
 

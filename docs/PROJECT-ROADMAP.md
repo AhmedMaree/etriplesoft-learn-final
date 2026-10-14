@@ -41,22 +41,22 @@ Outside the 41 phases: the standalone `odoo-learn` site was ported into this app
 | [Phase 09](phases/PHASE-09-COURSE-CONTENT-INTEGRATION.md) | Course Catalog & Content Integration | VERIFIED | 03, 07, 08 | 12, 22, 30 | Replace catalog/detail/instructor/outline fixtures with server data |
 | [Phase 10](phases/PHASE-10-ENROLLMENT-ENTITLEMENTS.md) | Enrollment & Entitlements | VERIFIED | 05, 07, 08 | 11, 12, 14, 19, 25 | Implement individual free enrollment and exact-locale current entitlement checks; D14 approved and user EN/AR visual/accessibility sign-off recorded 2026-10-12 |
 | [Phase 11](phases/PHASE-11-MUX-VIDEO.md) | Protected Video / Mux Infrastructure | IN PROGRESS | 08, 10 | 12, 27 | Store language-neutral video metadata; authorize uploads; verify webhooks; issue signed, enrollment-gated playback tokens |
-| [Phase 12](phases/PHASE-12-LEARNING-PLAYER.md) | Learning Player | PLANNED | 03, 09, 10, 11 | 13, 16, 25 | Build lesson/module navigation with authorized body/video/resources |
-| [Phase 13](phases/PHASE-13-PROGRESS-TRACKING.md) | Progress Tracking | PLANNED | 12 | 17 | Persist enrollment-scoped lesson/video progress and resume position |
-| [Phase 14](phases/PHASE-14-ASSESSMENT-DOMAIN.md) | Assessment Domain | PLANNED | 08, 10 | 15, 27 | Model single/multiple choice and true/false with immutable published versions |
-| [Phase 15](phases/PHASE-15-ASSESSMENT-ATTEMPTS.md) | Assessment Attempts & Server Grading | PLANNED | 14 | 16, 17 | Start version-bound attempts with server deadlines and retry limits |
-| [Phase 16](phases/PHASE-16-ASSESSMENT-UI.md) | Assessment UI Integration | PLANNED | 03, 12, 15 | 17, 31, 32 | Replace fixtures/client scoring with safe assessment services |
-| [Phase 17](phases/PHASE-17-COURSE-COMPLETION.md) | Course Completion | PLANNED | 13, 15, 16 | 18, 21 | Evaluate required lessons and required assessments together |
-| [Phase 18](phases/PHASE-18-CERTIFICATES.md) | Certificates | PLANNED | 17, 06 | 22, 28, 30 | Issue certificates only from authoritative completion |
+| [Phase 12](phases/PHASE-12-LEARNING-PLAYER.md) | Learning Player | IN PROGRESS | 03, 09, 10, 11 | 13, 16, 25 | Player and private resources implemented; automated checks pass, manual/provider acceptance pending |
+| [Phase 13](phases/PHASE-13-PROGRESS-TRACKING.md) | Progress Tracking | IN PROGRESS | 12 | 17 | Video progress/resume and 90% threshold implemented; broader progress and acceptance gates pending |
+| [Phase 14](phases/PHASE-14-ASSESSMENT-DOMAIN.md) | Assessment Domain | IN_PROGRESS | 08, 10 | 15, 27 | Model single/multiple choice and true/false with immutable published versions |
+| [Phase 15](phases/PHASE-15-ASSESSMENT-ATTEMPTS.md) | Assessment Attempts & Server Grading | IN_PROGRESS | 14 | 16, 17 | Start version-bound attempts with server deadlines and retry limits |
+| [Phase 16](phases/PHASE-16-ASSESSMENT-UI.md) | Assessment UI Integration | IN_PROGRESS | 03, 12, 15 | 17, 31, 32 | Replace fixtures/client scoring with safe assessment services |
+| [Phase 17](phases/PHASE-17-COURSE-COMPLETION.md) | Course Completion | IN_PROGRESS | 13, 15, 16 | 18, 21 | Evaluate required lessons and required assessments together |
+| [Phase 18](phases/PHASE-18-CERTIFICATES.md) | Certificates | IN_PROGRESS | 17, 06 | 22, 28, 30 | Issue certificates only from authoritative completion |
 | [Phase 19](phases/PHASE-19-ORDERS-CHECKOUT.md) | Orders & Checkout Domain | PLANNED | 07, 10 | 20 | Create owner-scoped one-time orders and item price/currency snapshots |
 | [Phase 20](phases/PHASE-20-KASHIER-PAYMENTS.md) | Kashier Payments | PLANNED | 19, 06 | 29, 34, 35 | Initialize provider checkout server-side using order snapshots |
 | [Phase 21](phases/PHASE-21-LEARNING-PATHS.md) | Learning Paths | PLANNED | 07, 17 | 22, 27, 30 | Publish translated ordered course paths |
-| [Phase 22](phases/PHASE-22-LEARNER-DASHBOARD.md) | Real Learner Dashboard | PLANNED | 09, 18, 21 | 23, 24, 31, 32, 33, 34, 35, 36 | Aggregate own enrollments, recent lessons, progress, completions and certificates |
+| [Phase 22](phases/PHASE-22-LEARNER-DASHBOARD.md) | Real Learner Dashboard | IN_PROGRESS | 09, 18, 21 | 23, 24, 31, 32, 33, 34, 35, 36 | Aggregate own enrollments, recent lessons, progress, completions and certificates |
 | [Phase 23](phases/PHASE-23-CALENDAR.md) | Calendar Scope & Integration | PLANNED | 22 | — | Maintain a DEFERRED V1 disposition until D04 changes |
 | [Phase 24](phases/PHASE-24-NOTIFICATIONS.md) | Notifications Scope & Integration | PLANNED | 22 | — | Maintain DEFERRED V1 disposition pending D05 |
 | [Phase 25](phases/PHASE-25-AI-ASSISTANT.md) | AI Learning Assistant | PLANNED | 08, 10, 12 | 31, 32, 33, 34, 35, 36 | Authorize course-scoped retrieval from real published content |
 | [Phase 26](phases/PHASE-26-COMMUNITY-MESSAGES.md) | Community / Messages Disposition | PLANNED | 00 | — | Record DEFERRED scope for community/messages under current evidence |
-| [Phase 27](phases/PHASE-27-COURSE-ADMINISTRATION.md) | Course & Content Administration | PLANNED | 06, 08, 11, 14, 21 | 31, 32, 33, 34, 35, 36 | Build create/edit/preview/publish/archive course and curriculum workflows |
+| [Phase 27](phases/PHASE-27-COURSE-ADMINISTRATION.md) | Course & Content Administration | IN_PROGRESS | 06, 08, 11, 14, 21 | 31, 32, 33, 34, 35, 36 | Build create/edit/preview/publish/archive course and curriculum workflows |
 | [Phase 28](phases/PHASE-28-LEARNER-ADMINISTRATION.md) | Learner / Enrollment Administration | PLANNED | 06, 18 | 31, 32, 33, 34, 35 | Provide least-privilege learner lookup and manual entitlement grant/revoke |
 | [Phase 29](phases/PHASE-29-COMMERCE-ADMINISTRATION.md) | Commerce Administration | PLANNED | 06, 20 | 31, 32, 33, 34, 35 | Expose order/payment/reconciliation status and failed event handling |
 | [Phase 30](phases/PHASE-30-SEO-METADATA.md) | SEO / Metadata / Public Discoverability | IN PROGRESS | 09, 18, 21 | 36 | Finish public course/path/verification indexing policy |

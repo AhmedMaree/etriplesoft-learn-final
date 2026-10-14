@@ -3,6 +3,8 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
 import { LessonPlayer } from "@/features/learning/components/lesson-player";
+import { LearnerQuiz } from "@/features/assessments/components/learner-quiz";
+import { CompletionControls } from "@/features/learning/components/completion-controls";
 import type { CatalogCourseDetail, CatalogOutlineLesson, LearnerLesson } from "@/features/courses/server/course-repository";
 import { courseHref, lessonHref } from "./course-links";
 
@@ -12,6 +14,10 @@ type Props = {
   lessonId: string;
   lesson: LearnerLesson | null;
   locale: Locale;
+  trackProgress: boolean;
+  autoplayNext: boolean;
+  progress: { lesson_id: string; status: string; percent: number; updated_at: string }[];
+  resources: { resource_id: string; label: string; description: string }[];
 };
 
 /** "4:28" / "1:02:05" for a lesson row; null when the duration is not known yet. */
@@ -23,9 +29,11 @@ function clock(seconds: number | null) {
   return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${s}` : `${m}:${s}`;
 }
 
-export async function LearnerLessonView({ course, outline, lessonId, lesson, locale }: Props) {
+export async function LearnerLessonView({ course, outline, lessonId, lesson, locale, trackProgress, autoplayNext, progress, resources }: Props) {
   const t = await getTranslations("courses");
   const navigationT = await getTranslations("navigation");
+  const completionT = await getTranslations('completion');
+  const readingReady = !!lesson && (lesson.lessonType === 'article' ? !!lesson.body?.trim() : lesson.lessonType === 'resource' ? resources.length>0 : true);
   const index = outline.findIndex((item) => item.lessonId === lessonId);
   const current = outline[index];
   const previous = outline[index - 1] ?? null;
@@ -48,13 +56,15 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
           <Link href={courseHref(course.slug)} dir="auto">{course.title}</Link>
         </nav>
 
-        {lesson ? (
+        {lesson?.lessonType === 'assessment' ? <LearnerQuiz lessonId={lessonId} locale={locale} /> : lesson ? (
           lesson.lessonType === "video" && (
             <LessonPlayer
               key={lessonId}
               lessonId={lessonId}
               locale={locale}
               title={lesson.title}
+              trackProgress={trackProgress}
+              autoplayNext={autoplayNext}
               next={next ? { href: lessonHref(course.slug, next.lessonId), title: next.lessonTitle } : null}
             />
           )
@@ -68,6 +78,8 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
           </div>
         )}
 
+        {lesson && !readingReady && <p className="panel lesson-notes" role="status">{completionT('contentPending')}</p>}
+        {trackProgress && lesson && readingReady && <CompletionControls courseId={course.id} locale={locale} {...(['article','resource'].includes(lesson.lessonType) ? {lessonId,lessonCompleted:progress.some(row=>row.lesson_id===lessonId&&row.status==='completed')} : {})} />}
         <header className="lesson-header">
           <p className="lesson-eyebrow">
             {t("moduleLabel", { n: moduleIndex + 1 })} · <span dir="auto">{current.moduleTitle}</span>
@@ -98,13 +110,20 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
             {lesson.body && <div dir="auto" className="lesson-body">{lesson.body}</div>}
           </section>
         )}
+        {resources.length > 0 && <section className="panel lesson-resources">
+          <h2>{t('resources')}</h2>
+          <ul>{resources.map((resource) => <li key={resource.resource_id}>
+            <a href={`/api/learning/resources/${resource.resource_id}?lessonId=${lessonId}&locale=${locale}`} dir="auto">{resource.label}</a>
+            {resource.description && <p dir="auto">{resource.description}</p>}
+          </li>)}</ul>
+        </section>}
       </div>
 
       <aside className="panel lesson-sidebar" aria-label={t("courseContent")}>
         <div className="lesson-sidebar-head">
           <h2>{t("courseContent")}</h2>
           <p dir="auto">{course.title}</p>
-          <div className="lesson-progress" aria-hidden="true"><span style={{ width: `${((index + 1) / outline.length) * 100}%` }} /></div>
+          <div className="lesson-progress" aria-hidden="true"><span style={{ width: `${outline.filter((item) => item.isRequired && progress.some((row) => row.lesson_id === item.lessonId && row.status === 'completed')).length / Math.max(1, outline.filter((item) => item.isRequired).length) * 100}%` }} /></div>
           <small>{t("lessonOf", { n: index + 1, total: outline.length })}</small>
         </div>
         {modules.map((module, position) => (
@@ -123,6 +142,7 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
                     >
                       <Icon size={18} aria-hidden="true" />
                       <span className="lesson-row-title" dir="auto">{item.number}. {item.lessonTitle}</span>
+                      {progress.some((row) => row.lesson_id === item.lessonId && row.status === 'completed') && <small>{t('lessonCompleted')}</small>}
                       {clock(item.durationSeconds) && <small>{clock(item.durationSeconds)}</small>}
                     </Link>
                   </li>

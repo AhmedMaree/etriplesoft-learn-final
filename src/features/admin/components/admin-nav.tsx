@@ -9,6 +9,9 @@ export function AdminNav() {
   const links = [
     { href: '/admin', label: t('nav.roles') },
     { href: '/admin/audit', label: t('nav.audit') },
+    { href: '/admin/enrollments', label: t('nav.enrollments') },
+    { href: '/admin/assessments', label: t('nav.assessments') },
+    { href: '/video-management', label: t('nav.videos') },
   ] as const
 
   return (

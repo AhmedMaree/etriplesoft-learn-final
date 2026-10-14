@@ -1,5 +1,9 @@
 # Phase 10 — Enrollment & Entitlements
 
+## Approved supplement — 2026-10-14
+
+The user explicitly approved audited administrator-granted course access while paid checkout remains later. Migration `20261014040126_admin_course_access` adds the distinct `admin` source and an idempotent current-admin RPC with typed audit target/reason. The localized `/admin/enrollments` form is tested; learners cannot grant access or enroll paid courses for free. The requested existing account received development-test access to Odoo Development, whose price is unchanged. The earlier verified free-enrollment phase remains historical evidence; this supplement has automated checks but pending user acceptance and does not complete Phase 28 administration.
+
 ## 1. Status
 
 VERIFIED — 2026-10-12

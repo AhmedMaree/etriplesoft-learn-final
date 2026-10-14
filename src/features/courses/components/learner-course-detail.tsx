@@ -14,6 +14,8 @@ import { courseImage } from "./learner-courses";
 import { courseHref, lessonHref } from "./course-links";
 import { CourseDetailActions } from "./course-detail-actions";
 import { CourseContentList, LearnerCourseTabs, type ModuleGroup } from "./learner-course-tabs";
+import { getCourseProgress } from '@/features/learning/server/progress';
+import { CompletionControls } from '@/features/learning/components/completion-controls';
 
 type Props = {
   course: CatalogCourseDetail;
@@ -58,6 +60,10 @@ export async function LearnerCourseDetail({ course, outline, locale, enrollment,
     ? t("free")
     : format.number(course.priceMinor / 100, { style: "currency", currency: course.currency, numberingSystem: "latn", maximumFractionDigits: 0 });
   const entitled = enrollment?.status === "active" || enrollment?.status === "completed";
+  const progress = entitled ? await getCourseProgress(course.id, outline.map((item) => item.lessonId)) : [];
+  const resumeLesson = outline.find((item) => item.lessonId === progress[0]?.lesson_id) ?? outline[0];
+  const required = outline.filter((item) => item.isRequired);
+  const completedRequired = required.filter((item) => progress.some((row) => row.lesson_id === item.lessonId && row.status === 'completed')).length;
   const statusKey = { active: "statusActive", completed: "statusCompleted", revoked: "statusRevoked", expired: "statusExpired" } as const;
   const statusLabel = enrollment ? t(statusKey[enrollment.status]) : null;
   const loginHref = `/login?next=${encodeURIComponent(`/${locale}${courseHref(course.slug)}`)}`;
@@ -97,6 +103,7 @@ export async function LearnerCourseDetail({ course, outline, locale, enrollment,
   return (
     <div className="columns detail-columns learner-detail">
       <div className="primary">
+        {entitled && <CompletionControls courseId={course.id} locale={locale} />}
         <nav className="course-breadcrumb" aria-label={navigationT("courseBreadcrumb")}>
           <Link href="/catalog">{navigationT("ourCourses")}</Link>
           <ChevronRight size={16} className="flip-rtl" aria-hidden="true" />
@@ -169,8 +176,9 @@ export async function LearnerCourseDetail({ course, outline, locale, enrollment,
           {enrollment?.status === "revoked" && <p role="status" className="enroll-note">{marketing.enrollmentRevoked}</p>}
           {enrollment?.status === "expired" && <p role="status" className="enroll-note">{marketing.enrollmentExpired}</p>}
           {!enrollment && !enrollmentError && <p className="enroll-note">{t("notEnrolledYet")}</p>}
-          {entitled && outline[0] && (
-            <Link className="btn" href={lessonHref(course.slug, outline[0].lessonId)} data-testid="course-start-learning">
+          {entitled && <p className="enroll-note">{t('completedRequired', { count: completedRequired, total: required.length })}</p>}
+          {entitled && resumeLesson && (
+            <Link className="btn" href={lessonHref(course.slug, resumeLesson.lessonId)} data-testid="course-start-learning">
               {t("startLearning")} <ArrowRight size={18} className="flip-rtl" aria-hidden="true" />
             </Link>
           )}

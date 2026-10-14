@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { isLocale } from "@/i18n/config";
 import { requireAuthenticatedUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -9,12 +9,17 @@ import {
   getCatalogCourse,
   getCatalogCourseOutline,
   getLearnerLesson,
+  getCourseEnrollment,
 } from "@/features/courses/server/course-repository";
 import { LearnerLessonView } from "@/features/courses/components/learner-lesson";
+import { getCourseProgress } from '@/features/learning/server/progress';
+import { Link } from '@/i18n/navigation';
+import { lessonHref } from '@/features/courses/components/course-links';
+import { Panel } from '@/components/ui/primitives';
 
 type PageProps = { params: Promise<{ locale: string; slug: string; lessonId: string }> };
 
-const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export const dynamic = "force-dynamic";
 
@@ -35,10 +40,24 @@ export default async function LessonPage({ params }: PageProps) {
   // learner_get_lesson returns a row only for a preview lesson or an entitled learner.
   const client = await createClient();
   const course = await getCatalogCourse(client, locale, slug);
-  if (!course) notFound();
-  const outline = await getCatalogCourseOutline(client, locale, slug);
-  if (!outline.some((item) => item.lessonId === lessonId)) notFound();
+  const outline = course ? await getCatalogCourseOutline(client, locale, slug) : [];
+  if (!course || !outline.some((item) => item.lessonId === lessonId)) {
+    const otherLocale = locale === 'en' ? 'ar' : 'en';
+    const otherOutline = await getCatalogCourseOutline(client, otherLocale, slug);
+    if (!otherOutline.some((item) => item.lessonId === lessonId)) notFound();
+    const t = await getTranslations('courses');
+    return <Panel><h1>{t('lessonUnavailable')}</h1><p>{t('lessonUnavailableBody')}</p>
+      <Link className="btn" href={lessonHref(slug, lessonId)} locale={otherLocale}>{t(otherLocale === 'en' ? 'openEnglishLesson' : 'openArabicLesson')}</Link></Panel>;
+  }
   const lesson = await getLearnerLesson(client, lessonId, locale);
-
-  return <LearnerLessonView course={course} outline={outline} lessonId={lessonId} lesson={lesson} locale={locale} />;
+  const [enrollment, preferences, resourceResult, progress] = await Promise.all([
+    getCourseEnrollment(client, course.id),
+    client.from('learner_preferences').select('autoplay_next').maybeSingle(),
+    lesson ? client.rpc('learner_get_lesson_resources', { p_lesson_id: lessonId, p_locale: locale }) : Promise.resolve({ data: [], error: null }),
+    getCourseProgress(course.id, outline.map((item) => item.lessonId)),
+  ]);
+  if (resourceResult.error) throw new Error('Lesson resources are unavailable.');
+  return <LearnerLessonView course={course} outline={outline} lessonId={lessonId} lesson={lesson} locale={locale}
+    trackProgress={enrollment?.status === 'active' || enrollment?.status === 'completed'} autoplayNext={preferences.data?.autoplay_next ?? false}
+    resources={resourceResult.data ?? []} progress={progress} />;
 }

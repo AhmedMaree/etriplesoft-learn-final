@@ -1,5 +1,7 @@
 # Verification matrix
 
+2026-10-14 learning evidence: 347 local DB checks, 4 signature cases and 7 focused browser/message cases pass; 48 EN/AR captures cover lesson/upload/admin-grant screens at all eight widths. Real signed playback, saved resume, private PDF download and cross-lesson resource denial are included. Three migrations are on local/hosted DEV; six owner-authorized real assets and four published private PDFs were checked. Required manual/caption/provider-recovery/production gates remain open; requirements below are not waived. See [operator guide](../COURSE-VIDEO-GUIDE.md).
+
 REQUIRED is a mandatory gate when executing the included phase. OPTIONAL is informative only. N/A needs the phase scope reason. These requirements do not claim tests already exist. Deferred phases 23/24/26 show their currently scoped disposition review; activation requires updating this matrix. Every implementation phase also requires typecheck and lint even though the requested table has only a Build column.
 
 | Phase | DB | RLS | Unit | Integration | Playwright | EN/AR | Responsive | Accessibility | Security | Build |
@@ -109,3 +111,5 @@ Phase 02 checkpoint (2026-10-08): focused anonymous capture suite 16/16; typeche
 Phase 01 ran on 2026-10-07: typecheck, lint and build passed; 14 of 15 Playwright tests passed. The 30 localized routes passed the eight-width route/render/direction/overflow sweep. The remaining auth callback test fails because the current configured development origin is excluded by the dirty redirect allowlist; it is assigned to Phase 05 and does not fail Phase 01's route architecture gate. See the Phase 01 contract for exact revision/diff evidence and limits.
 
 Historical QA-CHECKLIST.md records 13 Playwright tests on 2026-10-06 and 15 on 2026-10-07 plus prior typecheck/lint/build passes. It explicitly leaves full visual parity, Arabic font review and onboarding RLS behavior pending. Those remain later phase evidence and are not replaced by the Phase 01 route smoke.
+
+2026-10-14 learning continuation: Phases 14–18/22 and partial 27 are IN_PROGRESS with DEV implementations, local tests, both-locale captures and hosted transactional validation. [Learning checkpoint](../LEARNING-FEATURES-GUIDE.md) records scope and remaining checks. No full phase or production gate is waived.

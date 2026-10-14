@@ -2,7 +2,9 @@
 
 ## 1. Status
 
-PLANNED
+IN PROGRESS
+
+2026-10-14 implementation: D08 is explicitly approved as 90% of unique watched timeline, excluding seeking. Enrollment-scoped lesson/video tables, private server-timed sessions/intervals and constrained RPCs are applied to local and hosted DEV. Serial bounded checkpoints, retry, unique interval credit, resume, same-video tab supersession, completed access and revoke denial are implemented. All 347 local DB checks pass; the focused browser suite verifies real signed playback and saved resume. This completes the requested video-progress flow, not broader text/assessment completion, trusted learning-time dashboard aggregation, private-session retention, or manual/production acceptance. Do not mark Phase 13 VERIFIED from these partial gates. See [operator guide](../COURSE-VIDEO-GUIDE.md).
 
 Evidence: learning-widgets.tsx renders constant 30%/2-of-10 values; dashboard.tsx uses hardcoded continue-learning positions. No progress schema or server mutation exists.
 
@@ -147,10 +149,10 @@ Update this phase, ../PROJECT-ROADMAP.md, VERIFICATION-MATRIX.md, OPEN-DECISIONS
 ## 27. Completion Gate
 
 PHASE IMPLEMENTED:
-NO
+PARTIAL — enrollment-scoped video progress/resume/lesson completion implemented; broader phase gates remain open
 
 AUTOMATED VERIFICATION:
-NOT RUN
+PARTIAL — focused video checkpoint/owner/replay/seek/tab/threshold and browser resume checks pass
 
 MANUAL VERIFICATION:
 NOT RUN

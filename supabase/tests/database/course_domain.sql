@@ -216,11 +216,15 @@ SELECT ok(
 SELECT throws_ok($$UPDATE public.admin_audit_log SET safe_summary = 'tampered' WHERE target_type = 'course'$$, '42501', NULL, 'course audit rows are append-only');
 
 SELECT set_config('pgtap.audit_n', (SELECT count(*)::text FROM public.admin_audit_log WHERE target_type = 'course'), true);
+SELECT set_config('pgtap.audit_pages', ((SELECT count(*) FROM public.admin_audit_log) / 100)::text, true);
 SET LOCAL ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub', 'd1000000-0000-4000-8000-000000000001', true);
 SELECT set_config('request.jwt.claims', '{"sub":"d1000000-0000-4000-8000-000000000001","role":"authenticated"}', true);
 SELECT is(
-  (SELECT count(*)::integer FROM public.admin_list_audit(100, 0) WHERE target_type = 'course'),
+  (SELECT count(*)::integer
+   FROM generate_series(0,current_setting('pgtap.audit_pages')::integer) AS pages(n)
+   CROSS JOIN LATERAL public.admin_list_audit(100,pages.n*100) audit
+   WHERE audit.target_type = 'course'),
   current_setting('pgtap.audit_n')::integer,
   'the Phase 06 audit viewer lists every course audit row'
 );

@@ -1,15 +1,20 @@
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
-import { BookOpen, Users, CalendarDays, Award, ChevronRight, ArrowRight, BarChart3, Briefcase, Play } from 'lucide-react';
+import { BookOpen, Users, CalendarDays, Award, ChevronRight, ArrowRight, BarChart3, Briefcase } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { Panel, Title, IconBox, Progress } from '@/components/ui/primitives';
+import { Panel, Title, IconBox } from '@/components/ui/primitives';
 import { Community } from '@/components/shared/community-promo';
-import { ProgressPanel, Paths } from '@/features/learning/components/learning-widgets';
-import { CourseCard } from '@/features/courses/components/course-card';
 import { ASSET_BASE } from '@/lib/assets';
-import { courses } from '@/features/courses/data/demo-courses';
 import { ScrollToLearningPaths } from '@/features/dashboard/components/scroll-to-learning-paths';
 import { useTranslations } from 'next-intl';
+import { getLocale, getTranslations } from 'next-intl/server';
+import { isLocale } from '@/i18n/config';
+import { createClient } from '@/lib/supabase/server';
+import { listCatalogCourses } from '@/features/courses/server/course-repository';
+import { courseImage } from '@/features/courses/components/learner-courses';
+import { courseHref } from '@/features/courses/components/course-links';
+import { getLearningSummary } from '@/features/learning/server/summary';
+import { LearningSummaryPanel } from '@/features/learning/components/learning-summary';
 
 export function AICard() {
   const t = useTranslations("dashboard");
@@ -38,8 +43,12 @@ export function AICard() {
   );
 }
 
-export function Overview() {
-  const t = useTranslations("dashboard");
+export async function Overview() {
+  const t = await getTranslations("dashboard");
+  const learningT = await getTranslations('realLearning');
+  const locale = await getLocale();
+  if (!isLocale(locale)) throw new Error('Unsupported locale.');
+  const [summary, catalog] = await Promise.all([getLearningSummary(locale),listCatalogCourses(await createClient(),{locale,limit:3})]);
   return (
     <div className="columns">
       <div className="primary">
@@ -88,49 +97,20 @@ export function Overview() {
             })}
           </div>
         </section>
-        <Title href="/courses">{t("popularCourses")}</Title>
+        <Title href="/courses">{learningT('availableCourses')}</Title>
         <div className="course-grid">
-          {courses.slice(0, 3).map((c, i) => (
-            <CourseCard key={c.name} course={c} index={i} compact />
+          {catalog.courses.map((course) => (
+            <article className="course-card panel compact" key={course.id}><Link href={courseHref(course.slug)} className="course-image"><Image src={courseImage(course.slug)} alt="" fill sizes="(max-width:700px) 100vw,33vw" /></Link><div className="course-body"><h3 dir="auto"><Link href={courseHref(course.slug)}>{course.title}</Link></h3><p dir="auto">{course.summary}</p><Link className="btn outline" href={courseHref(course.slug)}>{learningT('viewCourse')}</Link></div></article>
           ))}
         </div>
         <div id="learning-paths">
-          <Paths />
+          <Title href="/courses?view=mine">{learningT('yourCourses')}</Title>
+          <div className="paths">{summary.courses.slice(0,3).map(course=><Link className="path panel" href={courseHref(course.slug)} key={course.slug}><IconBox icon={BookOpen}/><div><strong dir="auto">{course.title}</strong><p>{learningT('lessons',{finished:course.finished,required:course.required})}</p></div></Link>)}</div>
         </div>
         <Community />
       </div>
       <aside className="right-rail">
-        <ProgressPanel />
-        <Panel>
-          <Title href="/detail-course">{t("continueTitle")}</Title>
-          {[
-            "Business Workflows & ERP",
-            "Introduction to Models",
-            "Working with Views",
-          ].map((n, i) => (
-            <Link href="/detail-course" className="lesson-preview" key={n}>
-              <div className="lesson-thumb">
-                <Image
-                  src={ASSET_BASE + "course-2.svg"}
-                  alt=""
-                  fill
-                  sizes="96px"
-                />
-                <Play fill="white" />
-              </div>
-              <div>
-                <strong dir="ltr">{n}</strong>
-                <small dir="ltr">Odoo Development</small>
-                <div className="inline-progress">
-                  <Progress value={35 - i * 3} />
-                  <small>
-                    {[12, 8, 6][i]} / {45 - i * 10} min
-                  </small>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </Panel>
+        <LearningSummaryPanel summary={summary} />
         <AICard />
         <Panel>
           <Title>{t("quickLinks")}</Title>

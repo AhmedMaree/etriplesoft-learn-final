@@ -2,7 +2,9 @@
 
 ## 1. Status
 
-PLANNED
+IN PROGRESS
+
+2026-10-14 implementation: the existing lesson route/player is connected to renewable signed playback, enrollment-gated resources, previous/next/module links, saved resume, explicit missing-locale states and autoplay-next preference. Seven focused browser/message tests pass, including actual signed playback and private PDF bytes, resource substitution denial, administrator grants, and 48 EN/AR captures across all eight widths. Typecheck/build pass. Fresh provider expiry/revoke during actual playback and manual content/caption/visual acceptance remain unverified. Scope was explicitly authorized together with enrollment/Mux/progress by the current user request; no prerequisite is silently marked VERIFIED. See [operator guide](../COURSE-VIDEO-GUIDE.md).
 
 Evidence: src/features/learning/components/learning-widgets.tsx contains progress/path display fixtures, not a lesson player. No lesson route exists.
 
@@ -149,10 +151,10 @@ Update this phase, ../PROJECT-ROADMAP.md, VERIFICATION-MATRIX.md, OPEN-DECISIONS
 ## 27. Completion Gate
 
 PHASE IMPLEMENTED:
-NO
+PARTIAL — player/resources/video-progress integration implemented; remaining acceptance is explicit above
 
 AUTOMATED VERIFICATION:
-NOT RUN
+PARTIAL — focused browser/locale/DB suites pass; full provider failure/recovery matrix remains open
 
 MANUAL VERIFICATION:
 NOT RUN

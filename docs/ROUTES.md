@@ -1,5 +1,16 @@
 # Route map
 
+## Learning additions — 2026-10-14
+
+- `/{locale}/courses/{slug}/lessons/{lessonId}`: authenticated player/resources/progress; missing exact-locale lessons offer an explicit other-language link.
+- `/{locale}/video-management`: current admin/assigned-instructor uploads and caption operations.
+- `/{locale}/admin/enrollments`: current administrator-only audited access grants.
+- `POST /api/learning/progress`: start a session or submit a bounded serial checkpoint.
+- `GET /api/learning/resources/{resourceId}?lessonId=...&locale=...`: exact-resource authorization and private download redirect.
+- `GET /api/mux/lessons/{lessonId}`: authorized management status.
+
+Existing course-detail/query/demo URLs remain compatible. Lesson/resource UUID validation accepts existing deterministic UUID-shaped fixtures, including older non-v4 identifiers.
+
 The learner and authentication routes are shared beneath `[locale]`. Route groups remain URL-neutral. `/` redirects to `/en`; `/overview` resolves to `/en/overview`. `/en` and `/ar` are the public marketing landing page (route group `(site)`, styles in `src/features/marketing/`). The authenticated learner dashboard lives at `/en/overview` and `/ar/overview`. Legacy fragment URLs such as `/#courses` resolve to their English localized equivalent after hydration.
 
 | Screen | URL |
@@ -80,3 +91,7 @@ Pages live under `src/app/[locale]/(site)/` (shared header/footer, styles in `sr
 The public catalog is `/catalog`; `/courses` is the learner course list and both read published exact-locale database records. Catalog listing supports server-side search, category/level filters and pagination. `/{locale}/catalog/{slug}` shows public detail, instructor attribution and the published outline only; missing translations render a localized unavailable state and link only to another published locale. A valid `/detail-course?slug=...` redirects to the canonical route; ambiguous or invalid legacy links remain on a localized chooser. Local seed rows are demo placeholders. Migration `20261011150000_catalog_search_and_facets.sql` is applied to Hosted DEV; no course rows or fixtures have been added there. Odoo modules, learning paths and other editorial data remain English content rendered with `lang="en" dir="ltr"` inside Arabic pages (see I18N.md).
 
 Marketing UI copy is in `messages/marketing/{en,ar}.json` and `pages-{en,ar}.json`, read through `src/features/marketing/lib/messages.ts` (not the global next-intl catalog). Arabic is type-checked against English, so the two cannot drift. Privacy and Terms are ported from the standalone odoo-learn site, predate user accounts, and need legal review before launch.
+
+## Learning outcome routes — 2026-10-14
+
+`/{locale}/assessment` now requires login and lists entitled course assessment links; the course lesson UUID route renders the real quiz. `/{locale}/admin/assessments` creates/localizes/publishes drafts for current admins. `/{locale}/certificates` lists earned outcomes; `/{locale}/certificates/{certificateId}` is owner-only and supports EN/AR print presentation. `/{locale}/verify/{token}` is a no-index public narrow verification page. POST `/api/learning/quiz`, `/api/learning/quiz/author`, `/api/learning/completion` and `/api/learning/certificates` validate bounded inputs, authenticated authority and the configured app origin. Existing route groups remain URL-neutral.

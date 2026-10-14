@@ -1959,6 +1959,18 @@ html[lang="ar"] .learner-detail .course-banner img {
 }
 
 /* Lesson player: /courses/[slug]/lessons/[lessonId] */
+.video-upload-form { display: grid; gap: 12px; min-width: 0; margin-block: 20px; }
+.video-upload-form select, .video-upload-form input { width: 100%; min-width: 0; min-height: 44px; }
+.video-upload-form select { padding: 10px; border: 1px solid var(--line); border-radius: var(--radius); }
+.video-upload-form .btn { justify-self: start; }
+.video-upload-form progress { width: 100%; }
+.video-status-row { display: grid; gap: 6px; padding-block: 12px; border-block-end: 1px solid var(--line); overflow-wrap: anywhere; }
+.video-status-row fieldset { display: flex; flex-wrap: wrap; gap: 12px; margin-block: 10px; border: 1px solid var(--line); border-radius: 8px; }
+.video-status-row input[type="checkbox"] { width: auto; min-height: auto; margin-inline-end: 8px; }
+.video-status-row .btn { margin-inline-end: 8px; margin-block: 8px; }
+.lesson-progress-status { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.lesson-saved-progress { position: absolute; inset-block-start: 8px; inset-inline-start: 8px; margin: 0; padding: 4px 8px; border-radius: 6px; background: var(--brand-void); color: white; font-size: 12px; pointer-events: none; }
+.lesson-resources a { overflow-wrap: anywhere; }
 .lesson-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
@@ -2231,3 +2243,24 @@ html[lang="ar"] .learner-detail .course-banner img {
     animation-duration: 3s;
   }
 }
+.real-quiz fieldset, .quiz-author fieldset { min-inline-size: 0; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+.real-quiz legend { max-inline-size: 100%; overflow-wrap: anywhere; }
+.quiz-author textarea { min-block-size: 90px; inline-size: 100%; }
+.quiz-author { min-inline-size: 0; max-inline-size: 100%; }
+.quiz-author > label, .quiz-author select, .quiz-author input, .quiz-author textarea { min-inline-size: 0; max-inline-size: 100%; }
+.quiz-author legend { overflow-wrap: anywhere; max-inline-size: 100%; }
+.quiz-author-option { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.quiz-author-option > label:first-child { flex: 1 1 180px; }
+.quiz-author-option input[type="checkbox"] { inline-size: auto; }
+.learning-metrics { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.learning-metrics dd { margin: 4px 0 0; font-weight: 700; }
+.certificate-verification { padding-block: 48px; overflow-wrap: anywhere; }
+.certificate-language { margin-block-start: 16px; }
+.issued-certificate .certificate-seal { left: auto; right: auto; inset-inline-end: 38px; }
+.issued-certificate .certificate-body { padding-inline-end: 150px; }
+.issued-certificate .certificate-body h1, .issued-certificate .certificate-body h2 { overflow-wrap: anywhere; }
+@media screen and (max-width: 700px) {
+  .issued-certificate .certificate-body { padding-inline-end: 0; }
+  .issued-certificate .certificate-seal { position: relative; inset: auto; margin: 24px auto 40px; }
+}
+@media print { .certificate-print-actions, .certificate-language { display: none !important; } }

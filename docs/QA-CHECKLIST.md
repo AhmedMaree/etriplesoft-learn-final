@@ -1,5 +1,7 @@
 # QA checklist
 
+2026-10-14 learning checkpoint: 347/347 local DB checks, 7/7 focused browser/message tests and 4/4 signature checks pass. Browser tests include actual signed playback, persisted resume, private PDF bytes, wrong-lesson resource denial, paid-course administrator grants and 48 captures at eight widths in EN/AR. Captures: ignored `tmp/learning-review/`. Actual content/caption/manual approval, fresh provider upload/cancellation/recovery and production remain unverified. See [COURSE-VIDEO-GUIDE.md](COURSE-VIDEO-GUIDE.md).
+
 ## Route and behavior coverage
 
 - [ ] `/` and `/overview` render the same overview.
@@ -47,3 +49,7 @@ Representative locale routes covered by the route matrix: `/en`, `/ar`, `/en/cou
 - Playwright passed 15 tests. The localized route matrix checked both `/en/sign-up` and `/ar/sign-up` at 320, 375, 430, 768, 1024, 1280, 1440, and 1920px for direction, rendering, and horizontal overflow; signup tests covered student/professional/company field switching, hidden-field omission, password validation, and Arabic interaction.
 - Visual review covered the English desktop card and English/Arabic mobile forms. Typecheck, lint, and production build passed.
 - `learner_profiles` migration `20261007110000` was applied to linked DEV and database types regenerated. Hosted RLS behavior remains pending because this workspace lacks the service-role key; local pgTAP could not connect to a local Supabase database, and linked DEV lacks pgTAP.
+
+## Outcomes checkpoint — 2026-10-14
+
+See [the learning guide](LEARNING-FEATURES-GUIDE.md), `supabase/tests/database/assessments.sql` and `tests/assessment-flow.spec.ts`. Local domain tests cover private keys, grading, retries/deadlines, completion and certificate ownership/revocation. Hosted transactional validation passes 14 checks and rolls back synthetic data. Browser checks cover the real learning flow and both locales at all required widths; manual source content, Arabic/print approval and release gates remain open. Legacy demo-grading test expectations are replaced by authentication checks plus real DB-backed flow tests, not retained as an alternate production path.

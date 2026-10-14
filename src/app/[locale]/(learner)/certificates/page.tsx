@@ -1,6 +1,6 @@
 import { createPageMetadata } from "@/i18n/page-metadata";
 import { PageHeading } from "@/components/layout/page-heading";
-import { Certificates } from "@/features/certificates/components/certificates";
+import { LearnerCertificates } from "@/features/certificates/components/learner-certificates";
 import { isLocale } from '@/i18n/config'
 import { notFound } from 'next/navigation'
 import { requireAuthenticatedUser } from '@/lib/supabase/auth'
@@ -20,7 +20,7 @@ export default async function CertificatesRoute({ params }: { params: Promise<{ 
         title="Certifications"
         subtitle="Track your learning journey and celebrate your achievements."
       />
-      <Certificates />
+      <LearnerCertificates />
     </>
   );
 }

@@ -134,38 +134,14 @@ test("auth callback rejects invalid links and external return destinations", asy
   await page.goto("/en/auth/callback?error=access_denied&next=%2Fen%2Freset-password");
   await expect(page).toHaveURL(/\/en\/reset-password\?notice=recoveryExpired$/);
 });
-test("assessment saves answers, changes questions and scores submission", async ({
+test("legacy assessment entry requires authentication instead of client grading", async ({
   page,
 }) => {
   await page.goto("/en/assessment");
-  await page
-    .getByRole("button", { name: "Submit assessment", exact: true })
-    .click();
-  await expect(page.getByRole("status")).toContainText("Please answer all 10");
-  const correct = [0, 1, 2, 0, 3, 0, 2, 1, 3, 0];
-  for (let i = 0; i < 10; i++) {
-    await page
-      .locator(".question-numbers")
-      .getByRole("button", { name: String(i + 1), exact: true })
-      .count()
-      .then(async (n) => {
-        if (n)
-          await page
-            .locator(".question-numbers")
-            .getByRole("button", { name: String(i + 1), exact: true })
-            .click();
-        else await page.locator(".question-numbers button").nth(i).click();
-      });
-    await page.locator(".answers input").nth(correct[i]).check();
-  }
-  await page.getByRole("button", { name: "Save Answer", exact: true }).click();
-  await page.reload();
-  await page
-    .getByRole("button", { name: "Submit assessment", exact: true })
-    .click();
-  await expect(page.locator(".assessment-result")).toContainText("100%");
-  await page.getByRole("button", { name: "View Certificate" }).click();
-  await expect(page).toHaveURL(/\/en\/login\?next=%2Fen%2Fcertificates$/);
+  await expect(page).toHaveURL(/\/en\/login\?next=%2Fen%2Fassessment$/);
+  await expect(page.locator('.question-numbers')).toHaveCount(0);
+  // Persisted grading/resume/certificate eligibility are covered by assessment-flow.spec.ts
+  // against real local Supabase, rather than fixed public answer arrays.
 });
 test("assistant sends local replies and context switch is interactive", async ({
   page,

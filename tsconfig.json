@@ -51,7 +51,9 @@
     "tmp/phase10-local-next/types/**/*.ts",
     "tmp/phase10-local-next/dev/types/**/*.ts",
     "tmp/phase10-authenticated-next/types/**/*.ts",
-    "tmp/phase10-authenticated-next/dev/types/**/*.ts"
+    "tmp/phase10-authenticated-next/dev/types/**/*.ts",
+    "tmp/learning-flow-next/types/**/*.ts",
+    "tmp/learning-flow-next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

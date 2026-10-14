@@ -4,6 +4,8 @@
 
 IN PROGRESS
 
+2026-10-14 checkpoint: local PostgreSQL connectivity restored; all 347 DB checks pass across seven suites, including 52 Mux cases. Six real signed Odoo Development assets are already ready and linked on Hosted DEV. New management/playback migration fixes completed access and early-ready asset identity; direct upload/status and caption controls are implemented. Hosted DEV migrations are applied after a restricted public schema/data backup. Existing provider events are retained, but a fresh real upload/cancellation/error/replay lifecycle and required-caption/manual acceptance have not been re-run. Phase 11 is not marked VERIFIED. See [operator guide](../COURSE-VIDEO-GUIDE.md).
+
 Evidence (2026-10-12): Phase 08 and Phase 10 are VERIFIED. The user approved a company-owned Mux account, separate Development and Production environments, signed playback for protected lessons, uploads by authorized admins/assigned instructors, and reviewed English/Arabic captions when required. Local Mux credentials and signing key validate without displaying values. A signed test-mode direct upload was created and cancelled successfully. Application routes, a local migration and focused signature tests are implemented. Local PostgreSQL currently accepts health checks but Supabase CLI migration connections terminate unexpectedly; database tests, real asset ready/error/webhook receipts, hosted DEV review, and deployment settings remain pending. Hosted DEV and deployment settings have not been changed.
 
 ## 2. Goal

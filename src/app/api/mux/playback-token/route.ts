@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { isLocale } from '@/i18n/config'
 import { getMuxAllowedOrigins, getMuxClient } from '@/lib/mux/server'
 import { createClient } from '@/lib/supabase/server'
+import { readBoundedJson } from '@/lib/http/bounded-json'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
   if (Number(request.headers.get('content-length')) > 2048) return response({ error: 'Invalid request.' }, 413)
   let input: unknown
   try {
-    input = await request.json()
+    input = await readBoundedJson(request)
   } catch {
     return response({ error: 'Invalid request.' }, 400)
   }

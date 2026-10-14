@@ -1,5 +1,9 @@
 # Architecture
 
+## Learning checkpoint — 2026-10-14
+
+The lesson route now consumes entitlement-controlled resources and saved progress. The Mux Player client uses renewable server-issued tokens, serial checkpoints and Supabase resume. `/api/learning/progress` calls owner/entitlement-validated RPCs; no browser writes completion columns directly. `learning_private` stores locked playback sessions and unique watched intervals; public progress tables expose owner reads only. `/video-management` supports authorized direct uploads and caption review. `/admin/enrollments` provides explicitly approved, audited manual access independently of payment. The resource endpoint rechecks exact-locale lesson/resource access before private storage signing. See [COURSE-VIDEO-GUIDE.md](COURSE-VIDEO-GUIDE.md) for evidence and remaining acceptance; older Phase 11 statements below are historical.
+
 The application uses Next.js App Router, React, and TypeScript. Locale routes live under `src/app/[locale]/`; `(learner)` and `(auth)` are URL-neutral route groups. `src/app/[locale]/layout.tsx` validates locale parameters, sets `lang`/`dir`, loads the local font and global CSS, provides next-intl context, and mounts the legacy fragment handler and demo toast viewport. English and Arabic use shared page and feature components.
 
 ## Locale routing and messages
@@ -17,3 +21,7 @@ Feature code and demo fixtures live under `src/features/`; shared layout, UI, an
 ## Styling
 
 The approved design remains in `src/styles.css` and `src/refinements.css`. Direction-aware spacing uses CSS logical properties where appropriate, with scoped RTL placement rules for components whose direction changes. See [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md) and the root [DESIGN.md](../DESIGN.md).
+
+## Assessment/outcome checkpoint — 2026-10-14
+
+Server-authorized quiz RPCs now handle immutable versions, exact-locale presentation, private answer keys and DB-timed attempts. Narrow client components render assessment/authoring controls; dashboard and certificate data load on the server. Explicit completion evaluation persists a historical snapshot; certificate issuance uses that snapshot, and public verification returns a minimal token-selected projection. The legacy assessment route is an authenticated directory. See [the learning guide](LEARNING-FEATURES-GUIDE.md) for current behavior and limits.

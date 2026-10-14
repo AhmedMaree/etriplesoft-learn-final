@@ -39,7 +39,9 @@ Every phase entry has the same three parts:
 | 09 | Catalog and content integration | VERIFIED |
 | 10 | Enrollment and entitlements | VERIFIED (user EN/AR visual/accessibility sign-off recorded 2026-10-12) |
 | 11 | Protected video / Mux | IN PROGRESS (Mux-specific D15 decisions approved; local DB/provider verification pending) |
-| 12–22 | Player, progress, quizzes, completion, certificates, orders, payments, paths, dashboard | PLANNED |
+| 12–13 | Player and video progress | IN PROGRESS (working DEV flow; broader phase/manual acceptance gates remain) |
+| 14–18, 22 | Assessments, completion, certificates and dashboard | IN PROGRESS (working DEV implementation; full manual/release gates open) |
+| 19–21 | Orders, payments and paths | PLANNED |
 | 23, 24, 26 | Calendar, notifications, community | PLANNED, scope DEFERRED |
 | 25 | AI assistant | PLANNED |
 | 27–29 | Admin screens (courses, learners, commerce) | PLANNED |
@@ -65,3 +67,5 @@ These are inconsistencies I found while reading the phase files. None of them we
 6. **Open decisions block real work later.** D02 (refunds), D03 (privacy and retention), D07/D16 (quiz limits and grading), D08 (video completion), D17 (completion rules), D19 (paths), D21 (AI scope) and D27 (launch ownership) are all still OPEN. Each one stops a specific phase from being finished. The list is in `docs/phases/OPEN-DECISIONS.md`.
 7. **Arabic typography (D09) is only partly approved.** The font is approved. Full eight-width visual sign-off and native-speaker review are still open.
 8. **The working tree is uncommitted.** Phase 09 and Phase 10 work (catalog pages, enrollment actions, migrations, tests) shows as modified or untracked in git, so none of it is in a commit yet.
+
+2026-10-14: quiz authoring, video management and operator document placement are implemented parts of Phase 27; full course/content administration remains IN_PROGRESS. See [the current guide](../LEARNING-FEATURES-GUIDE.md).

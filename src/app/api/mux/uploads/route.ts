@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getMuxAllowedOrigins, getMuxClient } from '@/lib/mux/server'
+import { readBoundedJson } from '@/lib/http/bounded-json'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -24,7 +25,7 @@ export async function POST(request: Request) {
 
   let input: unknown
   try {
-    input = await request.json()
+    input = await readBoundedJson(request)
   } catch {
     return response({ error: 'Invalid request.' }, 400)
   }
@@ -68,6 +69,7 @@ export async function POST(request: Request) {
       p_upload_id: upload.id,
     })
     if (attachError) {
+      await mux.video.uploads.cancel(upload.id).catch(() => undefined)
       await supabase.rpc('mux_fail_lesson_upload', { p_video_id: videoId })
       return response({ error: 'Unable to save the upload record.' }, 502)
     }
