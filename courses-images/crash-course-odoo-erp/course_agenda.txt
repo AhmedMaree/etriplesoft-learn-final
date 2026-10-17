@@ -1,8 +1,0 @@
-https://drive.google.com/file/d/1__588N8jz1dI2gEN4FW0hHrANB_tpmQ3/view?usp=drive_link
-
-
-https://stream.mux.com/tzwC6VuQYC00sSVwRDaTaZoD3Obj8oCw5N70031BXdbQA.m3u8
-
-
-
-Audit the ETripleSoft Learn repository using GitHub and produce a prioritized improvement brief covering content, project structure, alignment and responsive behavior, SEO, accessibility, performance, code quality, and obvious defects. Base every finding on repository evidence, distinguish confirmed issues from recommendations, and include concrete file references and next actions. If GitHub is not connected, ask me to connect it before inspecting the repository. Do not modify the repository.
