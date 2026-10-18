@@ -143,28 +143,26 @@ test("return reconciliation settles only independently verified full payment", a
         sessionId,
       });
     if (path.endsWith(`/sessions/${sessionId}`))
-      return Response.json({
-        _id: sessionId,
-        merchantId: env.KASHIER_MERCHANT_ID,
-        status: paid ? "PAID" : "FAILED",
-        paymentParams: { order: id, amount: "499.00", currency: "EGP" },
-        capturedAmount: paid ? 499 : 0,
-        refundedAmount: 0,
-      });
-    if (path.endsWith(`/sessions/${sessionId}/payment`))
+      assert.fail("paid sessions cannot be read from the public session document");
+    if (path.endsWith(`/sessions/${sessionId}/payment`)) {
+      assert.equal(init.headers.Authorization, env.KASHIER_SECRET_KEY);
       return Response.json({
         message: "success",
         data: {
           sessionId,
           merchantOrderId: id,
           merchantId: env.KASHIER_MERCHANT_ID,
-          orderId: id,
-          amount: "499.00",
+          orderId: paid ? "9f492708-47bd-4073-b562-c98f73fe7fe2" : "NA",
+          amount: 499,
           currency: "EGP",
-          status: paid ? "SUCCESS" : "FAILURE",
-          lastTransactionType: "pay",
+          status: paid ? "PAID" : "CREATED",
+          capturedAmount: paid ? 499 : 0,
+          refundedAmount: 0,
+          lastTransactionType: paid ? "pay" : "NA",
+          history: paid ? [{ status: "SUCCESS", operation: "pay", amount: 499 }] : [],
         },
       });
+    }
     assert.ok(path.endsWith("/rpc/commerce_confirm_order"));
     assert.equal(JSON.parse(init.body).p_result, "paid");
     confirmations++;

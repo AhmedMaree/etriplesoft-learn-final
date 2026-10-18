@@ -62,6 +62,8 @@ export function verifyKashierSignature(
   const expected = createHmac("sha256", key).update(payload).digest();
   return timingSafeEqual(expected, Buffer.from(signature, "hex"));
 }
+// Verifies Kashier's GET /v3/payment/sessions/{id}/payment response (the only documented
+// result lookup; the public session document is unavailable once a session is paid).
 export function verifiedSessionResult(
   value: unknown,
   expected: {
@@ -71,68 +73,41 @@ export function verifiedSessionResult(
     total: number;
   },
 ) {
-  if (!record(value) || !record(value.session) || !record(value.payment))
+  if (!record(value) || value.message !== "success" || !record(value.data))
     throw new Error("provider_contract");
-  const session = value.session;
-  const params = session.paymentParams;
-  const paymentResponse = value.payment;
-  if (paymentResponse.message !== "success" || !record(paymentResponse.data))
-    throw new Error("provider_contract");
-  const payment = paymentResponse.data;
+  const payment = value.data;
   if (
-    session._id !== expected.sessionId ||
-    session.merchantId !== expected.merchantId ||
-    !record(params) ||
-    params.order !== expected.id ||
-    params.currency !== "EGP" ||
-    minorAmount(params.amount) !== expected.total ||
     payment.sessionId !== expected.sessionId ||
     payment.merchantOrderId !== expected.id ||
     payment.merchantId !== expected.merchantId ||
     payment.currency !== "EGP" ||
-    minorAmount(payment.amount) !== expected.total ||
-    typeof payment.orderId !== "string"
+    minorAmount(payment.amount) !== expected.total
   )
     throw new Error("provider_mismatch");
+  if (payment.status !== "PAID" && payment.status !== "REFUNDED") return null;
   if (
-    payment.orderId === "NA" ||
+    typeof payment.orderId !== "string" ||
     !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(payment.orderId)
-  ) {
-    if (session.status === "CREATED" || session.status === "PENDING") return null;
+  )
     throw new Error("provider_contract");
-  }
-  const amountMatches = (actual: unknown, expectedAmount: number) =>
+  const amountIs = (actual: unknown, expectedAmount: number) =>
     (typeof actual === "number" || typeof actual === "string") &&
-    (String(actual) === String(expectedAmount) ||
-      minorAmount(actual) === expectedAmount);
-  if (
-    session.status === "REFUNDED" &&
-    payment.status === "SUCCESS" &&
-    payment.lastTransactionType === "refund"
-  ) {
-    if (
-      !amountMatches(session.capturedAmount, expected.total) ||
-      !amountMatches(session.refundedAmount, expected.total)
-    )
+    minorAmount(actual) === expectedAmount;
+  const history = Array.isArray(payment.history) ? payment.history : [];
+  const captured = history.some(
+    (entry) =>
+      record(entry) &&
+      entry.status === "SUCCESS" &&
+      (entry.operation === "pay" || entry.operation === "capture") &&
+      amountIs(entry.amount, expected.total),
+  );
+  if (!captured || !amountIs(payment.capturedAmount, expected.total))
+    throw new Error("provider_mismatch");
+  if (payment.status === "REFUNDED") {
+    if (!amountIs(payment.refundedAmount, expected.total))
       throw new Error("unsupported_refund");
     return { result: "refunded" as const, providerOrderId: payment.orderId };
   }
-  if (
-    session.status === "PAID" &&
-    payment.status === "SUCCESS" &&
-    ["pay", "capture"].includes(String(payment.lastTransactionType))
-  ) {
-    if (!amountMatches(session.capturedAmount, expected.total))
-      throw new Error("provider_mismatch");
-    if (!amountMatches(session.refundedAmount, 0))
-      throw new Error("unsupported_refund");
-    return { result: "paid" as const, providerOrderId: payment.orderId };
-  }
-  if (
-    session.status === "CREATED" ||
-    session.status === "PENDING" ||
-    payment.status === "PENDING"
-  )
-    return null;
-  return null;
+  if (!amountIs(payment.refundedAmount, 0)) throw new Error("unsupported_refund");
+  return { result: "paid" as const, providerOrderId: payment.orderId };
 }

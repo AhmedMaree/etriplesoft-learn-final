@@ -168,19 +168,12 @@ export async function reconcileOrder(id: string) {
   if (!cfg) throw new Error("configuration");
   const order = await readCommerceOrder(id);
   if (typeof order.sessionId !== "string") throw new Error("session_missing");
-  // Event names and redirect claims are not settlement authority. Fetch the bound session.
-  const sessionUrl =
-    `${cfg.apiBase}/v3/payment/sessions/` +
-    encodeURIComponent(order.sessionId);
-  const [session, payment] = await Promise.all([
-    providerJson(sessionUrl, { method: "GET" }),
-    providerJson(`${sessionUrl}/payment`, {
-      method: "GET",
-      headers: { Authorization: cfg.secret },
-    }),
-  ]);
-  const value = { session, payment };
-  const confirmed = verifiedSessionResult(value, {
+  // Event names and redirect claims are not settlement authority. Fetch the bound session's payment.
+  const payment = await providerJson(
+    `${cfg.apiBase}/v3/payment/sessions/${encodeURIComponent(order.sessionId)}/payment`,
+    { method: "GET", headers: { Authorization: cfg.secret } },
+  );
+  const confirmed = verifiedSessionResult(payment, {
     id,
     sessionId: order.sessionId,
     merchantId: cfg.merchantId,

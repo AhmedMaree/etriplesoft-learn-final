@@ -98,94 +98,73 @@ const expected = {
   id: "local-order",
   sessionId: "session",
   merchantId: "MID-test",
-  total: 49900,
+  total: 44910,
 };
-const session = {
-  _id: expected.sessionId,
-  merchantId: expected.merchantId,
-  paymentParams: { order: expected.id, amount: "499.00", currency: "EGP" },
-  capturedAmount: 499,
-  refundedAmount: 0,
-  status: "PAID",
-};
+// Shape of a real Kashier test-mode GET /v3/payment/sessions/{id}/payment response (2026-10-18).
 const payment = {
   sessionId: expected.sessionId,
-  merchantOrderId: expected.id,
+  status: "PAID",
   merchantId: expected.merchantId,
-  orderId: "12345678-1234-4321-8123-123456789abc",
-  amount: "499.00",
+  merchantOrderId: expected.id,
+  amount: 449.1,
   currency: "EGP",
-  status: "SUCCESS",
+  method: "card",
+  orderId: "9f492708-47bd-4073-b562-c98f73fe7fe2",
+  capturedAmount: 449.1,
+  refundedAmount: 0,
   lastTransactionType: "pay",
+  history: [
+    { status: "SUCCESS", operation: "pay", amount: 449.1, transactionId: "TX-1" },
+  ],
 };
-const response = (s, p) => ({
-  session: s,
-  payment: { message: "success", data: p },
-});
+const response = (p) => ({ message: "success", data: p });
 test("accepts independently verified full capture", () =>
-  assert.equal(verifiedSessionResult(response(session, payment), expected).result, "paid"));
+  assert.equal(verifiedSessionResult(response(payment), expected).result, "paid"));
 test("rejects wrong merchant, amount, session and merchant order", () => {
-  for (const changed of [{ merchantId: "other" }, { _id: "other" }])
-    assert.throws(() =>
-      verifiedSessionResult(response({ ...session, ...changed }, payment), expected),
-    );
   for (const changed of [
     { merchantId: "other" },
     { sessionId: "other" },
     { amount: 1 },
     { merchantOrderId: "other" },
+    { currency: "USD" },
+    { capturedAmount: 1 },
+    { history: [{ status: "SUCCESS", operation: "pay", amount: 1 }] },
   ])
-    assert.throws(() =>
-      verifiedSessionResult(response(session, { ...payment, ...changed }), expected),
-    );
+    assert.throws(() => verifiedSessionResult(response({ ...payment, ...changed }), expected));
+  assert.throws(() => verifiedSessionResult({ message: "error", data: payment }, expected));
 });
 test("authorization or failure alone cannot grant access", () => {
-  assert.equal(
+  for (const status of ["AUTHORIZED", "FAILED", "CREATED", "PENDING", "EXPIRED"])
+    assert.equal(verifiedSessionResult(response({ ...payment, status }), expected), null);
+  assert.throws(() =>
     verifiedSessionResult(
-      response({ ...session, status: "AUTHORIZED" }, { ...payment, status: "SUCCESS" }),
+      response({ ...payment, history: [{ status: "FAILURE", operation: "pay", amount: 449.1 }] }),
       expected,
     ),
-    null,
-  );
-  assert.equal(
-    verifiedSessionResult(
-      response({ ...session, status: "FAILED" }, { ...payment, status: "FAILURE" }),
-      expected,
-    ),
-    null,
   );
 });
 test("full confirmed refund removes access and pending sessions do not grant access", () => {
   assert.equal(
     verifiedSessionResult(
-      response(
-        { ...session, status: "REFUNDED", refundedAmount: 499 },
-        { ...payment, status: "SUCCESS", lastTransactionType: "refund" },
-      ),
+      response({ ...payment, status: "REFUNDED", refundedAmount: 449.1, lastTransactionType: "refund" }),
       expected,
     ).result,
     "refunded",
   );
   assert.equal(
     verifiedSessionResult(
-      response(
-        { ...session, status: "CREATED", capturedAmount: 0 },
-        { ...payment, status: "PENDING", lastTransactionType: "NA", orderId: "NA" },
-      ),
+      response({ ...payment, status: "CREATED", capturedAmount: 0, orderId: "NA", history: [] }),
       expected,
     ),
     null,
   );
+  assert.throws(() => verifiedSessionResult(response({ ...payment, refundedAmount: 1 }), expected));
   assert.throws(() =>
-    verifiedSessionResult(
-      response({ ...session, refundedAmount: 1 }, payment),
-      expected,
-    ),
+    verifiedSessionResult(response({ ...payment, status: "REFUNDED", refundedAmount: 100 }), expected),
   );
 });
 test("unsigned event name cannot alter verified payment result", () =>
   assert.equal(
-    verifiedSessionResult({ ...response(session, payment), event: "refund" }, expected)
-      .result,
+    verifiedSessionResult({ ...response(payment), event: "refund" }, expected).result,
     "paid",
   ));
