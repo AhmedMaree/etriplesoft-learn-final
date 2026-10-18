@@ -1,7 +1,10 @@
 import type { Locale } from '@/i18n/config'
 
+// Each origin must also be listed in Supabase Auth's redirect URL allow list.
 const TRUSTED_AUTH_ORIGINS = new Set([
   'http://127.0.0.1:3010',
+  'https://etriplesoft-learn-final.vercel.app',
+  'https://learn.etriplesoft.com',
 ])
 
 const APP_ROUTES = new Set([
@@ -52,7 +55,7 @@ export function trustedAuthOrigin(): string {
     throw new Error('AUTH_SITE_URL must contain only a trusted origin.')
   }
   if (!TRUSTED_AUTH_ORIGINS.has(parsed.origin)) {
-    throw new Error('AUTH_SITE_URL is not in the approved development origin allowlist.')
+    throw new Error('AUTH_SITE_URL is not in the approved origin allowlist.')
   }
   return parsed.origin
 }

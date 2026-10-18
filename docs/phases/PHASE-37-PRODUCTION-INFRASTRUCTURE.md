@@ -4,6 +4,8 @@
 
 PLANNED
 
+Update 2026-10-18: `trustedAuthOrigin()` also accepts https://etriplesoft-learn-final.vercel.app (current Vercel production alias, `AUTH_SITE_URL` there) and https://learn.etriplesoft.com; each must also be in Supabase Auth's redirect URL allow list.
+
 Evidence: Only hosted DEV configuration is documented. .env.example contains DEV/public Supabase and local AUTH_SITE_URL names. trustedAuthOrigin() only accepts http://127.0.0.1:3010; metadata uses an unverified production hostname. No production readiness evidence exists.
 
 ## 2. Goal

@@ -35,7 +35,10 @@ export async function POST(request: Request) {
     return new Response(null, { status: 400 });
   try {
     const status = await reconcileOrder(body.data.merchantOrderId);
-    return new Response(null, { status: status === "pending" ? 503 : 200 });
+    // Kashier retries every non-200 reply. A signed failure/pending event that leaves the order
+    // pending is acknowledged; only an unsettled SUCCESS is retried until reconciliation sees it.
+    const retry = status === "pending" && body.data.status === "SUCCESS";
+    return new Response(null, { status: retry ? 503 : 200 });
   } catch {
     return new Response(null, { status: 503 });
   }
