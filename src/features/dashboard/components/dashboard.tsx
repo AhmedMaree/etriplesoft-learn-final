@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
-import { BookOpen, Users, CalendarDays, Award, ChevronRight, ArrowRight, BarChart3, Briefcase } from 'lucide-react';
+import { BookOpen, Users, CalendarDays, Award, ArrowRight, BarChart3, Briefcase } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Panel, Title, IconBox } from '@/components/ui/primitives';
 import { Community } from '@/components/shared/community-promo';
@@ -8,20 +8,22 @@ import { ASSET_BASE } from '@/lib/assets';
 import { ScrollToLearningPaths } from '@/features/dashboard/components/scroll-to-learning-paths';
 import { useTranslations } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { isLocale } from '@/i18n/config';
+import { isLocale, type Locale } from '@/i18n/config';
+import { demoFeaturesEnabled } from '@/lib/features';
 import { createClient } from '@/lib/supabase/server';
-import { listCatalogCourses } from '@/features/courses/server/course-repository';
-import { courseImage } from '@/features/courses/components/learner-courses';
-import { courseHref } from '@/features/courses/components/course-links';
+import type { CatalogCourse } from '@/features/courses/server/course-repository';
+import { getCatalogCourseDurations, getCatalogCourseOutline, listCatalogCourses } from '@/features/courses/server/course-repository';
+import { AvailableCourses, YourCourses, type OverviewCourse } from '@/features/dashboard/components/overview-courses';
 import { getLearningSummary } from '@/features/learning/server/summary';
-import { LearningSummaryPanel } from '@/features/learning/components/learning-summary';
+import { LearningSummaryPanel, QuickLinksCard } from '@/features/learning/components/learning-summary';
 
 export function AICard() {
   const t = useTranslations("dashboard");
+  if (!demoFeaturesEnabled) return null;
   return (
     <Panel className="ai-small">
       <Title link="">
-        {t("aiTitle")} <b className="badge">New</b>
+        {t("aiTitle")} <b className="badge">{t("newBadge")}</b>
       </Title>
       <div className="ai-small-body">
         <Image
@@ -48,7 +50,9 @@ export async function Overview() {
   const learningT = await getTranslations('realLearning');
   const locale = await getLocale();
   if (!isLocale(locale)) throw new Error('Unsupported locale.');
-  const [summary, catalog] = await Promise.all([getLearningSummary(locale),listCatalogCourses(await createClient(),{locale,limit:3})]);
+  const client = await createClient();
+  const [summary, catalog] = await Promise.all([getLearningSummary(locale),listCatalogCourses(client,{locale,limit:3})]);
+  const courses = await withCardDetails(client, locale, catalog.courses);
   return (
     <div className="columns">
       <div className="primary">
@@ -97,40 +101,41 @@ export async function Overview() {
             })}
           </div>
         </section>
-        <Title href="/courses">{learningT('availableCourses')}</Title>
-        <div className="course-grid">
-          {catalog.courses.map((course) => (
-            <article className="course-card panel compact" key={course.id}><Link href={courseHref(course.slug)} className="course-image"><Image src={courseImage(course.slug)} alt="" fill sizes="(max-width:700px) 100vw,33vw" /></Link><div className="course-body"><h3 dir="auto"><Link href={courseHref(course.slug)}>{course.title}</Link></h3><p dir="auto">{course.summary}</p><Link className="btn outline" href={courseHref(course.slug)}>{learningT('viewCourse')}</Link></div></article>
-          ))}
-        </div>
-        <div id="learning-paths">
-          <Title href="/courses?view=mine">{learningT('yourCourses')}</Title>
-          <div className="paths">{summary.courses.slice(0,3).map(course=><Link className="path panel" href={courseHref(course.slug)} key={course.slug}><IconBox icon={BookOpen}/><div><strong dir="auto">{course.title}</strong><p>{learningT('lessons',{finished:course.finished,required:course.required})}</p></div></Link>)}</div>
+        <div className="ov-courses">
+          <AvailableCourses courses={courses} locale={locale} />
+          <YourCourses courses={summary.courses} />
         </div>
         <Community />
       </div>
       <aside className="right-rail">
         <LearningSummaryPanel summary={summary} />
         <AICard />
-        <Panel>
-          <Title>{t("quickLinks")}</Title>
-          {[
-            [BookOpen, t("browseCourses"), "courses"],
-            [Users, t("joinCommunity"), "community"],
-            [Award, t("certifications"), "certificates"],
-            [CalendarDays, t("calendar"), "calendar"],
-          ].map(([I, t, p]) => {
-            const Icon = I as LucideIcon;
-            return (
-              <Link className="quick-link" href={`/${p}`} key={t as string}>
-                <Icon size={20} />
-                <span>{t as string}</span>
-                <ChevronRight size={17} />
-              </Link>
-            );
-          })}
-        </Panel>
+        <QuickLinksCard
+          links={[
+            { href: "/courses", icon: BookOpen, title: t("browseCourses"), subtitle: learningT("browseSubtitle"), tone: "blue" },
+            ...(demoFeaturesEnabled ? [{ href: "/community", icon: Users, title: t("joinCommunity"), subtitle: learningT("communitySubtitle"), tone: "green" }] : []),
+            { href: "/certificates", icon: Award, title: t("certifications"), subtitle: learningT("certificatesSubtitle"), tone: "purple" },
+            ...(demoFeaturesEnabled ? [{ href: "/calendar", icon: CalendarDays, title: t("calendar"), subtitle: learningT("calendarSubtitle"), tone: "orange" }] : []),
+          ]}
+        />
       </aside>
     </div>
   );
+}
+
+/** Real duration and published lesson counts for the three overview cards; missing values are simply omitted. */
+async function withCardDetails(
+  client: Awaited<ReturnType<typeof createClient>>,
+  locale: Locale,
+  courses: CatalogCourse[],
+): Promise<OverviewCourse[]> {
+  const [durations, outlines] = await Promise.all([
+    getCatalogCourseDurations(client, locale, courses.map((course) => course.id)).catch(() => ({} as Record<string, number>)),
+    Promise.all(courses.map((course) => getCatalogCourseOutline(client, locale, course.slug).catch(() => null))),
+  ]);
+  return courses.map((course, index) => ({
+    ...course,
+    durationSeconds: durations[course.id] ?? course.durationSeconds,
+    lessonCount: outlines[index]?.length || null,
+  }));
 }

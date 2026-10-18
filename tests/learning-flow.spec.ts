@@ -314,13 +314,19 @@ test("enrollment, real signed playback, persisted progress and resume", async ({
       Number(element.currentTime) >= position - 1
     );
   }, persisted);
-  sql(`UPDATE public.lesson_translations SET publication_status='draft',published_at=NULL WHERE lesson_id='${lessonId}' AND locale='ar';`);
+  sql(
+    `UPDATE public.lesson_translations SET publication_status='draft',published_at=NULL WHERE lesson_id='${lessonId}' AND locale='ar';`,
+  );
   try {
     await page.goto(`/ar/courses/${slug}/lessons/${lessonId}`);
-    await expect(page.locator('h1')).toContainText('الدرس غير متاح بهذه اللغة');
-    await expect(page.getByRole('link', { name: 'فتح الدرس بالإنجليزية' })).toHaveAttribute('href', `/en/courses/${slug}/lessons/${lessonId}`);
+    await expect(page.locator("h1")).toContainText("الدرس غير متاح بهذه اللغة");
+    await expect(
+      page.getByRole("link", { name: "فتح الدرس بالإنجليزية" }),
+    ).toHaveAttribute("href", `/en/courses/${slug}/lessons/${lessonId}`);
   } finally {
-    sql(`UPDATE public.lesson_translations SET publication_status='published',published_at=now() WHERE lesson_id='${lessonId}' AND locale='ar';`);
+    sql(
+      `UPDATE public.lesson_translations SET publication_status='published',published_at=now() WHERE lesson_id='${lessonId}' AND locale='ar';`,
+    );
   }
 });
 
@@ -394,4 +400,49 @@ test("administrator grants paid course access through the form", async ({
       `SELECT count(*) FROM public.admin_audit_log a JOIN public.enrollments e ON e.id=a.enrollment_id JOIN auth.users u ON u.id=e.user_id WHERE u.email='${paidEmail}' AND a.action='enrollment.granted';`,
     ),
   ).toBe("1");
+});
+
+test("checkout stays disabled without credentials and ignores forged success redirects", async ({
+  page,
+}) => {
+  test.setTimeout(120000);
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  sql(`UPDATE public.courses SET price_minor=49900 WHERE id='${courseId}';`);
+  await login(page, true);
+  for (const locale of ["en", "ar"])
+    for (const width of [320, 375, 430, 768, 1024, 1280, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(
+        `/${locale}/payment?course=${slug}&status=SUCCESS&amount=1`,
+      );
+      await expect(page.locator(".checkout-cart-page")).toBeVisible();
+      await expect(
+        page.getByRole("heading", {
+          level: 1,
+          name: locale === "en" ? "Your Cart" : "سلة المشتريات",
+        }),
+      ).toBeVisible();
+      await expect(page.locator(".checkout-continue-button")).toBeDisabled();
+      await expect(page.locator(".checkout-item-price")).toContainText("499");
+      await expect(page.locator(".checkout-summary-total")).toContainText("499");
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth + 1,
+        ),
+      ).toBe(true);
+      await page.screenshot({
+        path: `tmp/checkout-${locale}-${width}.png`,
+        fullPage: true,
+      });
+    }
+  const response = await page.request.post("/api/checkout", {
+    headers: { Origin: "http://127.0.0.1:3010" },
+    data: { action: "start", id: courseId, locale: "en", amount: 1 },
+  });
+  expect(response.status()).toBe(503);
+  expect(
+    sql(`SELECT count(*) FROM public.orders WHERE user_id='${userId}';`),
+  ).toBe("0");
+  expect(errors).toEqual([]);
 });

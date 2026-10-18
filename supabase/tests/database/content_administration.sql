@@ -1,0 +1,38 @@
+BEGIN;
+SELECT no_plan();
+INSERT INTO auth.users(id,aud,role,email,raw_user_meta_data,created_at,updated_at) VALUES
+('e2700000-0000-4000-8000-000000000001','authenticated','authenticated','content-admin@example.test','{}',now(),now()),
+('e2700000-0000-4000-8000-000000000002','authenticated','authenticated','content-learner@example.test','{}',now(),now());
+INSERT INTO public.user_roles(user_id,role,granted_by) VALUES('e2700000-0000-4000-8000-000000000001','admin','e2700000-0000-4000-8000-000000000001');
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','e2700000-0000-4000-8000-000000000001',true);
+SELECT set_config('a.course',public.admin_save_course_content('content-admin-test','en','Course','Summary','',0,'','beginner',false)::text,true);
+SELECT set_config('a.module',public.admin_create_module_draft(current_setting('a.course')::uuid,'en','Module')::text,true);
+SELECT set_config('a.lesson',public.admin_create_lesson_draft(current_setting('a.module')::uuid,'en','PDF','resource')::text,true);
+SELECT throws_ok($$SELECT public.admin_create_module_draft(current_setting('a.course')::uuid,'en','')$$,'23514',NULL,'invalid module title rolls back creation');
+SELECT throws_ok($$SELECT public.admin_edit_lesson(current_setting('a.lesson')::uuid,'en','Changed','Summary','Body',false,true,true,null)$$,'23514',NULL,'unpublished ancestors reject lesson publishing atomically');
+RESET ROLE;
+SELECT is((SELECT count(*)::int FROM public.course_modules WHERE course_id=current_setting('a.course')::uuid),1,'no partial module from invalid creation');
+SELECT is((SELECT title FROM public.lesson_translations WHERE lesson_id=current_setting('a.lesson')::uuid AND locale='en'),'PDF','failed publication did not change lesson title');
+SELECT is((SELECT is_required FROM public.lessons WHERE id=current_setting('a.lesson')::uuid),true,'failed publication did not change requirements');
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','e2700000-0000-4000-8000-000000000001',true);
+SELECT lives_ok($$SELECT public.admin_save_course_content('content-admin-test','en','Course','Summary','',0,'','beginner',true,current_setting('a.course')::uuid)$$,'course publishes atomically with translation');
+SELECT throws_ok($$SELECT public.admin_save_course_content('changed-url','en','Course','Summary','',0,'','beginner',true,current_setting('a.course')::uuid)$$,'23514',NULL,'editor preserves stable course URLs');
+SELECT public.admin_edit_module(current_setting('a.module')::uuid,'en','Module','',false,true);
+SELECT public.admin_edit_lesson(current_setting('a.lesson')::uuid,'en','PDF','','',true,false,true,null);
+SELECT is((SELECT is_required FROM public.catalog_get_course_outline('content-admin-test','en') WHERE lesson_id=current_setting('a.lesson')::uuid),false,'optional module does not advertise its lessons as required');
+SELECT is(jsonb_array_length(public.admin_get_curriculum(current_setting('a.course')::uuid,'en')),1,'authorized curriculum includes module');
+SELECT set_config('a.resource',(SELECT resource_id::text FROM public.admin_prepare_resource_upload(current_setting('a.lesson')::uuid,'en','Document')),true);
+SELECT is((SELECT lesson_id FROM public.admin_get_resource_upload(current_setting('a.resource')::uuid,'en')),current_setting('a.lesson')::uuid,'upload reservation binds the correct lesson');
+RESET ROLE;
+SELECT is((SELECT publication_status FROM public.lesson_resource_translations WHERE resource_id=current_setting('a.resource')::uuid AND locale='en'),'draft','resource starts unpublished');
+SELECT ok(NOT has_table_privilege('authenticated','public.lessons','UPDATE'),'editor does not widen table grants');
+SELECT ok(NOT has_function_privilege('anon','public.admin_prepare_resource_upload(uuid,text,text)','EXECUTE'),'anonymous upload reservation denied');
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','e2700000-0000-4000-8000-000000000002',true);
+SELECT throws_ok($$SELECT public.admin_get_curriculum(current_setting('a.course')::uuid,'en')$$,'42501',NULL,'learner cannot inspect authoring content');
+SELECT throws_ok($$SELECT public.admin_prepare_resource_upload(current_setting('a.lesson')::uuid,'en','Spoof')$$,'42501',NULL,'learner cannot obtain upload reservation');
+SELECT throws_ok($$SELECT public.admin_edit_module(current_setting('a.module')::uuid,'en','Hijack','',true,true)$$,'42501',NULL,'learner cannot alter required curriculum');
+SELECT * FROM finish();
+ROLLBACK;

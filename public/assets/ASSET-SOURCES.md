@@ -9,3 +9,7 @@
 - `learn-font.woff2`: Inter variable, Latin, from `@fontsource-variable/inter`; see `FONT-LICENSE.txt`.
 
 All source references at the repository root are preserved.
+- `learning-books-art.png`: graduation-cap-and-books artwork supplied by the user (Your courses section decoration); background made transparent, cropped and resized to 640px wide.
+- `progress-books-art.png`, `certificate-award-art.png`: transparent artwork supplied by the user for the Overview right rail (learning progress and quick links); cropped to content and resized to 360px.
+- `all-courses-artwork.png`: course-list artwork supplied by the user (copied from `courses-images/my-courses-page/`, which is not tracked in git).
+- `all-courses-art-clear.png`: transparent-background version of `all-courses-artwork.png` (background removed, cropped, 760px wide) for the All Courses hero.

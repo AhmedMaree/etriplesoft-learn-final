@@ -1,13 +1,15 @@
 {
   "name": "etriplesoft-learn",
   "version": "1.0.0",
-  "description": "",
+  "description": "ETripleSoft Learn: bilingual (English/Arabic) Odoo learning platform",
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1 --port 3010",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1 --port 3010",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "format": "prettier --write src tests scripts messages",
+    "format:check": "prettier --check src tests scripts messages",
     "inspect": "node scripts/inspect.mjs",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
@@ -25,11 +27,12 @@
     "mux:validate-config": "node scripts/validate-mux-config.mjs",
     "test:mux-dev-upload": "node scripts/test-mux-dev-upload.mjs",
     "test:mux-signatures": "node --test scripts/test-mux-webhook-signatures.mjs",
+    "test:kashier": "node --test scripts/test-kashier-checkout.mjs scripts/test-kashier-contract.mjs",
     "test": "playwright test"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "type": "module",
   "dependencies": {
     "@mux/mux-player-react": "^3.14.0",

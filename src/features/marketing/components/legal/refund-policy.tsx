@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
 import { BUSINESS_DETAILS } from "../../lib/business";
 import { getMarketingMessages } from "../../lib/messages";
+import { SupportNav } from "./support-nav";
 
 const sectionIds = [
   "course-fit-guarantee",
@@ -24,20 +25,27 @@ export function RefundPolicy({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <section className="mk-page-hero mk-page-hero--low">
+      <section className="mk-page-hero mk-page-hero--low mk-page-hero--grid">
         <div className="mk-container">
           <div className="mk-narrow-wide mk-narrow-start">
+            <span className="mk-kicker">{m.legal.eyebrow}</span>
             <h1 className="mk-page-title">{p.title}</h1>
             <p className="mk-lead">{p.intro}</p>
-            <p className="mk-small">{p.updated}</p>
+            <p className="mk-policy-updated">
+              <CalendarDays size={16} aria-hidden="true" />
+              {p.updated}
+            </p>
           </div>
+          <SupportNav locale={locale} current="refund" />
 
           <div className="mk-summary">
             {p.summary.map((item, index) => {
               const Icon = summaryIcons[index] ?? ShieldCheck;
               return (
                 <div key={item.title}>
-                  <Icon size={20} aria-hidden="true" />
+                  <span className="mk-summary-icon">
+                    <Icon size={20} aria-hidden="true" />
+                  </span>
                   <div>
                     <p className="mk-summary-title">{item.title}</p>
                     <p className="mk-body">{item.text}</p>
@@ -57,7 +65,8 @@ export function RefundPolicy({ locale }: { locale: Locale }) {
               {p.sections.map((section, index) => (
                 <li key={section.title}>
                   <a href={`#${sectionIds[index]}`}>
-                    {index + 1}. {section.title}
+                    <span className="mk-policy-toc-num">{index + 1}</span>
+                    {section.title}
                   </a>
                 </li>
               ))}
@@ -68,8 +77,11 @@ export function RefundPolicy({ locale }: { locale: Locale }) {
         <article className="mk-policy">
           {p.sections.map((section, index) => (
             <section id={sectionIds[index]} key={section.title} className="mk-policy-section mk-anchor">
-              <h2 className="mk-h2-sm">
-                {index + 1}. {section.title}
+              <h2 className="mk-h2-sm mk-policy-heading">
+                <span className="mk-policy-num" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                {section.title}
               </h2>
               {section.intro && <p className="mk-body mk-legal-body">{section.intro}</p>}
               {section.bullets && (

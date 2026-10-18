@@ -73,3 +73,37 @@ test("landing role filter and FAQ are interactive", async ({ page }) => {
   await item.locator("summary").click();
   await expect(item).toHaveAttribute("open", "");
 });
+
+test("Arabic learning-path and Odoo-module editorial content is localized", async ({ page }) => {
+  test.setTimeout(120_000);
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/ar/learning-paths");
+    if (width < 768) {
+      const firstRoleCard = page.locator(".mk-path-card").first();
+      const trigger = firstRoleCard.getByRole("button");
+      await expect(trigger).toBeVisible();
+      if ((await trigger.getAttribute("aria-expanded")) !== "true") await trigger.click();
+      await expect(firstRoleCard.locator(".mk-path-detail")).toBeVisible();
+      await expect(firstRoleCard.locator(".mk-path-detail")).toContainText("دورة");
+    } else {
+      await expect(page.getByRole("tab", { name: "المستخدم النهائي" })).toBeVisible();
+    }
+    if (width >= 768) {
+      await expect(page.getByText(/تعرّف على ترابط CRM/).first()).toBeVisible();
+    }
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
+      `/ar/learning-paths overflows at ${width}px`,
+    ).toBe(true);
+
+    await page.goto("/ar/odoo-modules");
+    await expect(page.getByRole("button", { name: /المبيعات/ }).first()).toBeVisible();
+    await expect(page.getByText("أمر بيع", { exact: true })).toBeVisible();
+    await expect(page.locator(".mk-eco-panel")).not.toContainText("Lead");
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
+      `/ar/odoo-modules overflows at ${width}px`,
+    ).toBe(true);
+  }
+});

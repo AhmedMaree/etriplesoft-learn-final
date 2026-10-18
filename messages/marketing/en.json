@@ -15,6 +15,7 @@
     "partner": "Odoo Gold Partner · MENA Region",
     "logIn": "Log in",
     "signUp": "Sign up",
+    "myLearning": "My Learning",
     "nav": {
       "home": "Home",
       "courses": "Courses",
@@ -254,6 +255,7 @@
       ]
     },
     "cta": {
+      "kicker": "Get started",
       "title": "Start learning solo, or build skills across your team.",
       "lead": "Choose a practical Odoo path for yourself, or equip your organization with a common foundation.",
       "browse": "Browse courses",

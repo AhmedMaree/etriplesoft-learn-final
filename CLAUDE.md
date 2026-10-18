@@ -24,7 +24,7 @@ Avoid overengineering.
 
 Do not add unrelated functionality.
 
-Do not redesign approved frontend interfaces.
+Improve design quality inside the existing brand (see `DESIGN.md` and the brand PDF); do not change the brand identity or approved screen layouts without an explicit request.
 
 Use the existing components, tokens and patterns whenever possible.
 

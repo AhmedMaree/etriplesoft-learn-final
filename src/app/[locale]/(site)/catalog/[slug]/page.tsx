@@ -18,7 +18,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isLocale(locale)) return {};
-  const course = getCourseBySlug(slug);
+  const course = getCourseBySlug(slug, locale);
   if (!course) return { title: getMarketingMessages(locale).course.notFound };
   return marketingMetadata(locale, course.title, course.tagline, `/catalog/${course.slug}`);
 }
@@ -27,7 +27,7 @@ export default async function CoursePage({ params }: PageProps) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
   setRequestLocale(locale);
-  const course = getCourseBySlug(slug);
+  const course = getCourseBySlug(slug, locale);
   if (!course) notFound();
   return <CourseDetail course={course} locale={locale} />;
 }

@@ -3,9 +3,26 @@
     "metaTitle": "Courses",
     "metaDescription": "Browse practical Odoo and ERP courses, filterable by the role you actually work in.",
     "eyebrow": "All Courses",
-    "title": "Find the Right Odoo Course for Your Role",
-    "lead": "Explore practical Odoo and ERP training designed for end users, system administrators, implementors, automation specialists, and developers.",
-    "imageAlt": "Illustration of the ETripleSoft Learn Odoo course ecosystem",
+    "hero": {
+      "titleStart": "Master the",
+      "titleAccent": "Odoo",
+      "titleEnd": "Course That Fits Your Career Path",
+      "lead": "Learn Odoo through practical, real-world examples and build the skills to step into the job market with confidence.",
+      "start": "Start Learning Now",
+      "paths": "Explore Learning Paths",
+      "artLabel": "A learner studying Odoo on a laptop, with Odoo apps and a hands-on practice checklist",
+      "appsTitle": "Odoo Apps",
+      "apps": { "crm": "CRM", "sales": "Sales", "inventory": "Inventory", "accounting": "Accounting", "purchase": "Purchase", "hr": "HR" },
+      "checklist": ["Install Odoo", "Configure modules", "Hands-on practice", "Real business cases"],
+      "courseCount": "{n, plural, one {{count} course} other {{count} courses}}",
+      "courseCountSub": "For every Odoo role",
+      "featuresLabel": "Why learn with us",
+      "features": [
+        { "title": "Earn Certificates", "text": "Showcase your skills and achievements" },
+        { "title": "Practical Projects", "text": "Practice on real business data" },
+        { "title": "Expert Instructors", "text": "Learn from working Odoo practitioners" }
+      ]
+    },
     "searchPlaceholder": "Search by course, role, Odoo module, or skill",
     "searchLabel": "Search courses",
     "searchSubmit": "Search",
@@ -136,13 +153,28 @@
     "tabs": "Learning path roles",
     "list": "Learning paths",
     "summary": "{level} • {hours}+ Hours • {courses}",
+    "shortSummary": "{level} • {hours}+",
     "courses": "{n, plural, one {{count} Course} other {{count} Courses}}",
     "fullPath": "The Full Path",
     "viewCourse": "View Course",
     "note": "Choose the role that matches your goals. You do not need to complete every path.",
     "explore": "Explore path",
     "pathAlt": "{title} learning path",
-    "details": "{title} details"
+    "details": "{title} details",
+    "courseEditorial": {
+      "crash-course-odoo-erp": { "title": "Crash Course: Odoo ERP", "tagline": "Understand how CRM, Sales, Inventory, delivery, invoicing, and payments connect through one practical Odoo workflow." },
+      "odoo-user-guide": { "title": "Odoo User Guide", "tagline": "Learn to manage daily tasks across Odoo applications and connected business workflows." },
+      "odoo-system-admin": { "title": "Odoo System Administration", "tagline": "Manage users, permissions, company settings, data quality, and operational support." },
+      "odoo-implementation": { "title": "Odoo Implementation", "tagline": "Learn requirement gathering, process mapping, solution design, configuration, testing, go-live, and handover." },
+      "odoo-development": { "title": "Odoo Development", "tagline": "Build and extend Odoo modules with models, business logic, views, actions, integrations, and debugging." },
+      "python-development-for-odoo": { "title": "Python Development for Odoo", "tagline": "Develop Odoo backend skills with Python, ORM, relationships, APIs, testing, and optimization." },
+      "odoo-automation": { "title": "Odoo Automation", "tagline": "Reduce repetitive work with automated actions, approvals, alerts, scheduled tasks, and APIs." }
+    },
+    "moduleTags": {
+      "Sales": "Sales", "CRM": "CRM", "Accounting": "Accounting", "Inventory": "Inventory",
+      "Manufacturing": "Manufacturing", "Purchase": "Purchase", "Human Resources": "Human Resources",
+      "Website & eCommerce": "Website & eCommerce"
+    }
   },
   "modules": {
     "metaTitle": "Explore Odoo Modules",
@@ -161,7 +193,17 @@
     "skills": "Skills You Will Develop",
     "roles": "Related Roles",
     "courses": "Related Courses",
-    "exploreRelated": "Explore Related Courses"
+    "exploreRelated": "Explore Related Courses",
+    "content": {
+      "sales": { "name": "Sales", "shortDescription": "Manage quotations, sales orders, pricing, deliveries, and customer invoicing.", "overview": "The Sales module runs the order-to-cash process—from a customer’s first quotation through delivery and final invoicing—and connects directly to Inventory and Accounting.", "workflow": ["Lead", "Quotation", "Sales Order", "Delivery", "Invoice"], "skills": ["Customers", "Pricelists", "Quotations", "Sales Orders", "Delivery Flow"], "relatedRoles": ["End User", "Functional Consultant", "Implementer"] },
+      "crm": { "name": "CRM", "shortDescription": "Manage leads, opportunities, activities, follow-ups, and pipeline progress.", "overview": "CRM tracks a prospect from first contact to a won opportunity, giving sales teams a structured pipeline and a clear record of every follow-up.", "workflow": ["Lead", "Opportunity", "Activity", "Quotation", "Customer"], "skills": ["Leads", "Opportunities", "Activities", "Pipeline", "Follow-Ups"], "relatedRoles": ["End User", "Sales User", "Functional Consultant"] },
+      "accounting": { "name": "Accounting", "shortDescription": "Manage invoices, vendor bills, payments, journals, and reconciliation.", "overview": "Accounting handles the financial side of each transaction: issuing customer invoices, recording vendor bills, tracking payments, and reconciling journals against bank statements.", "workflow": ["Invoice", "Post", "Payment", "Reconciliation", "Reporting"], "skills": ["Customer Invoices", "Vendor Bills", "Payments", "Journals", "Reconciliation"], "relatedRoles": ["End User", "Accountant", "Functional Consultant", "Implementer"] },
+      "inventory": { "name": "Inventory", "shortDescription": "Control products, warehouses, receipts, deliveries, routes, and stock movements.", "overview": "Inventory manages stock across warehouses—receiving goods, reserving them against orders, picking, and shipping—using configurable routes that match real operations.", "workflow": ["Receipt", "Storage", "Reservation", "Picking", "Delivery"], "skills": ["Products", "Warehouses", "Stock Moves", "Receipts", "Deliveries", "Routes"], "relatedRoles": ["End User", "Inventory User", "System Administrator", "Implementer"] },
+      "manufacturing": { "name": "Manufacturing", "shortDescription": "Plan production with bills of materials, manufacturing orders, and work orders.", "overview": "Manufacturing turns a bill of materials into a production plan by scheduling manufacturing orders, tracking work at work centers, and recording finished goods.", "workflow": ["Bill of Materials", "Manufacturing Order", "Work Orders", "Production", "Finished Goods"], "skills": ["Bills of Materials", "Manufacturing Orders", "Work Centers", "Work Orders", "Production Planning"], "relatedRoles": ["Manufacturing User", "Functional Consultant", "Implementer"] },
+      "purchase": { "name": "Purchase", "shortDescription": "Manage requests for quotation, purchase orders, receipts, and vendor bills.", "overview": "Purchase runs procurement from the first request for quotation through vendor negotiation, purchase orders, goods receipt, and the resulting vendor bill.", "workflow": ["Request for Quotation", "Purchase Order", "Receipt", "Vendor Bill", "Payment"], "skills": ["Vendors", "RFQs", "Purchase Orders", "Product Receipts", "Vendor Bills"], "relatedRoles": ["End User", "Purchase User", "Functional Consultant", "Implementer"] },
+      "human-resources": { "name": "Human Resources", "shortDescription": "Organize employees, attendance, leave requests, and essential HR operations.", "overview": "Human Resources centralizes employee records, attendance, and time-off requests, with an approval flow that keeps managers and HR staff in sync.", "workflow": ["Employee", "Attendance", "Leave Request", "Approval", "HR Reporting"], "skills": ["Employees", "Departments", "Attendance", "Time Off", "Approvals"], "relatedRoles": ["HR User", "System Administrator", "Implementer"] },
+      "website-ecommerce": { "name": "Website and eCommerce", "shortDescription": "Build connected website and online-sales experiences integrated with Odoo operations.", "overview": "Website and eCommerce lets a business publish products online and take orders directly from its site, with each order flowing into delivery and invoicing.", "workflow": ["Product", "Website", "Cart", "Online Order", "Delivery", "Invoice"], "skills": ["Website Pages", "Products", "eCommerce", "Online Orders", "Order Integration"], "relatedRoles": ["Website User", "Developer", "Implementer"] }
+    }
   },
   "about": {
     "metaTitle": "About Us",
@@ -294,7 +336,7 @@
     "items": [
       {
         "question": "How do I start a course?",
-        "answer": "Open any course page and select “Start Learning.” Published courses open directly in our course platform where you can begin the lessons right away."
+        "answer": "Open any course page and select “Start Learning.” If you are not signed in, you will be asked to sign in first, then the course opens in your learning area where you can enroll and begin the lessons."
       },
       {
         "question": "Do I need any prior Odoo experience?",
@@ -330,6 +372,7 @@
     "updated": "Last updated: {date}",
     "contactTitle": "Contact Us",
     "related": "Related policies",
+    "contents": "On this page",
     "privacy": {
       "metaTitle": "Privacy Policy",
       "metaDescription": "How ETripleSoft Learn collects, uses, and protects your information.",
@@ -338,7 +381,7 @@
       "sections": [
         {
           "title": "Information We Collect",
-          "body": "When you contact us, subscribe for updates, or start a course, we may collect information such as your name, email address, and any details you choose to share with us. If a course is hosted on a third-party platform (such as our Odoo-based course platform), that platform’s own privacy practices also apply to your activity there."
+          "body": "When you contact us, subscribe for updates, or start a course, we may collect information such as your name, email address, and any details you choose to share with us. When you take a course, your course activity, such as enrollments and lesson progress, is stored in your ETripleSoft Learn account."
         },
         {
           "title": "How We Use Information",
@@ -350,7 +393,7 @@
         },
         {
           "title": "Third-Party Services",
-          "body": "Course content is delivered through our Odoo-based learning platform, and some pages may link to third-party services (such as social media). We are not responsible for the privacy practices of external sites you visit from links on our website."
+          "body": "Course content is delivered within your ETripleSoft Learn account, and some pages may link to third-party services (such as social media). We are not responsible for the privacy practices of external sites you visit from links on our website."
         },
         {
           "title": "Data Security",
@@ -383,7 +426,7 @@
         },
         {
           "title": "Course Content and Access",
-          "body": "Course lessons are delivered through our Odoo-based course platform. Selecting “Start Learning” on a course page will take you to that platform to begin the course. Access, availability, and any course-specific terms on that platform are governed by its own terms of use."
+          "body": "Course lessons are delivered in your ETripleSoft Learn account. Selecting “Start Learning” on a course page asks you to sign in if you are not already, then opens the course in your learning area. Access to a course depends on your enrollment and the course’s availability."
         },
         {
           "title": "Intellectual Property",
@@ -399,7 +442,7 @@
         },
         {
           "title": "Limitation of Liability",
-          "body": "To the extent permitted by law, ETripleSoft Learn is not liable for indirect or incidental damages arising from your use of this website or its linked course platform."
+          "body": "To the extent permitted by law, ETripleSoft Learn is not liable for indirect or incidental damages arising from your use of this website or the courses delivered through it."
         },
         {
           "title": "Changes to These Terms",

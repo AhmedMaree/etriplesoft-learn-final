@@ -140,7 +140,7 @@ export function SettingsPage({
   return (
     <div className="settings-layout">
       <Panel className="settings-nav">
-        <h2>{t('title')}</h2>
+        <p className="settings-nav-title">{t('title')}</p>
         <p>{t('subtitle')}</p>
         {tabs.map(([key, title, description, Icon]) => (
           <button className={tab === key ? 'selected' : ''} onClick={() => setTab(key)} key={key}>
@@ -182,9 +182,9 @@ export function SettingsPage({
           <Link className="text-link" href="/forgot-password">{auth('forgotPassword')}</Link>
         </div> : isPreferencesTab ? <div className="preference-options">
           {(tab === 'Notifications' ? preferenceControls.slice(0, 4) : preferenceControls.slice(4)).map(({ key, label }) => (
-            <label key={key}>
-              <span><strong>{t(label)}</strong><p>{t('preferenceDescription', { item: t(label).toLowerCase() })}</p></span>
-              <button type="button" role="switch" aria-label={t(label)} aria-checked={toggles[key]} className={`switch ${toggles[key] ? 'on' : ''}`} onClick={() => setToggles((current) => ({ ...current, [key]: !current[key] }))} />
+            <label key={key} htmlFor={`preference-${key}`}>
+              <span id={`preference-${key}-label`}><strong>{t(label)}</strong><p>{t('preferenceDescription', { item: t(label).toLowerCase() })}</p></span>
+              <button id={`preference-${key}`} type="button" role="switch" aria-labelledby={`preference-${key}-label`} aria-checked={toggles[key]} className={`switch ${toggles[key] ? 'on' : ''}`} onClick={() => setToggles((current) => ({ ...current, [key]: !current[key] }))} />
             </label>
           ))}
         </div> : <div className="preference-options">

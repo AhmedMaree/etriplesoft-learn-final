@@ -22,8 +22,9 @@ export default async function OdooModulesPage({ params }: PageProps) {
   setRequestLocale(locale);
   const m = getMarketingMessages(locale);
   const copy = m.modules;
+  const courseEditorial = m.paths.courseEditorial;
 
-  const views: ModuleView[] = getAllModules().map((mod) => ({
+  const views: ModuleView[] = getAllModules(locale).map((mod) => ({
     slug: mod.slug,
     name: mod.name,
     shortDescription: mod.shortDescription,
@@ -33,9 +34,9 @@ export default async function OdooModulesPage({ params }: PageProps) {
     workflow: mod.workflow,
     skills: mod.skills,
     relatedRoles: mod.relatedRoles,
-    courses: getCoursesForModule(mod.slug).map((course) => ({
+    courses: getCoursesForModule(mod.slug, locale).map((course) => ({
       slug: course.slug,
-      title: course.title,
+      title: courseEditorial[course.slug as keyof typeof courseEditorial]?.title ?? course.title,
       levelLabel: m.levels[course.level],
     })),
   }));

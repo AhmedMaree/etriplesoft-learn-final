@@ -3,16 +3,18 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { CurriculumModule } from "../../model/course";
-import { EN } from "../../lib/content-lang";
+import { contentAttrs } from "../../lib/content-lang";
 
 type CurriculumProps = {
   modules: CurriculumModule[];
   notice?: string;
   title: string;
   countLabel: string;
+  contentLang?: "en" | "ar";
 };
 
-export function CourseCurriculum({ modules, notice, title, countLabel }: CurriculumProps) {
+export function CourseCurriculum({ modules, notice, title, countLabel, contentLang }: CurriculumProps) {
+  const content = contentAttrs(contentLang);
   const [open, setOpen] = useState<Set<string>>(() => new Set(modules[0] ? [modules[0].number] : []));
 
   if (modules.length === 0) return null;
@@ -30,7 +32,7 @@ export function CourseCurriculum({ modules, notice, title, countLabel }: Curricu
     <div id="curriculum" className="mk-anchor">
       <h2 className="mk-h2-sm">{title}</h2>
       <p className="mk-body mk-count">{countLabel}</p>
-      {notice && <div className="mk-notice" {...EN}>{notice}</div>}
+      {notice && <div className="mk-notice" {...content}>{notice}</div>}
 
       <div className="mk-curriculum">
         {modules.map((mod) => {
@@ -40,7 +42,7 @@ export function CourseCurriculum({ modules, notice, title, countLabel }: Curricu
             <div key={mod.number} className="mk-curriculum-item">
               <h3>
                 <button type="button" onClick={() => toggle(mod.number)} aria-expanded={isOpen} aria-controls={panelId}>
-                  <span className="mk-curriculum-title" {...EN}>
+                  <span className="mk-curriculum-title" {...content}>
                     <span className="mk-curriculum-number">{mod.number}</span>
                     {mod.title}
                   </span>
@@ -48,7 +50,7 @@ export function CourseCurriculum({ modules, notice, title, countLabel }: Curricu
                 </button>
               </h3>
               {isOpen && (
-                <div id={panelId} className="mk-curriculum-panel" {...EN}>
+                <div id={panelId} className="mk-curriculum-panel" {...content}>
                   <p className="mk-body">{mod.description}</p>
                 </div>
               )}

@@ -27,6 +27,11 @@ SELECT throws_ok($$SELECT public.admin_localize_quiz_draft(current_setting('q.ve
 SELECT public.admin_localize_quiz_draft(current_setting('q.version')::uuid,'ar','اختبار','', '[{"prompt":"اختيار واحد","options":["أ","ب"]},{"prompt":"اختيارات متعددة","options":["أ","ب","ج"]},{"prompt":"صح أو خطأ","options":["صح","خطأ"]}]');
 SELECT public.admin_publish_quiz_version(current_setting('q.version')::uuid);
 SELECT throws_ok($$SELECT public.admin_localize_quiz_draft(current_setting('q.version')::uuid,'ar','اختبار','', '[]')$$,'23514',NULL,'published version cannot gain or change translations');
+SELECT is((SELECT count(*)::int FROM public.learner_get_lesson(current_setting('q.lesson')::uuid,'en')),1,'current administrator can preview published course lessons without enrollment');
+SELECT is(public.admin_preview_published_quiz(current_setting('q.lesson')::uuid,'en')->>'adminPreview','true','administrator quiz preview is explicitly read-only');
+SELECT is(public.admin_preview_published_quiz(current_setting('q.lesson')::uuid,'en')->'review','null'::jsonb,'administrator preview never reveals answer keys');
+SELECT ok(NOT public.admin_preview_published_quiz(current_setting('q.lesson')::uuid,'en')::text ~ 'correctOptions|explanation','administrator preview contains no answer-key fields');
+SELECT throws_ok($$SELECT public.learner_quiz_action(current_setting('q.lesson')::uuid,'en','start')$$,'42501',NULL,'administrator preview cannot create an attempt without enrollment');
 RESET ROLE;
 SELECT ok(NOT has_schema_privilege('authenticated','assessment_private','USAGE'),'keys schema private');
 SELECT ok(NOT has_table_privilege('authenticated','public.question_translations','SELECT'),'explanations not directly readable');

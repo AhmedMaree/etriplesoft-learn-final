@@ -305,11 +305,11 @@ svg {
   margin-inline-start: -8px;
   padding: 3px 9px;
 }
-.sidebar nav a:nth-child(3) > svg {
+.sidebar nav a[href$="/ai-page"] > svg {
   color: var(--blue);
   fill: var(--blue);
 }
-.sidebar nav a:nth-child(3).active > svg {
+.sidebar nav a[href$="/ai-page"].active > svg {
   color: white;
   fill: white;
 }
@@ -1826,7 +1826,7 @@ svg {
   font-size: 14px;
 }
 .input-wrap input::placeholder {
-  color: #8d98af;
+  color: #5b657a;
 }
 .input-wrap select {
   cursor: pointer;
@@ -2276,10 +2276,12 @@ input[type="radio"]:checked {
   width: 37px;
   height: 37px;
 }
-.pass-mark h1 {
+.pass-mark h1,
+.pass-mark .pass-value {
   font-size: 38px;
   color: var(--green);
   margin-top: 5px;
+  font-weight: 700;
 }
 .pass-mark p {
   font-size: 18px;
@@ -2320,9 +2322,11 @@ input[type="radio"]:checked {
   min-height: 410px;
   text-align: center;
 }
-.assessment-result h1 {
+.assessment-result h1,
+.assessment-result .score-value {
   color: var(--green);
   font-size: 60px;
+  font-weight: 700;
 }
 .calendar-stats {
   display: grid;
@@ -3337,9 +3341,11 @@ input[type="radio"]:checked {
   padding: 22px 15px;
   min-height: 920px;
 }
-.settings-nav > h2 {
+.settings-nav > h2,
+.settings-nav > .settings-nav-title {
   font-size: 25px;
   margin: 0 9px 5px;
+  font-weight: 700;
 }
 .settings-nav > p {
   font-size: 16px;
@@ -4536,7 +4542,8 @@ input[type="radio"]:checked {
   .pills {
     gap: 5px;
   }
-  .pills button {
+  .pills button,
+  .pills a {
     padding: 10px 11px;
     font-size: 10px;
   }
@@ -5413,7 +5420,8 @@ input[type="radio"]:checked {
     flex-wrap: wrap;
     gap: 6px;
   }
-  .pills button {
+  .pills button,
+  .pills a {
     font-size: 11px;
     padding: 10px 13px;
   }
@@ -6462,7 +6470,8 @@ input[type="radio"]:checked {
   .pills {
     gap: 7px;
   }
-  .pills button {
+  .pills button,
+  .pills a {
     font-size: 12px;
     padding: 11px 14px;
   }
@@ -8621,13 +8630,16 @@ input[type="radio"]:checked {
 .learner-filter-bar {
   flex-wrap: wrap;
 }
+.learner-filter-bar .sort input[type="search"] {
+  width: min(260px, 100%);
+}
 .pills {
   flex-wrap: wrap;
 }
 .pills a {
   background: #f0f2f4;
   border-radius: 17px;
-  padding: 13px 17px;
+  padding: 14px 18px;
   color: #344775;
   font-size: 12px;
   white-space: nowrap;
@@ -8637,7 +8649,8 @@ input[type="radio"]:checked {
   background: var(--blue);
   color: white;
 }
-.pills a:focus-visible {
+.pills a:focus-visible,
+.pills button:focus-visible {
   outline: 2px solid var(--blue);
   outline-offset: 2px;
 }

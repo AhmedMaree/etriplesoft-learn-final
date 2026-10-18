@@ -1,0 +1,14 @@
+{
+  "courseSlug": "odoo-system-admin",
+  "bunnyCollection": "Odoo System Admin",
+  "lessons": [
+    { "lessonId": "b43e5d8a-7a73-4a65-a425-2d5d46600254", "title": "Administration", "bunnyTitle": "L01 - Administration" },
+    { "lessonId": "41f4f2a7-3fe5-b52b-8949-0fa72e09da0e", "title": "Access Rights", "bunnyTitle": "L02 - Access Rights" },
+    { "lessonId": "acc5316a-dc21-d2fa-2005-a9f326bd86b4", "title": "Handle Users", "bunnyTitle": "L03 - Handle Users" },
+    { "lessonId": "58f9a014-82d0-ab9f-96f5-41c89f36ac2c", "title": "Security Groups", "bunnyTitle": "L04 - Security Groups" },
+    { "lessonId": "28b11afe-c3cd-f92a-63b1-6cc7c334561d", "title": "Companies", "bunnyTitle": "L05 - Companies" },
+    { "lessonId": "c6a44622-373f-5ee1-f997-5c2e9aeed8d6", "title": "Languages", "bunnyTitle": "L06 - Languages" },
+    { "lessonId": "68fc9b05-877f-b304-ec75-69e9e858b830", "title": "Studio", "bunnyTitle": "L07 - Studio" },
+    { "lessonId": "d880a2e9-6e34-10a0-80c5-ecba4fbac9cc", "title": "Backups", "bunnyTitle": "L08 - Backups" }
+  ]
+}

@@ -2,9 +2,10 @@ import Image from "next/image";
 import { ArrowUpRight, Clock, Layers } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { CourseTileData } from "../lib/course-tile";
-import { EN } from "../lib/content-lang";
+import { contentAttrs } from "../lib/content-lang";
 
 export function CourseTile({ course, actionLabel }: { course: CourseTileData; actionLabel: string }) {
+  const content = contentAttrs(course.contentLang);
   return (
     <Link href={`/catalog/${course.slug}`} className="mk-tile" aria-label={course.ariaLabel}>
       <div className="mk-tile-media">
@@ -25,8 +26,8 @@ export function CourseTile({ course, actionLabel }: { course: CourseTileData; ac
       </div>
 
       <div className="mk-tile-body">
-        <div className="mk-tile-tag" {...EN}>{course.tag}</div>
-        <h3 className="mk-tile-title" {...EN}>{course.title}</h3>
+        <div className="mk-tile-tag" {...content}>{course.tag}</div>
+        <h3 className="mk-tile-title" {...content}>{course.title}</h3>
         <div className="mk-tile-meta">
           <span>
             <Clock size={12} aria-hidden="true" />
@@ -39,7 +40,7 @@ export function CourseTile({ course, actionLabel }: { course: CourseTileData; ac
         </div>
 
         {course.moduleTags.length > 0 && (
-          <ul className="mk-tile-tags" {...EN}>
+          <ul className="mk-tile-tags" {...content}>
             {course.moduleTags.map((tag) => (
               <li key={tag}>{tag}</li>
             ))}
@@ -47,7 +48,7 @@ export function CourseTile({ course, actionLabel }: { course: CourseTileData; ac
         )}
 
         <div className="mk-tile-foot">
-          <div className="mk-tile-instructor" {...EN}>
+          <div className="mk-tile-instructor" {...content}>
             <span aria-hidden="true">{course.instructorInitials}</span>
             {course.instructorName}
           </div>

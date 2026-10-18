@@ -9,3 +9,35 @@ coverage/
 *.tsbuildinfo
 .impeccable/current-review/
 .env*.local
+
+# Environment & secrets (keep .env.example tracked)
+.env
+.env.*
+!.env.example
+
+# Tooling / local state
+.playwright-mcp/
+.impeccable/hook.cache.json
+.impeccable/review/
+supabase/.temp/
+supabase/.branches/
+supabase/snippets/
+.vercel/
+.claude/settings.local.json
+
+# Editors
+.vscode/
+.idea/
+
+# Keys & certificates
+*.pem
+*.key
+
+# Logs & OS files
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Course content and images (videos/PDFs are too big for git)
+courses-images/

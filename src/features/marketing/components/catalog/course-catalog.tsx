@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Lightbulb, Search, SearchX } from "lucide-react";
+import { Lightbulb, Search, SearchX, X } from "lucide-react";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
@@ -112,10 +112,6 @@ export function CourseCatalog({ courses, copy, roles }: CourseCatalogProps) {
         </label>
       </div>
 
-      <p className="mk-results" aria-live="polite">
-        {resultsLabel}
-      </p>
-
       <div className="mk-guide">
         <div className="mk-guide-text">
           <span className="mk-guide-icon">
@@ -170,6 +166,17 @@ export function CourseCatalog({ courses, copy, roles }: CourseCatalogProps) {
         </label>
 
         <div>
+          <div className="mk-results-bar">
+            <p className="mk-results" aria-live="polite">
+              {resultsLabel}
+            </p>
+            {role !== "all" && (
+              <button type="button" className="mk-filter-chip" onClick={() => setRole("all")} aria-label={`${copy.clear}: ${roles[role]}`}>
+                {roles[role]}
+                <X size={14} aria-hidden="true" />
+              </button>
+            )}
+          </div>
           {filtered.length === 0 ? (
             <div className="mk-empty">
               <SearchX size={24} aria-hidden="true" />

@@ -33,7 +33,7 @@ export default async function LearningPathsPage({ params }: PageProps) {
 
   const paths: RolePath[] = learningPaths.map(({ role, stages }) => {
     const courses = stages
-      .map((slug) => getCourseBySlug(slug))
+      .map((slug) => getCourseBySlug(slug, locale))
       .filter((course): course is NonNullable<typeof course> => course !== undefined);
     const totalHours = Math.round(courses.reduce((sum, course) => sum + course.durationHours, 0));
     const highest = courses.reduce<CourseLevel>(
@@ -42,6 +42,7 @@ export default async function LearningPathsPage({ params }: PageProps) {
     );
     const title = m.roles[role];
     const courseCount = formatMessage(locale, m.paths.courses, { n: courses.length, count: String(courses.length) });
+    const courseEditorial = (slug: string) => m.paths.courseEditorial[slug as keyof typeof m.paths.courseEditorial];
     return {
       role,
       title,
@@ -53,9 +54,14 @@ export default async function LearningPathsPage({ params }: PageProps) {
         hours: String(totalHours),
         courses: courseCount,
       }),
-      shortSummary: `${m.levels[highest]} • ${totalHours}+`,
-      moduleTags: Array.from(new Set(courses.flatMap((course) => course.moduleTags))).slice(0, 4),
-      courses: courses.map((course) => ({ slug: course.slug, title: course.title, tagline: course.tagline })),
+      shortSummary: formatMessage(locale, m.paths.shortSummary, { level: m.levels[highest], hours: String(totalHours) }),
+      moduleTags: Array.from(new Set(courses.flatMap((course) => course.moduleTags)))
+        .slice(0, 4)
+        .map((tag) => m.paths.moduleTags[tag as keyof typeof m.paths.moduleTags] ?? tag),
+      courses: courses.map((course) => {
+        const copy = courseEditorial(course.slug);
+        return { slug: course.slug, title: copy?.title ?? course.title, tagline: copy?.tagline ?? course.tagline };
+      }),
     };
   });
 

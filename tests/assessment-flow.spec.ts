@@ -20,6 +20,7 @@ let courseId: string;
 let quizId: string;
 let readingId: string;
 let certificateId: string;
+let editorCourseId: string;
 const sql = (query: string) =>
   execFileSync(
     "docker",
@@ -173,11 +174,27 @@ test.beforeAll(async () => {
   await client.auth.signInWithPassword({ email, password });
   await rpc("learner_grant_free_enrollment", { p_course_id: courseId });
 });
-test.afterAll(() => {
+test.afterAll(async () => {
   if (courseId)
     sql(
       `UPDATE public.courses SET status='archived' WHERE id='${courseId}'; UPDATE public.user_roles SET revoked_at=now(),revoked_by='${adminId}' WHERE user_id='${adminId}' AND revoked_at IS NULL;`,
     );
+  if (editorCourseId) {
+    const keys = sql(
+      `SELECT r.storage_object_key FROM public.lesson_resources r JOIN public.lessons l ON l.id=r.lesson_id JOIN public.course_modules m ON m.id=l.module_id WHERE m.course_id='${editorCourseId}' AND r.kind='file';`,
+    )
+      .split("\n")
+      .filter((key) => key.startsWith(`courses/${editorCourseId}/`));
+    sql(
+      `UPDATE public.courses SET status='archived' WHERE id='${editorCourseId}';`,
+    );
+    if (keys.length)
+      await createClient<Database>(url!, secret!, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      })
+        .storage.from("course-resources")
+        .remove(keys);
+  }
 });
 async function login(page: Page, admin = false) {
   await page.goto("/en/login");
@@ -185,7 +202,7 @@ async function login(page: Page, admin = false) {
   await page.locator("input[name=password]").fill(password);
   await page.locator("form.auth-fields button[type=submit]").click();
   await page.waitForURL((current) => !current.pathname.endsWith("/login"));
-  await expect(page.locator(".learning-metrics")).toBeVisible();
+  await expect(page.locator(".rl-stats")).toBeVisible();
 }
 test("real quiz autosaves, resumes, grades and enables course completion", async ({
   page,
@@ -292,7 +309,7 @@ test("real quiz autosaves, resumes, grades and enables course completion", async
   ).toBeVisible();
   await anonymous.close();
   await page.goto("/en/overview");
-  await expect(page.locator(".learning-metrics")).toContainText(
+  await expect(page.locator(".rl-stats")).toContainText(
     "Completed courses",
   );
   await expect(
@@ -334,7 +351,7 @@ test("assessment and authoring preserve both locales at all required widths", as
         caret: "initial",
       });
       await page.goto(`/${locale}/overview`);
-      await expect(page.locator(".learning-metrics")).toBeVisible();
+      await expect(page.locator(".rl-stats")).toBeVisible();
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth + 1,
@@ -362,6 +379,19 @@ test("assessment and authoring preserve both locales at all required widths", as
         path: `tmp/quiz-${locale}-${width}.png`,
         fullPage: true,
         caret: "initial",
+      });
+      await page.goto(`/${locale}/admin/courses/${courseId}`);
+      await expect(page.locator(".course-editor")).toBeVisible();
+      await page.locator(".admin-lesson summary").first().click();
+      await page.evaluate(() => document.fonts.ready);
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth + 1,
+        ),
+      ).toBe(true);
+      await page.screenshot({
+        path: `tmp/course-editor-${locale}-${width}.png`,
+        fullPage: true,
       });
     }
   expect(errors).toEqual([]);
@@ -396,4 +426,106 @@ test("administrator authors and publishes a reviewed quiz version", async ({
   await expect(page.getByRole("status")).toContainText(
     "Assessment version published",
   );
+});
+
+test("administrator creates curriculum and uploads a validated private PDF", async ({
+  page,
+}) => {
+  test.setTimeout(120000);
+  await login(page, true);
+  await page.goto("/en/admin/courses");
+  await page
+    .getByLabel("Title", { exact: true })
+    .fill("Document workflow verification");
+  await page
+    .getByLabel("Course URL name", { exact: true })
+    .fill(`editor-${run}`);
+  await page
+    .getByLabel("Summary", { exact: true })
+    .fill("Clearly labeled local content workflow fixture");
+  await page.getByRole("button", { name: "Save course", exact: true }).click();
+  await page.waitForURL(/\/admin\/courses\/[0-9a-f-]+$/);
+  editorCourseId = page.url().split("/").at(-1)!;
+  await page.getByLabel("Publish in this language", { exact: true }).check();
+  await page.getByRole("button", { name: "Save course", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("Saved.");
+  await page.getByLabel("New module title", { exact: true }).fill("Curriculum");
+  await page.getByRole("button", { name: "Add module", exact: true }).click();
+  const modulePanel = page.locator(".admin-module");
+  await expect(modulePanel).toBeVisible();
+  await modulePanel
+    .getByLabel("Publish in this language", { exact: true })
+    .check();
+  await modulePanel
+    .getByRole("button", { name: "Save module", exact: true })
+    .click();
+  await expect(modulePanel.getByRole("status")).toContainText("Saved.");
+  await modulePanel
+    .getByLabel("New lesson title", { exact: true })
+    .fill("PDF lesson");
+  await modulePanel
+    .getByLabel("Lesson type", { exact: true })
+    .selectOption("resource");
+  await modulePanel
+    .getByRole("button", { name: "Add lesson", exact: true })
+    .click();
+  const lesson = modulePanel.locator(".admin-lesson");
+  await expect(lesson).toBeVisible();
+  await lesson.locator("summary").click();
+  await lesson.getByLabel("Publish in this language", { exact: true }).check();
+  await lesson
+    .getByRole("button", { name: "Save lesson", exact: true })
+    .click();
+  await expect(lesson.getByRole("status")).toContainText("Saved.");
+  const resources = lesson.locator(".admin-resource-upload");
+  await resources
+    .getByLabel("Document title", { exact: true })
+    .fill("Browser-uploaded PDF");
+  await resources
+    .getByLabel("PDF file", { exact: true })
+    .setInputFiles("courses-images/crash-course-odoo-erp/Course Agenda.pdf");
+  await resources
+    .getByRole("button", { name: "Upload PDF draft", exact: true })
+    .click();
+  await expect(resources.getByRole("status")).toContainText(
+    "PDF uploaded and validated",
+  );
+  await resources
+    .getByRole("button", { name: "Publish document", exact: true })
+    .click();
+  await expect(resources.getByRole("status")).toContainText(
+    "Document published",
+  );
+  await resources
+    .getByLabel("Document title", { exact: true })
+    .fill("Invalid PDF");
+  await resources.getByLabel("PDF file", { exact: true }).setInputFiles({
+    name: "invalid.pdf",
+    mimeType: "application/pdf",
+    buffer: Buffer.from("not-a-real-pdf"),
+  });
+  await resources
+    .getByRole("button", { name: "Upload PDF draft", exact: true })
+    .click();
+  await expect(resources.getByRole("status")).toContainText(
+    "Upload or validation failed",
+  );
+  expect(
+    sql(
+      `SELECT rt.publication_status FROM public.lesson_resource_translations rt JOIN public.lesson_resources r ON r.id=rt.resource_id JOIN public.lessons l ON l.id=r.lesson_id JOIN public.course_modules m ON m.id=l.module_id WHERE m.course_id='${editorCourseId}' AND rt.label='Invalid PDF';`,
+    ),
+  ).toBe("draft");
+  await page.context().clearCookies();
+  await login(page);
+  const denied = await page.request.post("/api/admin/resources", {
+    headers: { Origin: "http://127.0.0.1:3016" },
+    data: {
+      action: "begin",
+      locale: "en",
+      lessonId: readingId,
+      label: "Unauthorized",
+      size: 100,
+    },
+  });
+  expect(denied.status()).toBe(403);
 });

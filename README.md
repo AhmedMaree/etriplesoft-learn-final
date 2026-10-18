@@ -1,8 +1,8 @@
 # ETripleSoft Learn
 
-ETripleSoft Learn is a responsive learning-platform frontend focused on Odoo education. This repository preserves the approved interactive demo in the Next.js App Router. LMS services and backend integrations are planned for later phases.
+ETripleSoft Learn is a bilingual (English/Arabic) learning management system for Odoo education, built on the Next.js App Router with Supabase, Mux and Kashier. Learners can browse the catalog, enroll, watch protected video, read private PDFs, take server-graded assessments, complete courses and earn verifiable certificates. Administrators manage courses, curriculum, assessments, video and access. Current launch status is tracked in [docs/phases/PRODUCTION-READINESS.md](docs/phases/PRODUCTION-READINESS.md); the system is not yet approved for production.
 
-English and Arabic are core product locales. Shared `/en` and `/ar` routes, locale-aware navigation, and RTL document direction are implemented. Some interface strings still need Arabic extraction; course and LMS demo fixtures intentionally remain English. See [docs/I18N.md](docs/I18N.md).
+English and Arabic are core product locales. Shared `/en` and `/ar` routes, locale-aware navigation and RTL document direction are implemented, and the EN/AR message catalogs have matching keys. Course content is published per locale and never silently falls back. See [docs/I18N.md](docs/I18N.md).
 
 ## Stack
 
@@ -10,6 +10,8 @@ English and Arabic are core product locales. Shared `/en` and `/ar` routes, loca
 - TypeScript with strict checking
 - Existing CSS and local Learn font
 - Lucide icons
+- Supabase (Auth, Postgres with RLS, private Storage)
+- Mux (signed video playback) and Kashier (checkout, test mode)
 - Playwright for browser coverage
 
 ## Development
@@ -55,7 +57,7 @@ Localized routes are prefixed with `/en` or `/ar`. Unprefixed legacy paths resol
 | Course details | `/en/detail-course` | `/ar/detail-course` |
 | Assessment | `/en/assessment` | `/ar/assessment` |
 | Checkout | `/en/payment` | `/ar/payment` |
-| Signup / demo login | `/en/sign-up` | `/ar/sign-up` |
+| Sign up | `/en/sign-up` | `/ar/sign-up` |
 
 ## Project structure
 
@@ -65,7 +67,7 @@ src/
     [locale]/
       layout.tsx              Locale document layout, font, styles and providers
       (learner)/              URL-neutral learner shell and explicit pages
-      (auth)/sign-up/         Signup demo page
+      (auth)/                 Login, sign-up, recovery, callback
   i18n/                       Locale config, routing, request and navigation helpers
   features/                   Domain UI and feature-owned demo data
     <domain>/components/       Feature screens and focused interactions
@@ -91,7 +93,7 @@ docs/                          Project, architecture, design, and QA guidance
 
 The locale layout, explicit route pages, metadata, page headings, overview composition, shared UI primitives, and community/messages placeholders are Server Components. The learner layout keeps a small Client Component shell for mobile navigation, menus, search, and profile display; route content is passed through as server-rendered children. Interactive feature screens use feature-scoped Client Components. Browser persistence and toast handling live in small client utilities.
 
-The approved global CSS and runtime assets are shared across locales. Course fixtures now live with the courses feature. Demo settings and assessment answers remain localStorage-backed. The hosted identity/RLS foundation and session refresh are connected; signup, payments, AI, and LMS workflows remain unimplemented.
+The approved global CSS and runtime assets are shared across locales. Learning, assessment, completion, certificate, dashboard and checkout flows read server-owned data from Supabase; browser state is never authoritative. Calendar, community, messages and the AI assistant still show demonstration content and are not launch features (see [PRODUCT.md](PRODUCT.md)).
 
 ## Environment
 

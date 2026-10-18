@@ -14,7 +14,7 @@ colors:
   mint: "#e2f7f0"
 typography:
   body:
-    fontFamily: 'Learn, "Arial", sans-serif'
+    fontFamily: '"MK Montserrat", "Plex Arabic", "Segoe UI", sans-serif'
     fontSize: "16px"
   headline:
     fontSize: "38px"
@@ -74,7 +74,7 @@ The brand PDF values are retained separately in CSS as `--brand-circuit` (#1B72F
 
 ## Typography
 
-`Learn` is the CSS alias for the bundled Inter variable font, with Arial and sans-serif fallbacks. Canva Sans was not supplied, so exact reference typography is not achieved. The base size becomes 14px at widths up to 1350px; many components use explicit sizes.
+The learner, auth and admin screens share the public site's brand typefaces (`src/brand-fonts.css`): Montserrat for text (`--brand-font-body`) and Canva Sans for `h1`–`h3` (`--brand-font-head`), so the public site and the signed-in app read as one product. Arabic glyphs come from Plex Arabic. The base size becomes 14px at widths up to 1350px; many components use explicit sizes.
 
 Page headings generally range from 35–40px on desktop, promotional headlines approximately 41–43px, section titles 17–21px, body copy 14–17px, and metadata 10–12px. These are observed roles, not a strict modular scale. Narrow layouts reduce headings and allow wrapping. Certificate signatures retain their separate cursive treatment.
 
@@ -121,7 +121,7 @@ The approved design must be shared across English and Arabic. Localization must 
 
 - English is LTR and Arabic is RTL. The locale layout controls document `lang` and `dir`; components should not set global direction independently.
 - Preserve typography roles, colors, gradients, spacing, alignment, container widths, card treatments, imagery, and responsive composition in both locales.
-- English font: the current `Learn` alias uses the bundled Inter variable font. Arabic font: the bundled Inter font was visually sampled at 1280px and looked readable, but embedded Arabic glyph coverage versus fallback and all-width visual review remain unverified. Arabic font sign-off is pending. Do not choose a replacement without visual review.
+- English font: Montserrat text and Canva Sans headings, shared with the public site. Arabic font: Plex Arabic, also shared with the public site. Do not choose a replacement without visual review.
 - Review Arabic glyph rendering, line height, heading and paragraph wrapping, font weight, button/input height, and clipping separately. Do not apply Latin letter-spacing rules to Arabic unless validated.
 - Prefer logical CSS properties (`margin-inline-*`, `padding-inline-*`, `inset-inline-*`, `border-inline-*`, `text-align: start/end`, and logical sizing) where they express the layout. Review existing physical left/right positioning contextually rather than rewriting mechanically.
 - Identify icons as directional or non-directional. Adapt arrows, chevrons, back/forward controls, and progression indicators when meaning requires it. Never mirror logos, brand marks, Odoo/Microsoft marks, photos, screenshots, video, charts whose meaning changes, play/download symbols, or generic non-directional icons automatically.

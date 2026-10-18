@@ -17,6 +17,16 @@
 5. Open the matching crash-course lessons and use Lesson resources to download the PDFs. The server authorizes the exact resource/lesson/locale before a 60-second private download redirect.
 6. Review captions and actual Arabic content before accepting the phases. `/ar/...` uses the same localized interface; missing exact-locale lessons offer an explicit link to their available language, without silently substituting content.
 
+## Bunny Stream videos
+
+Lessons can also play from Bunny Stream (`lesson_videos.provider = 'bunny'`). Bunny videos are imported outside the app, then attached to an existing video lesson by an administrator; playback, entitlement, captions and progress use the same database checks as Mux.
+
+1. Import: `node --env-file=.env.local scripts/fetch-drive-videos-to-bunny.mjs --list=<videos.json>` asks Bunny to fetch Google Drive links into a collection named after the course (dry run first, then `--apply`; `--status` shows encoding).
+2. Attach: `node scripts/attach-bunny-videos.mjs --plan=scripts/course-plans/<course>-bunny-videos.json` reads each finished video's GUID and duration from the Bunny API and calls the audited `admin_attach_bunny_video` RPC (dry run first, then `--apply`).
+3. Playback: `/api/mux/playback-token` calls `learner_get_lesson_video`; for Bunny it returns a 5-minute signed embed URL (`BUNNY_TOKEN_KEY`, embed view token authentication). The embed reports play/pause/seek/time through Player.js, which feeds the existing progress checkpoints.
+
+Keep Bunny "Enable direct play" off, embed token authentication on, and allowed domains limited to the site and local development hosts. `BUNNY_*` values are server-only.
+
 ## Video uploads and captions
 
 Video bytes go straight to Mux in retryable 5 MiB chunks through pinned `@mux/upchunk@3.5.0`; they do not pass through Next.js. An interrupted transfer retries individual chunks. After a final failure, inspect the pending upload before retrying: its lesson reservation lasts until cancellation/timeout. Closing the browser transfer does not necessarily cancel the provider intent.

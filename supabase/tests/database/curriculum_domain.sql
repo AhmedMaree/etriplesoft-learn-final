@@ -2,7 +2,7 @@
 -- Runs in a rolled-back transaction; fixtures are local/CI only.
 BEGIN;
 
-SELECT plan(36);
+SELECT plan(40);
 
 INSERT INTO auth.users (id, aud, role, email, raw_user_meta_data, created_at, updated_at)
 VALUES ('d8000000-0000-4000-8000-000000000001', 'authenticated', 'authenticated', 'curriculum-admin@example.test', '{}'::jsonb, pg_catalog.now(), pg_catalog.now());
@@ -69,6 +69,10 @@ SELECT is((SELECT count(*)::integer FROM public.catalog_get_course_outline('pgta
 SELECT is((SELECT is_preview FROM public.catalog_get_course_outline('pgtap-curriculum', 'en')), true, 'outline exposes the preview marker');
 SELECT is((SELECT count(*)::integer FROM public.catalog_get_course_outline('pgtap-curriculum', 'ar')), 0, 'missing Arabic lesson translation never falls back to English');
 SELECT throws_ok($$SELECT * FROM public.catalog_get_course_outline('pgtap-curriculum', 'fr')$$, '22023', NULL, 'unsupported outline locale is rejected');
+SELECT is((SELECT duration_seconds FROM public.catalog_course_durations(ARRAY[current_setting('pgtap.course')::uuid], 'en')), 120::bigint, 'catalog runtime sums published exact-locale lesson durations');
+SELECT is((SELECT count(*)::integer FROM public.catalog_course_durations(ARRAY[current_setting('pgtap.course')::uuid], 'ar')), 0, 'catalog runtime does not fall back to another locale');
+SELECT throws_ok($$SELECT * FROM public.catalog_course_durations(ARRAY[]::uuid[], 'fr')$$, '22023', NULL, 'unsupported catalog runtime locale is rejected');
+SELECT ok(has_function_privilege('anon', 'public.catalog_course_durations(uuid[],text)', 'EXECUTE'), 'anonymous catalog can read the narrow runtime projection');
 SELECT throws_ok($$SELECT * FROM public.lesson_translations$$, '42501', NULL, 'anonymous direct lesson-body reads are denied');
 SELECT throws_ok($$SELECT * FROM public.lesson_resources$$, '42501', NULL, 'anonymous direct resource reads are denied');
 SELECT throws_ok($$SELECT * FROM public.lesson_resource_translations$$, '42501', NULL, 'anonymous direct resource metadata reads are denied');

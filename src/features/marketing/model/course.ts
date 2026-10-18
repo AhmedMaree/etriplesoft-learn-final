@@ -57,6 +57,29 @@ export type Course = {
   rating: number;
   resourcesCount: number;
   certificate: boolean;
+  /** Language of the editorial text; set by the repository so Arabic pages mark untranslated text as English. */
+  contentLang?: "en" | "ar";
+};
+
+/** Translated editorial fields for one course; everything structural stays on the English record. */
+export type CourseTranslation = {
+  title: string;
+  tagline: string;
+  description: string[];
+  levelLabel?: string;
+  language: string;
+  durationLabel: string;
+  track: string;
+  format: string;
+  moduleTags: string[];
+  learningOutcomes: string[];
+  whoItsFor: string[];
+  requirements: string[];
+  curriculum: { title: string; description: string }[];
+  curriculumNotice?: string;
+  projects: CourseProject[];
+  faq: CourseFaq[];
+  instructor?: { role: string; bio: string };
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -105,5 +128,31 @@ export function isCourse(value: unknown): value is Course {
     isStringArray(value.relatedCourseSlugs) &&
     isObjectArray(value.faq, ["question", "answer"]) &&
     (value.instructor === null || isObjectArray([value.instructor], ["name", "role", "bio", "initials"]))
+  );
+}
+
+/** Build-time guard for a course translation; module counts must match the English curriculum. */
+export function isCourseTranslation(value: unknown, course: Course): value is CourseTranslation {
+  if (!isRecord(value)) return false;
+  return (
+    typeof value.title === "string" &&
+    typeof value.tagline === "string" &&
+    isStringArray(value.description) &&
+    (value.levelLabel === undefined || typeof value.levelLabel === "string") &&
+    typeof value.language === "string" &&
+    typeof value.durationLabel === "string" &&
+    typeof value.track === "string" &&
+    typeof value.format === "string" &&
+    isStringArray(value.moduleTags) &&
+    isStringArray(value.learningOutcomes) &&
+    isStringArray(value.whoItsFor) &&
+    isStringArray(value.requirements) &&
+    isObjectArray(value.curriculum, ["title", "description"]) &&
+    Array.isArray(value.curriculum) &&
+    value.curriculum.length === course.curriculum.length &&
+    (value.curriculumNotice === undefined || typeof value.curriculumNotice === "string") &&
+    isObjectArray(value.projects, ["title", "description"]) &&
+    isObjectArray(value.faq, ["question", "answer"]) &&
+    (value.instructor === undefined || isObjectArray([value.instructor], ["role", "bio"]))
   );
 }

@@ -4,6 +4,7 @@ import { isLocale } from "@/i18n/config";
 import { readBoundedJson } from "@/lib/http/bounded-json";
 import { isQuizState } from "@/features/assessments/types";
 import { hasTrustedRequestOrigin } from "@/lib/http/trusted-origin";
+import { getAdminAccess } from "@/lib/supabase/auth";
 import type { Json } from "@/types/database";
 
 export const dynamic = "force-dynamic";
@@ -36,6 +37,17 @@ export async function POST(request: Request) {
   const client = await createClient();
   const { data: auth, error: authError } = await client.auth.getUser();
   if (authError || !auth.user) return reply({ error: "authentication" }, 401);
+  if (input.action === "get" && (await getAdminAccess()).status === "admin") {
+    const { data: preview, error: previewError } = await client.rpc(
+      "admin_preview_published_quiz",
+      { p_lesson_id: input.lessonId, p_locale: input.locale },
+    );
+    if (previewError) return reply({ error: "failed" }, 503);
+    if (preview !== null) {
+      if (!isQuizState(preview)) return reply({ error: "failed" }, 503);
+      return reply({ quiz: preview });
+    }
+  }
   const params: {
     p_lesson_id: string;
     p_locale: string;

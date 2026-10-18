@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { ArrowRight, Award } from "lucide-react";
+import { ArrowRight, Award, Clock } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { CatalogCourse } from "../../lib/catalog-data";
-import { EN } from "../../lib/content-lang";
+import { contentAttrs } from "../../lib/content-lang";
 
 type CourseCardProps = {
   course: CatalogCourse;
@@ -12,6 +12,7 @@ type CourseCardProps = {
 const FALLBACK_IMAGE = "/marketing/all-courses-image.png";
 
 export function CourseCard({ course, labels }: CourseCardProps) {
+  const content = contentAttrs(course.contentLang);
   return (
     <Link href={`/catalog/${course.slug}`} className="mk-card">
       <div className="mk-card-media">
@@ -31,11 +32,20 @@ export function CourseCard({ course, labels }: CourseCardProps) {
       </div>
 
       <div className="mk-card-body">
-        <div className="mk-card-meta" {...EN}>
-          {course.track} &middot; {course.levelText} &middot; {course.durationLabel}
+        <div className="mk-card-meta" {...content}>
+          {course.track}
         </div>
-        <h3 className="mk-card-title" {...EN}>{course.title}</h3>
-        <p className="mk-card-text" {...EN}>{course.tagline}</p>
+        <h3 className="mk-card-title" {...content}>{course.title}</h3>
+        <div className="mk-card-chips" {...content}>
+          <span className="mk-card-chip" data-level={course.levelRank}>
+            {course.levelText}
+          </span>
+          <span className="mk-card-chip">
+            <Clock size={13} aria-hidden="true" />
+            {course.durationLabel}
+          </span>
+        </div>
+        <p className="mk-card-text" {...content}>{course.tagline}</p>
 
         <div className="mk-card-foot">
           <span className="mk-card-action">
@@ -44,7 +54,7 @@ export function CourseCard({ course, labels }: CourseCardProps) {
           </span>
           {course.certificate && (
             <span className="mk-card-cert">
-              <Award size={16} aria-hidden="true" />
+              <Award size={14} aria-hidden="true" />
               {labels.certificate}
             </span>
           )}

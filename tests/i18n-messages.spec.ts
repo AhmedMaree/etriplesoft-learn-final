@@ -39,7 +39,36 @@ test("messages contain no mojibake and no empty values", () => {
 });
 
 test("ICU placeholders match between locales", () => {
-  const placeholders = (value: string) => [...value.matchAll(/\{(\w+)/g)].map((m) => m[1]).sort();
+  // Collect ICU argument names. In "{count, plural, one {course} other {courses}}" only
+  // "count" is an argument; the braces after selectors wrap translatable text, not arguments.
+  const placeholders = (value: string): string[] => {
+    const names = new Set<string>();
+    const message = (i: number, stopAtBrace: boolean): number => {
+      while (i < value.length) {
+        const ch = value[i];
+        if (ch === "}" && stopAtBrace) return i;
+        if (ch !== "{") { i += 1; continue; }
+        const close = value.indexOf("}", i);
+        const head = /^\{\s*(\w+)\s*([,}])/.exec(value.slice(i, close + 1));
+        if (!head) { i += 1; continue; }
+        names.add(head[1]);
+        if (head[2] === "}") { i = close + 1; continue; }
+        // Complex argument: skip "type," then read "selector {message}" pairs.
+        let j = value.indexOf(",", i + head[0].length - 1);
+        j = value.indexOf(",", j + 1) + 1;
+        while (j < value.length && value[j] !== "}") {
+          const open = value.indexOf("{", j);
+          if (open < 0) break;
+          j = message(open + 1, true) + 1;
+          while (value[j] === " ") j += 1;
+        }
+        i = j + 1;
+      }
+      return i;
+    };
+    message(0, false);
+    return [...names].sort();
+  };
   for (const key of Object.keys(english)) {
     expect(placeholders(arabic[key] ?? ""), key).toEqual(placeholders(english[key]));
   }

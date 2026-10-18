@@ -315,6 +315,35 @@
 }
 
 /* ---------- Footer ---------- */
+/* Signed-in replacement for Log in / Sign up. */
+.mk-account {
+  padding-block: 4px;
+  padding-inline-start: 6px;
+}
+.mk-account-avatar {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.2);
+}
+.mk-account-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The same footer inside the learner app's main column. */
+.mk.mk--embedded {
+  min-height: 0;
+  margin-top: 22px;
+  overflow: hidden;
+  border: 1px solid #eef0f5;
+  border-radius: 18px;
+  background: #fff;
+}
 .mk-footer {
   width: 100%;
   padding-block: 40px 24px;

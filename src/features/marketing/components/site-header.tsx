@@ -2,11 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, UserRound, X } from "lucide-react";
+import { useLocale } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { LocaleSwitcher } from "@/components/shared/locale-switcher";
 import { roleSlugs } from "../model/course";
 import type { MarketingMessages } from "../lib/messages";
+import { getOdooPartnerUrl } from "../lib/business";
+import { useSignedInLearner } from "../lib/use-signed-in-learner";
 
 type SiteHeaderProps = {
   shell: MarketingMessages["shell"];
@@ -16,10 +19,29 @@ type SiteHeaderProps = {
 const navLinks = [
   { href: "/", key: "home" },
   { href: "/catalog", key: "courses" },
-  { href: "/learning-paths", key: "learningPaths" },
-  { href: "/odoo-modules", key: "modules" },
   { href: "/about", key: "about" },
 ] as const;
+
+function MyLearningLink({
+  label,
+  avatarUrl,
+  className,
+  onClick,
+}: {
+  label: string;
+  avatarUrl: string | null;
+  className: string;
+  onClick?: () => void;
+}) {
+  return (
+    <Link href="/overview" className={`mk-btn mk-btn--primary mk-account ${className}`} onClick={onClick}>
+      <span className="mk-account-avatar" aria-hidden="true">
+        {avatarUrl ? <Image src={avatarUrl} alt="" width={28} height={28} unoptimized /> : <UserRound size={16} />}
+      </span>
+      {label}
+    </Link>
+  );
+}
 
 function isActivePath(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
@@ -27,6 +49,8 @@ function isActivePath(pathname: string, href: string) {
 
 export function SiteHeader({ shell, roles }: SiteHeaderProps) {
   const pathname = usePathname();
+  const locale = useLocale();
+  const learner = useSignedInLearner();
   const headerRef = useRef<HTMLElement>(null);
   const [menuPath, setMenuPath] = useState<string | null>(null);
   const [coursesOpen, setCoursesOpen] = useState(false);
@@ -130,17 +154,28 @@ export function SiteHeader({ shell, roles }: SiteHeaderProps) {
           </nav>
 
           <div className="mk-header-actions">
-            <span className="mk-partner mk-header-partner">
+            <a
+              className="mk-partner mk-header-partner"
+              href={getOdooPartnerUrl(locale)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <span aria-hidden="true">⭐</span>
               {shell.partner}
-            </span>
+            </a>
             <LocaleSwitcher className="mk-locale" />
-            <Link href="/login" className="mk-login">
-              {shell.logIn}
-            </Link>
-            <Link href="/sign-up" className="mk-btn mk-btn--primary mk-btn--sm">
-              {shell.signUp}
-            </Link>
+            {learner ? (
+              <MyLearningLink label={shell.myLearning} avatarUrl={learner.avatarUrl} className="mk-btn--sm" />
+            ) : (
+              <>
+                <Link href="/login" className="mk-login">
+                  {shell.logIn}
+                </Link>
+                <Link href="/sign-up" className="mk-btn mk-btn--primary mk-btn--sm">
+                  {shell.signUp}
+                </Link>
+              </>
+            )}
           </div>
 
           <button
@@ -198,17 +233,28 @@ export function SiteHeader({ shell, roles }: SiteHeaderProps) {
           )}
         </div>
         <div className="mk-drawer-footer">
-          <span className="mk-partner">
+          <a className="mk-partner" href={getOdooPartnerUrl(locale)} target="_blank" rel="noopener noreferrer">
             <span aria-hidden="true">⭐</span>
             {shell.partner}
-          </span>
+          </a>
           <LocaleSwitcher className="mk-locale mk-locale--block" />
-          <Link href="/login" className="mk-btn mk-btn--outline mk-btn--block" onClick={closeMobile}>
-            {shell.logIn}
-          </Link>
-          <Link href="/sign-up" className="mk-btn mk-btn--primary mk-btn--block" onClick={closeMobile}>
-            {shell.signUp}
-          </Link>
+          {learner ? (
+            <MyLearningLink
+              label={shell.myLearning}
+              avatarUrl={learner.avatarUrl}
+              className="mk-btn--block"
+              onClick={closeMobile}
+            />
+          ) : (
+            <>
+              <Link href="/login" className="mk-btn mk-btn--outline mk-btn--block" onClick={closeMobile}>
+                {shell.logIn}
+              </Link>
+              <Link href="/sign-up" className="mk-btn mk-btn--primary mk-btn--block" onClick={closeMobile}>
+                {shell.signUp}
+              </Link>
+            </>
+          )}
         </div>
       </div>
       {mobileOpen && <div className="mk-scrim" onClick={closeMobile} aria-hidden="true" />}

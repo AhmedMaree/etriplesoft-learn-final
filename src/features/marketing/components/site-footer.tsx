@@ -1,12 +1,14 @@
 import Image from "next/image";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { LocaleSwitcher } from "@/components/shared/locale-switcher";
 import { getMarketing } from "../lib/get-marketing";
 import { formatMessage } from "../lib/messages";
-import { BUSINESS_DETAILS } from "../lib/business";
+import { BUSINESS_DETAILS, getOdooPartnerUrl } from "../lib/business";
 import { FacebookIcon, InstagramIcon, LinkedinIcon } from "./social-icons";
 
-export async function SiteFooter() {
+/** `localeSwitcher` is for the learner app, whose header has no language control of its own. */
+export async function SiteFooter({ localeSwitcher = false }: { localeSwitcher?: boolean } = {}) {
   const { locale, m } = await getMarketing();
   const f = m.footer;
   const columns = [
@@ -97,10 +99,11 @@ export async function SiteFooter() {
 
       <div className="mk-container mk-footer-bottom">
         <p>{formatMessage(locale, f.rights, { year: String(new Date().getFullYear()) })}</p>
-        <span className="mk-partner">
+        <a className="mk-partner" href={getOdooPartnerUrl(locale)} target="_blank" rel="noopener noreferrer">
           <span aria-hidden="true">⭐</span>
           {m.shell.partner}
-        </span>
+        </a>
+        {localeSwitcher && <LocaleSwitcher className="mk-locale" />}
       </div>
     </footer>
   );

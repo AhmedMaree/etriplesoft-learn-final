@@ -5,7 +5,6 @@ import { Link } from "@/i18n/navigation";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import {
-  ArrowRight,
   Bell,
   ChevronDown,
   ChevronRight,
@@ -15,7 +14,6 @@ import {
   Settings,
 } from "lucide-react";
 import { Avatar } from "@/components/shared/profile-avatar";
-import { featuredCourse } from "@/features/courses/data/demo-courses";
 import { logoutAction } from "@/features/auth/actions";
 import type { Locale } from "@/i18n/config";
 
@@ -60,14 +58,10 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
       <div className="greeting">
         {["courses", "payment", "detail-course"].includes(page) ? (
           <div className="crumb">
-            <Link href="/courses">{t("navigation.courses")}</Link>
-            <ChevronRight size={17} />
+            <Link href="/courses">{t("navigation.ourCourses")}</Link>
+            <ChevronRight size={17} className="flip-rtl" aria-hidden="true" />
             <span>
-              {page === "payment"
-                ? t("checkout.title")
-                : page === "detail-course"
-                  ? `${t("courses.allCourses")}  ›  ${featuredCourse.name}`
-                  : t("courses.allCourses")}
+              {page === "payment" ? t("checkout.title") : t("courses.allCourses")}
             </span>
           </div>
         ) : (
@@ -90,21 +84,11 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
           onClick={() => setNotification(!notification)}
         >
           <Bell />
-          <i className="dot" />
         </button>
         {notification && (
           <div className="popover">
-            <strong>{t("common.makingProgress")}</strong>
-            <p>{t("dashboard.continueCourse")}</p>
-            <button
-              className="text-link"
-              onClick={() => {
-                router.push("/detail-course");
-                setNotification(false);
-              }}
-            >
-              {t("dashboard.continueLearning")} <ArrowRight size={16} />
-            </button>
+            <strong>{t("common.notifications")}</strong>
+            <p>{t("common.noNotifications")}</p>
           </div>
         )}
       </div>
@@ -113,7 +97,7 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
           <Avatar src={avatarUrl} alt={learnerName} />
           <span>
             <strong>{learnerName}</strong>
-            <small>{t("navigation.learning")}</small>
+            <small>{t("navigation.learner")}</small>
           </span>
           <ChevronDown size={18} />
         </button>

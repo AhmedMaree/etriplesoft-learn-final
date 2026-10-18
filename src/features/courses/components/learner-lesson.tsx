@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, ChevronRight, CirclePlay, FileText, Lock } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronRight, CirclePlay, Download, FileText, Lock } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
@@ -15,6 +15,7 @@ type Props = {
   lesson: LearnerLesson | null;
   locale: Locale;
   trackProgress: boolean;
+  adminPreview: boolean;
   autoplayNext: boolean;
   progress: { lesson_id: string; status: string; percent: number; updated_at: string }[];
   resources: { resource_id: string; label: string; description: string }[];
@@ -29,7 +30,7 @@ function clock(seconds: number | null) {
   return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${s}` : `${m}:${s}`;
 }
 
-export async function LearnerLessonView({ course, outline, lessonId, lesson, locale, trackProgress, autoplayNext, progress, resources }: Props) {
+export async function LearnerLessonView({ course, outline, lessonId, lesson, locale, trackProgress, adminPreview, autoplayNext, progress, resources }: Props) {
   const t = await getTranslations("courses");
   const navigationT = await getTranslations("navigation");
   const completionT = await getTranslations('completion');
@@ -50,6 +51,7 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
   return (
     <div className="lesson-layout">
       <div className="lesson-main">
+        {adminPreview && <p className="panel lesson-notes" role="status">{t("adminPreviewNotice")}</p>}
         <nav className="course-breadcrumb" aria-label={navigationT("courseBreadcrumb")}>
           <Link href="/courses">{t("allCourses")}</Link>
           <ChevronRight size={16} className="flip-rtl" aria-hidden="true" />
@@ -65,7 +67,7 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
               title={lesson.title}
               trackProgress={trackProgress}
               autoplayNext={autoplayNext}
-              next={next ? { href: lessonHref(course.slug, next.lessonId), title: next.lessonTitle } : null}
+              next={next ? { href: lessonHref(course.slug, next.lessonId), title: next.lessonTitle, isPracticeCheck: next.lessonType === "assessment" } : null}
             />
           )
         ) : (
@@ -78,8 +80,6 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
           </div>
         )}
 
-        {lesson && !readingReady && <p className="panel lesson-notes" role="status">{completionT('contentPending')}</p>}
-        {trackProgress && lesson && readingReady && <CompletionControls courseId={course.id} locale={locale} {...(['article','resource'].includes(lesson.lessonType) ? {lessonId,lessonCompleted:progress.some(row=>row.lesson_id===lessonId&&row.status==='completed')} : {})} />}
         <header className="lesson-header">
           <p className="lesson-eyebrow">
             {t("moduleLabel", { n: moduleIndex + 1 })} · <span dir="auto">{current.moduleTitle}</span>
@@ -88,20 +88,7 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
           <p className="lesson-position">{t("lessonOf", { n: index + 1, total: outline.length })}</p>
         </header>
 
-        <nav className="lesson-pager" aria-label={t("lessonNavigation")}>
-          {previous ? (
-            <Link className="btn outline" href={lessonHref(course.slug, previous.lessonId)}>
-              <ArrowLeft size={16} className="flip-rtl" aria-hidden="true" /> {t("previousLesson")}
-            </Link>
-          ) : <span />}
-          {next ? (
-            <Link className="btn" href={lessonHref(course.slug, next.lessonId)}>
-              {t("nextLesson")} <ArrowRight size={16} className="flip-rtl" aria-hidden="true" />
-            </Link>
-          ) : (
-            <Link className="btn outline" href={courseHref(course.slug)}>{t("backToCourse")}</Link>
-          )}
-        </nav>
+        {lesson && !readingReady && <p className="panel lesson-notes" role="status">{completionT('contentPending')}</p>}
 
         {(lesson?.summary || lesson?.body) && (
           <section className="panel lesson-notes">
@@ -113,10 +100,44 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
         {resources.length > 0 && <section className="panel lesson-resources">
           <h2>{t('resources')}</h2>
           <ul>{resources.map((resource) => <li key={resource.resource_id}>
-            <a href={`/api/learning/resources/${resource.resource_id}?lessonId=${lessonId}&locale=${locale}`} dir="auto">{resource.label}</a>
-            {resource.description && <p dir="auto">{resource.description}</p>}
+            <a href={`/api/learning/resources/${resource.resource_id}?lessonId=${lessonId}&locale=${locale}`}>
+              <span className="lesson-resource-icon" aria-hidden="true"><FileText size={20} /></span>
+              <span className="lesson-resource-text">
+                <strong dir="auto">{resource.label}</strong>
+                {resource.description && <small dir="auto">{resource.description}</small>}
+              </span>
+              <Download size={18} className="lesson-resource-action" aria-hidden="true" />
+            </a>
           </li>)}</ul>
         </section>}
+
+        {trackProgress && lesson && readingReady && <CompletionControls courseId={course.id} locale={locale} {...(['article','resource'].includes(lesson.lessonType) ? {lessonId,lessonCompleted:progress.some(row=>row.lesson_id===lessonId&&row.status==='completed')} : {})} />}
+
+        <nav className="lesson-pager" aria-label={t("lessonNavigation")}>
+          {previous ? (
+            <Link className="lesson-pager-link" href={lessonHref(course.slug, previous.lessonId)}>
+              <ArrowLeft size={18} className="flip-rtl" aria-hidden="true" />
+              <span>
+                <small>{t("previousLesson")}</small>
+                <strong dir="auto">{previous.lessonTitle}</strong>
+              </span>
+            </Link>
+          ) : <span />}
+          {next ? (
+            <Link className="lesson-pager-link is-next" href={lessonHref(course.slug, next.lessonId)}>
+              <span>
+                <small>{t("nextLesson")}</small>
+                <strong dir="auto">{next.lessonTitle}</strong>
+              </span>
+              <ArrowRight size={18} className="flip-rtl" aria-hidden="true" />
+            </Link>
+          ) : (
+            <Link className="lesson-pager-link is-next" href={courseHref(course.slug)}>
+              <span><strong>{t("backToCourse")}</strong></span>
+              <ArrowRight size={18} className="flip-rtl" aria-hidden="true" />
+            </Link>
+          )}
+        </nav>
       </div>
 
       <aside className="panel lesson-sidebar" aria-label={t("courseContent")}>

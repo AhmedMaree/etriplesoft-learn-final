@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { Circle, CircleCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
@@ -56,22 +57,32 @@ export function CompletionControls({
       setBusy(false);
     }
   }
+  if (lessonId) {
+    const Icon = lessonCompleted ? CircleCheck : Circle;
+    return (
+      <section className={`panel lesson-complete${lessonCompleted ? " is-done" : ""}`}>
+        <span className="lesson-complete-icon" aria-hidden="true">
+          <Icon size={22} />
+        </span>
+        <p className="lesson-complete-text">
+          {t(lessonCompleted ? "lessonCompletedHint" : "markCompleteHint")}
+        </p>
+        <button
+          className={lessonCompleted ? "btn outline" : "btn"}
+          disabled={busy || lessonCompleted}
+          onClick={() => void complete()}
+        >
+          {t(busy ? "saving" : lessonCompleted ? "lessonCompleted" : "markComplete")}
+        </button>
+        {message && <p role="status">{t(message)}</p>}
+      </section>
+    );
+  }
   return (
-    <section className="panel lesson-notes">
-      <button
-        className="btn outline"
-        disabled={busy || (!!lessonId && lessonCompleted)}
-        onClick={() => void complete()}
-      >
-        {t(
-          busy
-            ? "saving"
-            : lessonId
-              ? lessonCompleted
-                ? "lessonCompleted"
-                : "markComplete"
-              : "checkCourse",
-        )}
+    <section className="panel lesson-notes course-completion-check">
+      <p className="completion-hint">{t("checkCourseHint")}</p>
+      <button className="btn outline" disabled={busy} onClick={() => void complete()}>
+        {t(busy ? "saving" : "checkCourse")}
       </button>
       {message && <p role="status">{t(message)}</p>}
     </section>

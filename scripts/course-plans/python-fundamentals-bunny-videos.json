@@ -1,0 +1,11 @@
+{
+  "courseSlug": "python-fundamentals",
+  "bunnyCollection": "Python Fundamentals",
+  "lessons": [
+    { "lessonId": "c75d5c23-dbbf-1440-f5e1-02ba07923ead", "title": "Lists", "bunnyTitle": "list.mp4" },
+    { "lessonId": "1ebfc86f-a4d5-ba60-d21d-ace1c536a497", "title": "Tuples", "bunnyTitle": "tuple.mp4" },
+    { "lessonId": "ca3ca3ea-1abd-f470-f692-6711ca967fc5", "title": "Dictionaries", "bunnyTitle": "dict.mp4" },
+    { "lessonId": "9a577192-3a33-ef8b-96b2-3c37d27a54f8", "title": "Functions", "bunnyTitle": "function.mp4" },
+    { "lessonId": "e205fd01-a8b4-686b-ef7d-0c4f6b108273", "title": "Intro To OOP", "bunnyTitle": "oop.mp4" }
+  ]
+}

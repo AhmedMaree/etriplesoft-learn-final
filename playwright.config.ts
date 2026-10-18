@@ -1,26 +1,25 @@
 import { defineConfig } from "@playwright/test";
-import fs from "node:fs";
+import { chromiumExecutable, nextDevCommand } from "./playwright.shared";
+
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3010";
 const appPort = new URL(baseURL).port || "3010";
-const bundled =
-  "C:/Users/Ahmed/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe";
+
 export default defineConfig({
   testDir: "tests",
+  // Needs its own proxy server: run with playwright.phase09-loading.config.ts.
+  testIgnore: ["phase09-loading.spec.ts"],
   fullyParallel: true,
   workers: 1,
   use: {
-  baseURL,
+    baseURL,
     viewport: { width: 1448, height: 1086 },
-    launchOptions: {
-      executablePath:
-        process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ||
-        (fs.existsSync(bundled) ? bundled : undefined),
-    },
+    launchOptions: { executablePath: chromiumExecutable() },
   },
   webServer: {
-    command: `npm.cmd exec -- next dev --hostname 127.0.0.1 --port ${appPort}`,
+    command: nextDevCommand(appPort),
     url: baseURL,
     reuseExistingServer: true,
+    env: { NEXT_PUBLIC_SHOW_DEMO_FEATURES: "true" },
   },
   reporter: "list",
 });

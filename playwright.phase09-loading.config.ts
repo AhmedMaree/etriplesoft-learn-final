@@ -1,9 +1,7 @@
 import { defineConfig } from "@playwright/test";
-import fs from "node:fs";
+import { chromiumExecutable } from "./playwright.shared";
 
 const baseURL = "http://127.0.0.1:3012";
-const bundled =
-  "C:/Users/Ahmed/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe";
 
 export default defineConfig({
   testDir: "tests",
@@ -13,11 +11,7 @@ export default defineConfig({
   use: {
     baseURL,
     viewport: { width: 320, height: 900 },
-    launchOptions: {
-      executablePath:
-        process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ||
-        (fs.existsSync(bundled) ? bundled : undefined),
-    },
+    launchOptions: { executablePath: chromiumExecutable() },
   },
   webServer: {
     command: "node tests/support/phase09-loading-app.mjs",

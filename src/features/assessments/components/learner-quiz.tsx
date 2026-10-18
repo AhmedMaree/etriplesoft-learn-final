@@ -1,6 +1,14 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import {
+  ClipboardCheck,
+  Clock,
+  ListChecks,
+  Play,
+  RotateCcw,
+  Target,
+} from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
 import { isQuizState, type QuizState } from "../types";
@@ -188,23 +196,79 @@ export function LearnerQuiz({
   const current = state.questions[question];
   const active = state.attempt?.status === "active";
   const review = state.review?.find((item) => item.questionId === current?.id);
+  if (state.adminPreview)
+    return (
+      <section className="panel question-card real-quiz">
+        <h2 dir="auto">{state.title}</h2>
+        <p dir="auto">{state.instructions}</p>
+        <p role="status">{t("adminPreview")}</p>
+        {state.questions.map((item, index) => (
+          <fieldset key={item.id} disabled>
+            <legend>
+              {t("question", { n: index + 1, total: state.questions.length })}: {" "}
+              <span dir="auto">{item.prompt}</span>
+            </legend>
+            <ul>
+              {item.options.map((option) => (
+                <li key={option.id} dir="auto">{option.label}</li>
+              ))}
+            </ul>
+          </fieldset>
+        ))}
+      </section>
+    );
   return (
     <section className="panel question-card real-quiz">
-      <h2 dir="auto">{state.title}</h2>
-      <p dir="auto">{state.instructions}</p>
-      <p>
-        {t("rules", {
-          pass: state.passPercent,
-          attempts: state.maxAttempts,
-          minutes: state.durationSeconds / 60,
-        })}
-      </p>
-      <p>{t("used", { n: state.attemptsUsed, total: state.maxAttempts })}</p>
+      <header className="quiz-head">
+        <span className="quiz-chip">
+          <ClipboardCheck size={16} aria-hidden="true" /> {t("eyebrow")}
+        </span>
+        <h2 dir="auto">{state.title}</h2>
+        {state.instructions && (
+          <p className="quiz-instructions" dir="auto">
+            {state.instructions}
+          </p>
+        )}
+      </header>
+      {!active && (
+        <dl className="quiz-facts">
+          {state.questions.length > 0 && (
+            <div>
+              <ListChecks size={20} aria-hidden="true" />
+              <dt>{t("questionsLabel")}</dt>
+              <dd>{state.questions.length}</dd>
+            </div>
+          )}
+          <div>
+            <Target size={20} aria-hidden="true" />
+            <dt>{t("passMark")}</dt>
+            <dd dir="ltr">{state.passPercent}%</dd>
+          </div>
+          <div>
+            <Clock size={20} aria-hidden="true" />
+            <dt>{t("timeLimit")}</dt>
+            <dd>{t("minutesValue", { n: state.durationSeconds / 60 })}</dd>
+          </div>
+          <div>
+            <RotateCcw size={20} aria-hidden="true" />
+            <dt>{t("attemptLimit")}</dt>
+            <dd>
+              {t("attemptsValue", {
+                n: state.attemptsUsed,
+                total: state.maxAttempts,
+              })}
+            </dd>
+          </div>
+        </dl>
+      )}
       {error && <p role="alert">{t(error)}</p>}
       {!state.attempt ? (
-        <button className="btn" disabled={busy} onClick={start}>
-          {t("start")}
-        </button>
+        <div className="quiz-start">
+          <button className="btn" disabled={busy} onClick={start}>
+            <Play size={18} aria-hidden="true" /> {t("start")}
+          </button>
+          <p>{t("startHint")}</p>
+        </div>
       ) : (
         <>
           {active ? (

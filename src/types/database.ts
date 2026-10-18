@@ -7,11 +7,6 @@ export type Json =
   | Json[];
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.15";
-  };
   public: {
     Tables: {
       admin_audit_log: {
@@ -483,6 +478,8 @@ export type Database = {
           granted_at: string;
           granted_by: string;
           id: string;
+          order_item_id: string | null;
+          refund_confirmed_at: string | null;
           revoked_at: string | null;
           revoked_by: string | null;
           status: string;
@@ -496,6 +493,8 @@ export type Database = {
           granted_at?: string;
           granted_by: string;
           id?: string;
+          order_item_id?: string | null;
+          refund_confirmed_at?: string | null;
           revoked_at?: string | null;
           revoked_by?: string | null;
           status?: string;
@@ -509,6 +508,8 @@ export type Database = {
           granted_at?: string;
           granted_by?: string;
           id?: string;
+          order_item_id?: string | null;
+          refund_confirmed_at?: string | null;
           revoked_at?: string | null;
           revoked_by?: string | null;
           status?: string;
@@ -527,6 +528,13 @@ export type Database = {
             columns: ["granted_by"];
             isOneToOne: false;
             referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "enrollments_order_item_id_fkey";
+            columns: ["order_item_id"];
+            isOneToOne: true;
+            referencedRelation: "order_items";
             referencedColumns: ["id"];
           },
           {
@@ -883,6 +891,7 @@ export type Database = {
       lesson_videos: {
         Row: {
           aspect_ratio: string | null;
+          bunny_video_id: string | null;
           created_at: string;
           created_by: string;
           duration_seconds: number | null;
@@ -892,6 +901,7 @@ export type Database = {
           mux_asset_id: string | null;
           mux_playback_id: string | null;
           mux_upload_id: string | null;
+          provider: string;
           required_caption_locales: string[];
           resolution_tier: string | null;
           status: string;
@@ -899,6 +909,7 @@ export type Database = {
         };
         Insert: {
           aspect_ratio?: string | null;
+          bunny_video_id?: string | null;
           created_at?: string;
           created_by: string;
           duration_seconds?: number | null;
@@ -908,6 +919,7 @@ export type Database = {
           mux_asset_id?: string | null;
           mux_playback_id?: string | null;
           mux_upload_id?: string | null;
+          provider?: string;
           required_caption_locales?: string[];
           resolution_tier?: string | null;
           status?: string;
@@ -915,6 +927,7 @@ export type Database = {
         };
         Update: {
           aspect_ratio?: string | null;
+          bunny_video_id?: string | null;
           created_at?: string;
           created_by?: string;
           duration_seconds?: number | null;
@@ -924,6 +937,7 @@ export type Database = {
           mux_asset_id?: string | null;
           mux_playback_id?: string | null;
           mux_upload_id?: string | null;
+          provider?: string;
           required_caption_locales?: string[];
           resolution_tier?: string | null;
           status?: string;
@@ -1077,6 +1091,156 @@ export type Database = {
             columns: ["option_id"];
             isOneToOne: false;
             referencedRelation: "question_options";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      order_items: {
+        Row: {
+          amount_minor: number;
+          course_id: string;
+          id: string;
+          order_id: string;
+          title: string;
+        };
+        Insert: {
+          amount_minor: number;
+          course_id: string;
+          id?: string;
+          order_id: string;
+          title: string;
+        };
+        Update: {
+          amount_minor?: number;
+          course_id?: string;
+          id?: string;
+          order_id?: string;
+          title?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "order_items_course_id_fkey";
+            columns: ["course_id"];
+            isOneToOne: false;
+            referencedRelation: "courses";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "order_items_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      orders: {
+        Row: {
+          created_at: string;
+          currency: string;
+          expires_at: string;
+          id: string;
+          locale: string;
+          status: string;
+          total_minor: number;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          currency?: string;
+          expires_at?: string;
+          id?: string;
+          locale: string;
+          status?: string;
+          total_minor: number;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          currency?: string;
+          expires_at?: string;
+          id?: string;
+          locale?: string;
+          status?: string;
+          total_minor?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "orders_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      payment_events: {
+        Row: {
+          amount_minor: number;
+          event_key: string;
+          id: number;
+          order_id: string;
+          received_at: string;
+          result: string;
+        };
+        Insert: {
+          amount_minor: number;
+          event_key: string;
+          id?: never;
+          order_id: string;
+          received_at?: string;
+          result: string;
+        };
+        Update: {
+          amount_minor?: number;
+          event_key?: string;
+          id?: never;
+          order_id?: string;
+          received_at?: string;
+          result?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payment_events_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      payments: {
+        Row: {
+          confirmed_at: string | null;
+          order_id: string;
+          provider_order_id: string | null;
+          refunded_at: string | null;
+          session_id: string | null;
+          session_url: string | null;
+        };
+        Insert: {
+          confirmed_at?: string | null;
+          order_id: string;
+          provider_order_id?: string | null;
+          refunded_at?: string | null;
+          session_id?: string | null;
+          session_url?: string | null;
+        };
+        Update: {
+          confirmed_at?: string | null;
+          order_id?: string;
+          provider_order_id?: string | null;
+          refunded_at?: string | null;
+          session_id?: string | null;
+          session_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payments_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: true;
+            referencedRelation: "orders";
             referencedColumns: ["id"];
           },
         ];
@@ -1532,6 +1696,14 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      admin_attach_bunny_video: {
+        Args: {
+          p_bunny_video_id: string;
+          p_duration_seconds: number;
+          p_lesson_id: string;
+        };
+        Returns: string;
+      };
       admin_create_course: {
         Args: {
           p_category?: string;
@@ -1556,6 +1728,15 @@ export type Database = {
         };
         Returns: string;
       };
+      admin_create_lesson_draft: {
+        Args: {
+          p_locale: string;
+          p_module_id: string;
+          p_title: string;
+          p_type: string;
+        };
+        Returns: string;
+      };
       admin_create_lesson_resource: {
         Args: {
           p_external_url?: string;
@@ -1568,6 +1749,10 @@ export type Database = {
           storage_object_key: string;
         }[];
       };
+      admin_create_module_draft: {
+        Args: { p_course_id: string; p_locale: string; p_title: string };
+        Returns: string;
+      };
       admin_create_quiz_version: {
         Args: {
           p_instructions: string;
@@ -1578,6 +1763,31 @@ export type Database = {
         };
         Returns: string;
       };
+      admin_edit_lesson: {
+        Args: {
+          p_body: string;
+          p_duration?: number;
+          p_id: string;
+          p_locale: string;
+          p_preview: boolean;
+          p_publish: boolean;
+          p_required: boolean;
+          p_summary: string;
+          p_title: string;
+        };
+        Returns: undefined;
+      };
+      admin_edit_module: {
+        Args: {
+          p_description: string;
+          p_id: string;
+          p_locale: string;
+          p_publish: boolean;
+          p_required: boolean;
+          p_title: string;
+        };
+        Returns: undefined;
+      };
       admin_find_user_by_email: {
         Args: { p_email: string };
         Returns: {
@@ -1587,6 +1797,17 @@ export type Database = {
         }[];
       };
       admin_get_course: { Args: { p_course_id: string }; Returns: Json };
+      admin_get_curriculum: {
+        Args: { p_course_id: string; p_locale: string };
+        Returns: Json;
+      };
+      admin_get_resource_upload: {
+        Args: { p_id: string; p_locale: string };
+        Returns: {
+          lesson_id: string;
+          storage_object_key: string;
+        }[];
+      };
       admin_grant_course_access: {
         Args: { p_email: string; p_reason: string; p_slug: string };
         Returns: string;
@@ -1659,9 +1880,20 @@ export type Database = {
         };
         Returns: undefined;
       };
+      admin_prepare_resource_upload: {
+        Args: { p_label: string; p_lesson_id: string; p_locale: string };
+        Returns: {
+          resource_id: string;
+          storage_object_key: string;
+        }[];
+      };
       admin_publish_quiz_version: {
         Args: { p_version_id: string };
         Returns: undefined;
+      };
+      admin_preview_published_quiz: {
+        Args: { p_lesson_id: string; p_locale: string };
+        Returns: Json;
       };
       admin_reorder_course_modules: {
         Args: { p_course_id: string; p_module_ids: string[] };
@@ -1680,6 +1912,21 @@ export type Database = {
         Returns: undefined;
       };
       admin_revoke_role: { Args: { p_role_id: string }; Returns: undefined };
+      admin_save_course_content: {
+        Args: {
+          p_category: string;
+          p_description: string;
+          p_id?: string;
+          p_level: string;
+          p_locale: string;
+          p_price_minor: number;
+          p_publish: boolean;
+          p_slug: string;
+          p_summary: string;
+          p_title: string;
+        };
+        Returns: string;
+      };
       admin_save_lesson_translation: {
         Args: {
           p_body?: string;
@@ -1770,7 +2017,10 @@ export type Database = {
         };
         Returns: undefined;
       };
-      assert_active_admin: { Args: never; Returns: string };
+      assert_active_admin: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
       catalog_count_courses: {
         Args: {
           p_category?: string;
@@ -1779,6 +2029,10 @@ export type Database = {
           p_search?: string;
         };
         Returns: number;
+      };
+      catalog_course_durations: {
+        Args: { p_course_ids: string[]; p_locale: string };
+        Returns: { course_id: string; duration_seconds: number }[];
       };
       catalog_get_course: {
         Args: { p_locale: string; p_slug: string };
@@ -1873,6 +2127,23 @@ export type Database = {
           title: string;
         }[];
       };
+      commerce_bind_session: {
+        Args: { p_id: string; p_session_id: string; p_url: string };
+        Returns: undefined;
+      };
+      commerce_confirm_order: {
+        Args: {
+          p_amount: number;
+          p_currency: string;
+          p_event_key: string;
+          p_id: string;
+          p_provider_order_id: string;
+          p_result: string;
+          p_session_id: string;
+        };
+        Returns: undefined;
+      };
+      commerce_get_order: { Args: { p_id: string }; Returns: Json };
       course_is_published: { Args: { p_course_id: string }; Returns: boolean };
       learner_checkpoint_video: {
         Args: {
@@ -1894,9 +2165,22 @@ export type Database = {
         Args: { p_lesson_id: string; p_locale: string };
         Returns: undefined;
       };
+      learner_create_order: {
+        Args: { p_course_id: string; p_locale: string };
+        Returns: string;
+      };
       learner_evaluate_completion: {
         Args: { p_course_id: string; p_locale: string };
         Returns: Json;
+      };
+      learner_get_lesson_video: {
+        Args: { p_lesson_id: string; p_locale: string };
+        Returns: {
+          bunny_video_id: string | null;
+          mux_playback_id: string | null;
+          provider: string;
+          video_id: string;
+        }[];
       };
       learner_get_lesson: {
         Args: { p_lesson_id: string; p_locale: string };
@@ -1940,7 +2224,7 @@ export type Database = {
         }[];
       };
       learner_list_certificates: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           certificate_number: string;
           course_completion_id: string;

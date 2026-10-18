@@ -48,8 +48,8 @@ Outside the 41 phases: the standalone `odoo-learn` site was ported into this app
 | [Phase 16](phases/PHASE-16-ASSESSMENT-UI.md) | Assessment UI Integration | IN_PROGRESS | 03, 12, 15 | 17, 31, 32 | Replace fixtures/client scoring with safe assessment services |
 | [Phase 17](phases/PHASE-17-COURSE-COMPLETION.md) | Course Completion | IN_PROGRESS | 13, 15, 16 | 18, 21 | Evaluate required lessons and required assessments together |
 | [Phase 18](phases/PHASE-18-CERTIFICATES.md) | Certificates | IN_PROGRESS | 17, 06 | 22, 28, 30 | Issue certificates only from authoritative completion |
-| [Phase 19](phases/PHASE-19-ORDERS-CHECKOUT.md) | Orders & Checkout Domain | PLANNED | 07, 10 | 20 | Create owner-scoped one-time orders and item price/currency snapshots |
-| [Phase 20](phases/PHASE-20-KASHIER-PAYMENTS.md) | Kashier Payments | PLANNED | 19, 06 | 29, 34, 35 | Initialize provider checkout server-side using order snapshots |
+| [Phase 19](phases/PHASE-19-ORDERS-CHECKOUT.md) | Orders & Checkout Domain | IN PROGRESS | 07, 10 | 20 | Create owner-scoped one-time orders and item price/currency snapshots |
+| [Phase 20](phases/PHASE-20-KASHIER-PAYMENTS.md) | Kashier Payments | IN PROGRESS | 19, 06 | 29, 34, 35 | Initialize provider checkout server-side using order snapshots |
 | [Phase 21](phases/PHASE-21-LEARNING-PATHS.md) | Learning Paths | PLANNED | 07, 17 | 22, 27, 30 | Publish translated ordered course paths |
 | [Phase 22](phases/PHASE-22-LEARNER-DASHBOARD.md) | Real Learner Dashboard | IN_PROGRESS | 09, 18, 21 | 23, 24, 31, 32, 33, 34, 35, 36 | Aggregate own enrollments, recent lessons, progress, completions and certificates |
 | [Phase 23](phases/PHASE-23-CALENDAR.md) | Calendar Scope & Integration | PLANNED | 22 | — | Maintain a DEFERRED V1 disposition until D04 changes |

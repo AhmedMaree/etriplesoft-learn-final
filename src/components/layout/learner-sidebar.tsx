@@ -6,23 +6,27 @@ import {
   Award,
   BookOpen,
   CalendarDays,
+  Compass,
   Home,
   MessageSquare,
-  Play,
   Settings,
   Sparkles,
   Users,
   X,
-  GraduationCap,
 } from "lucide-react";
-import { IconBox } from "@/components/ui/primitives";
 import { useTranslations } from "next-intl";
-import { useDemoToast } from "@/lib/browser/demo-toast";
 import type { DemoRoute } from "@/lib/routes";
+import { DEMO_ONLY_ROUTES, demoFeaturesEnabled } from "@/lib/features";
+import type { LearningSummary } from "@/features/learning/server/summary";
+import { courseImage } from "@/features/courses/components/course-image";
+import { courseHref, lessonHref } from "@/features/courses/components/course-links";
 
-const nav: [DemoRoute, typeof Home][] = [
+type NavId = DemoRoute | "catalog";
+
+const nav: [NavId, typeof Home][] = [
   ["overview", Home],
   ["courses", BookOpen],
+  ["catalog", Compass],
   ["ai-page", Sparkles],
   ["community", Users],
   ["messages", MessageSquare],
@@ -33,6 +37,7 @@ const nav: [DemoRoute, typeof Home][] = [
 const navMessage = {
   overview: "overview",
   courses: "courses",
+  catalog: "catalog",
   "ai-page": "ai",
   community: "community",
   messages: "messages",
@@ -45,14 +50,16 @@ export function LearnerSidebar({
   activePage,
   mobileOpen,
   onClose,
+  continueLearning,
 }: {
   activePage: string;
   mobileOpen: boolean;
   onClose: () => void;
+  continueLearning: LearningSummary["courses"][number] | null;
 }) {
   const t = useTranslations("navigation");
   const common = useTranslations("common");
-  const notify = useDemoToast();
+  const dashboard = useTranslations("dashboard");
 
   return (
     <>
@@ -64,9 +71,10 @@ export function LearnerSidebar({
         />
       )}
       <aside className={`sidebar ${mobileOpen ? "open" : ""}`}>
-        <Link className="brand" href="/overview">
+        <Link className="brand" href="/">
           <Image
             src="/assets/logo-display.svg"
+            loading="eager"
             alt="ETripleSoft Learn"
             width={871}
             height={278}
@@ -80,7 +88,9 @@ export function LearnerSidebar({
           <X />
         </button>
         <nav>
-          {nav.map(([id, Icon]) => (
+          {nav
+            .filter(([id]) => demoFeaturesEnabled || !(DEMO_ONLY_ROUTES as readonly string[]).includes(id))
+            .map(([id, Icon]) => (
             <Link
               key={id}
               href={`/${id}`}
@@ -94,34 +104,33 @@ export function LearnerSidebar({
             </Link>
           ))}
         </nav>
-        <div className="app-promo">
-          <IconBox icon={GraduationCap} />
-          <h3>{t("appTitle")}</h3>
-          <p>{t("appCopy")}</p>
-          <button
-            className="store"
-            onClick={() => notify(common("mobileAppUnavailable"))}
-          >
-            <svg viewBox="0 0 24 28" aria-hidden="true">
-              <path
-                fill="white"
-                d="M17 0c0 3-2 5-4 5-1-3 2-5 4-5M20 15c0-4 3-5 3-5-2-4-6-4-8-3-2 1-3 1-5 0C3 5 0 11 2 18c1 4 4 9 7 9 2 0 3-1 5-1s3 1 5 1c2-1 5-6 5-8-3-1-4-3-4-4"
-              />
-            </svg>
-            <span>
-              <small>{t("downloadOn")}</small>App Store
-            </span>
-          </button>
-          <button
-            className="store"
-            onClick={() => notify(common("mobileAppUnavailable"))}
-          >
-            <Play fill="#00d591" color="#00b7ff" />
-            <span>
-              <small>{t("getItOn")}</small>Google Play
-            </span>
-          </button>
-        </div>
+        {activePage !== "overview" && continueLearning ? (
+          <section className="continue-learning" aria-label={dashboard("continueTitle")}>
+            <h2>{dashboard("continueTitle")}</h2>
+            <Link
+              className="continue-course"
+              href={continueLearning.resumeLessonId
+                ? lessonHref(continueLearning.slug, continueLearning.resumeLessonId)
+                : courseHref(continueLearning.slug)}
+              onClick={onClose}
+            >
+              <Image src={courseImage(continueLearning.slug)} alt="" width={48} height={48} />
+              <span>{continueLearning.title}</span>
+            </Link>
+            <div className="continue-progress" aria-label={`${Math.floor((continueLearning.finished / Math.max(continueLearning.required, 1)) * 100)}%`}>
+              <span style={{ width: `${Math.min(100, Math.floor((continueLearning.finished / Math.max(continueLearning.required, 1)) * 100))}%` }} />
+            </div>
+            <Link
+              className="continue-action"
+              href={continueLearning.resumeLessonId
+                ? lessonHref(continueLearning.slug, continueLearning.resumeLessonId)
+                : courseHref(continueLearning.slug)}
+              onClick={onClose}
+            >
+              {common("continue")}
+            </Link>
+          </section>
+        ) : null}
       </aside>
     </>
   );

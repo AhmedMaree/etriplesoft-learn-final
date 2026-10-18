@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+import { demoFeaturesEnabled } from "@/lib/features";
 import { createPageMetadata } from "@/i18n/page-metadata";
 import { Link } from "@/i18n/navigation";
 import { ArrowRight } from "lucide-react";
@@ -10,6 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 export default async function MessagesRoute() {
+  if (!demoFeaturesEnabled) notFound();
   const t = await getTranslations("common");
   return (
     <>

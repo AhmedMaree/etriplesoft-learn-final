@@ -3,79 +3,6 @@
  * Everything is scoped under `.mk` / `mk-*` so it cannot leak into the learner
  * dashboard styles in src/styles.css. Brand tokens come from the brand identity PDF.
  */
-@font-face {
-  font-family: "MK Canva Sans";
-  src: url("/fonts/CanvaSans-Regular.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MK Canva Sans";
-  src: url("/fonts/CanvaSans-RegularItalic.otf") format("opentype");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MK Canva Sans";
-  src: url("/fonts/CanvaSans-Medium.otf") format("opentype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MK Canva Sans";
-  src: url("/fonts/CanvaSans-MediumItalic.otf") format("opentype");
-  font-weight: 500;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MK Canva Sans";
-  src: url("/fonts/CanvaSans-Bold.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MK Canva Sans";
-  src: url("/fonts/CanvaSans-BoldItalic.otf") format("opentype");
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MK Montserrat";
-  src: url("/fonts/montserrat-latin-300-normal.woff2") format("woff2");
-  font-weight: 300;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MK Montserrat";
-  src: url("/fonts/montserrat-latin-400-normal.woff2") format("woff2");
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MK Montserrat";
-  src: url("/fonts/montserrat-latin-500-normal.woff2") format("woff2");
-  font-weight: 500;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MK Montserrat";
-  src: url("/fonts/montserrat-latin-600-normal.woff2") format("woff2");
-  font-weight: 600;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MK Montserrat";
-  src: url("/fonts/montserrat-latin-700-normal.woff2") format("woff2");
-  font-weight: 700;
-  font-display: swap;
-}
-
 .mk {
   /* Brand (Circuit / Matrix / Static / Void) */
   --mk-circuit: #1b72ff;
@@ -100,8 +27,8 @@
   --mk-outline-variant: #c2c6d8;
   --mk-error: #ba1a1a;
 
-  --mk-font-head: "MK Canva Sans", "MK Montserrat", "Plex Arabic", "Segoe UI", Tahoma, "Noto Sans Arabic", sans-serif;
-  --mk-font-body: "MK Montserrat", "Plex Arabic", "Segoe UI", Tahoma, "Noto Sans Arabic", sans-serif;
+  --mk-font-head: var(--brand-font-head);
+  --mk-font-body: var(--brand-font-body);
   --mk-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   --mk-gutter: 16px;
@@ -369,6 +296,10 @@
   font-size: 11px;
   font-weight: 600;
   line-height: 14px;
+  text-decoration: none;
+}
+a.mk-partner:hover {
+  background: #fde68a;
 }
 
 .mk-visually-hidden {

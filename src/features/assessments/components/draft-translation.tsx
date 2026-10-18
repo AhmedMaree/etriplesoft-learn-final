@@ -54,7 +54,7 @@ export function DraftTranslation({
     }
   }
   return (
-    <fieldset disabled={busy}>
+    <fieldset className="quiz-author-translation" disabled={busy}>
       <legend>{t("translation")}</legend>
       <label>
         <input
@@ -94,7 +94,7 @@ export function DraftTranslation({
             />
           </label>
           {questions.map((q, index) => (
-            <fieldset key={index}>
+            <fieldset className="quiz-author-translation-question" key={index}>
               <legend>
                 {t("question", { n: index + 1, total: questions.length })}
               </legend>
@@ -117,7 +117,7 @@ export function DraftTranslation({
               </label>
               {q.options.map((label, j) => (
                 <label key={j}>
-                  {t("option")} {j + 1}
+                  {t("option", { n: j + 1 })}
                   <input
                     value={label}
                     maxLength={1000}

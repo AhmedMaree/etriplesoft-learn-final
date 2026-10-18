@@ -32,7 +32,7 @@
   unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
 }
 
-/* Learner and auth screens: Arabic glyphs from Plex, everything else from the existing Learn font. */
+/* Learner and auth screens: Arabic glyphs from Plex, everything else from the shared brand fonts. */
 html[lang="ar"] body {
-  font-family: "Plex Arabic", var(--font-learn), Arial, sans-serif;
+  font-family: "Plex Arabic", var(--brand-font-body);
 }

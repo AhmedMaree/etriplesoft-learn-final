@@ -6,8 +6,11 @@ import { ArrowRight, Hourglass, Lock, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
+import { BunnyPlayer } from "./bunny-player";
 
-type Playback = { playbackId: string; tokens: { playback: string; thumbnail: string; storyboard: string } };
+type Playback =
+  | { provider: "mux"; playbackId: string; tokens: { playback: string; thumbnail: string; storyboard: string } }
+  | { provider: "bunny"; embedUrl: string };
 type State = { kind: "loading" } | { kind: "ready"; playback: Playback } | { kind: "unavailable" | "error" };
 type SavedProgress = { session_id: string; position_seconds: number; watched_seconds: number; duration_seconds: number; percent: number; completed: boolean };
 
@@ -15,7 +18,7 @@ type Props = {
   lessonId: string;
   locale: Locale;
   title: string;
-  next: { href: string; title: string } | null;
+  next: { href: string; title: string; isPracticeCheck: boolean } | null;
   trackProgress: boolean;
   autoplayNext: boolean;
 };
@@ -32,9 +35,11 @@ async function requestPlayback(lessonId: string, locale: Locale): Promise<State>
     if (response.status === 403) return { kind: "unavailable" };
     if (!response.ok) return { kind: "error" };
     const data = await response.json();
+    if (data.provider === "bunny") return { kind: "ready", playback: { provider: "bunny", embedUrl: data.embedUrl } };
     return {
       kind: "ready",
       playback: {
+        provider: "mux",
         playbackId: data.playbackId,
         tokens: { playback: data.token, thumbnail: data.thumbnailToken, storyboard: data.storyboardToken },
       },
@@ -44,7 +49,7 @@ async function requestPlayback(lessonId: string, locale: Locale): Promise<State>
   }
 }
 
-/** Requests a short-lived signed playback token from the server, then plays the lesson with Mux Player. */
+/** Requests short-lived signed playback access from the server, then plays the lesson with Mux Player or the Bunny embed. */
 export function LessonPlayer({ lessonId, locale, title, next, trackProgress, autoplayNext }: Props) {
   const t = useTranslations("courses");
   const p = useTranslations("learningProgress");
@@ -62,6 +67,8 @@ export function LessonPlayer({ lessonId, locale, title, next, trackProgress, aut
   const resume = useRef(0);
   const [initialPosition, setInitialPosition] = useState(0);
   const seeking = useRef(false);
+  const bunnyPosition = useRef(0);
+  const bunnyPlaying = useRef(false);
 
   // The parent keys this component by lesson, so state starts fresh for every lesson.
   useEffect(() => {
@@ -73,8 +80,10 @@ export function LessonPlayer({ lessonId, locale, title, next, trackProgress, aut
     const timer = setInterval(() => {
       void requestPlayback(lessonId, locale).then((result) => {
         if (!active) return;
-        if (result.kind === 'ready' || result.kind === 'unavailable') setState(result);
-        else setSaveError(true);
+        // A loaded Bunny embed keeps playing; replacing its URL would reload the iframe.
+        if (result.kind === 'ready' || result.kind === 'unavailable') {
+          setState((current) => current.kind === 'ready' && current.playback.provider === 'bunny' && result.kind === 'ready' ? current : result);
+        } else setSaveError(true);
       });
     }, 240_000);
     return () => {
@@ -103,7 +112,7 @@ export function LessonPlayer({ lessonId, locale, title, next, trackProgress, aut
 
   function checkpoint(playing: boolean) {
     const current = session.current;
-    const position = player.current?.currentTime;
+    const position = state.kind === "ready" && state.playback.provider === "bunny" ? bunnyPosition.current : player.current?.currentTime;
     if (!current || position === undefined || !Number.isFinite(position)) return;
     const seq = ++sequence.current;
     lastCheckpoint.current = Date.now();
@@ -129,6 +138,26 @@ export function LessonPlayer({ lessonId, locale, title, next, trackProgress, aut
         if (newlyCompleted) router.refresh();
       } catch { setSaveError(true); }
     });
+  }
+
+  function finish() {
+    checkpoint(true);
+    checkpoint(false);
+    void queue.current.then(() => {
+      const completed = session.current?.completed === true;
+      const canOpenNext = next && (!next.isPracticeCheck || (trackProgress && completed));
+      setEnded(Boolean(canOpenNext));
+      if (autoplayNext && canOpenNext) router.push(next.href);
+    });
+  }
+
+  function onBunnyEvent(event: "play" | "pause" | "timeupdate" | "seeked" | "ended", position: number) {
+    bunnyPosition.current = position;
+    if (event === "play") { bunnyPlaying.current = true; setEnded(false); checkpoint(true); }
+    else if (event === "pause") { checkpoint(true); bunnyPlaying.current = false; checkpoint(false); }
+    else if (event === "seeked") { checkpoint(false); if (bunnyPlaying.current) checkpoint(true); }
+    else if (event === "timeupdate") { if (bunnyPlaying.current && Date.now() - lastCheckpoint.current >= 5000) checkpoint(true); }
+    else { finish(); bunnyPlaying.current = false; }
   }
 
   const load = useCallback(() => {
@@ -158,6 +187,9 @@ export function LessonPlayer({ lessonId, locale, title, next, trackProgress, aut
 
   return (
     <div className="lesson-player">
+      {state.playback.provider === "bunny" ? (
+        <BunnyPlayer embedUrl={state.playback.embedUrl} title={title} startAt={initialPosition} onEvent={onBunnyEvent} />
+      ) : (
       <MuxPlayer
         ref={player}
         playbackId={state.playback.playbackId}
@@ -176,7 +208,7 @@ export function LessonPlayer({ lessonId, locale, title, next, trackProgress, aut
         onPause={() => { checkpoint(true); checkpoint(false); }}
         onSeeking={() => { seeking.current = true; checkpoint(false); }}
         onSeeked={() => { seeking.current = false; checkpoint(!player.current?.paused); }}
-        onEnded={() => { checkpoint(true); checkpoint(false); setEnded(true); if (autoplayNext && next) void queue.current.then(() => router.push(next.href)); }}
+        onEnded={finish}
         onError={() => {
           // Tokens last five minutes; one silent refresh covers an expired session.
           if (retried.current) { setState({ kind: 'error' }); return; }
@@ -184,17 +216,21 @@ export function LessonPlayer({ lessonId, locale, title, next, trackProgress, aut
           void load();
         }}
       />
+      )}
       {trackProgress && <p className="lesson-saved-progress" role="status">
         {saveError ? p('saveError') : progress ? progress.completed ? p('completed') : p('watched', { percent: progress.percent }) : p('loading')}
       </p>}
       {ended && next && (
         <div className="lesson-up-next" role="status">
-          <small>{t("upNext")}</small>
+          <small>{next.isPracticeCheck ? t("videoPracticeCheck") : t("upNext")}</small>
           <strong dir="auto">{next.title}</strong>
           <Link className="btn" href={next.href}>
-            {t("playNext")} <ArrowRight size={16} className="flip-rtl" aria-hidden="true" />
+            {next.isPracticeCheck ? t("answerVideoQuestions") : t("playNext")} <ArrowRight size={16} className="flip-rtl" aria-hidden="true" />
           </Link>
         </div>
+      )}
+      {trackProgress && next?.isPracticeCheck && progress && !progress.completed && (
+        <p className="lesson-saved-progress" role="status">{t("watchMoreForPractice")}</p>
       )}
     </div>
   );

@@ -1,0 +1,10 @@
+{
+  "courseSlug": "odoo-user-guide",
+  "bunnyCollection": "Odoo User Guide",
+  "lessons": [
+    { "lessonId": "4e06440c-5a44-a610-4a5f-e74c9005040a", "title": "Accounting", "bunnyTitle": "Accounting" },
+    { "lessonId": "7c7429eb-ff4e-ef2f-5e47-21bab03cb7c2", "title": "CRM", "bunnyTitle": "CRM" },
+    { "lessonId": "968c1153-5f66-ba15-b009-b735146d143b", "title": "Sales", "bunnyTitle": "Sales" },
+    { "lessonId": "b28ecd8c-6eb4-2e5c-4587-6a0529249e2a", "title": "Purchase", "bunnyTitle": "Purchase" }
+  ]
+}

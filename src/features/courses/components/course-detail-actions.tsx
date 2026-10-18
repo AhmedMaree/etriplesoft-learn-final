@@ -1,32 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { Bookmark, Ellipsis, Share2 } from "lucide-react";
+import { Check, Ellipsis, Share2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 
 export function CourseDetailActions({ slug }: { slug: string }) {
   const t = useTranslations("courses");
-  const [saved, setSaved] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  function toggleSaved() {
-    setSaved(!saved);
-  }
+  const [copied, setCopied] = useState(false);
 
   async function shareCourse() {
     const url = window.location.href;
     if (navigator.share) {
       try {
         await navigator.share({ title: document.title, url });
-        return;
       } catch {
         // A dismissed share sheet should not trigger a fallback copy.
-        return;
       }
+      return;
     }
     try {
       await navigator.clipboard.writeText(url);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2500);
     } catch {
       // Clipboard access may be unavailable in insecure contexts.
     }
@@ -34,14 +31,11 @@ export function CourseDetailActions({ slug }: { slug: string }) {
 
   return (
     <div className="detail-actions">
-      <button type="button" aria-pressed={saved} onClick={toggleSaved}>
-        <Bookmark fill={saved ? "currentColor" : "none"} aria-hidden="true" />
-        <small>{saved ? t("saved") : t("save")}</small>
-      </button>
       <button type="button" onClick={shareCourse}>
-        <Share2 aria-hidden="true" />
-        <small>{t("share")}</small>
+        {copied ? <Check aria-hidden="true" /> : <Share2 aria-hidden="true" />}
+        <small>{copied ? t("linkCopied") : t("share")}</small>
       </button>
+      <span className="visually-hidden" role="status">{copied ? t("linkCopied") : ""}</span>
       <div className="course-more-wrap">
         <button
           type="button"

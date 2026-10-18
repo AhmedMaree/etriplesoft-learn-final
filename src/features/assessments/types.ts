@@ -13,6 +13,7 @@ export type QuizState = {
   durationSeconds: number;
   serverNow: string;
   attemptsUsed: number;
+  adminPreview?: boolean;
   questions: QuizQuestion[];
   attempt: null | {
     id: string;
@@ -47,6 +48,7 @@ export function isQuizState(value: unknown): value is QuizState {
       (key) => typeof value[key] === "number",
     ) ||
     !Array.isArray(value.questions) ||
+    (value.adminPreview !== undefined && typeof value.adminPreview !== "boolean") ||
     !value.questions.every(
       (q) =>
         record(q) &&
@@ -81,6 +83,7 @@ export function isQuizState(value: unknown): value is QuizState {
     )
       return false;
   }
+  if (value.adminPreview === true && value.attempt !== null) return false;
   return (
     value.review === null ||
     (Array.isArray(value.review) &&

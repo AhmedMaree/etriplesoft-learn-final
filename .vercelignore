@@ -1,0 +1,37 @@
+# Files kept in git but not needed by the Vercel build or runtime.
+# Vercel already skips .git, .next, .vercel, node_modules and .env*.local.
+
+# Docs, agent and design tooling
+docs/
+EXPORTS/
+.agents/
+.claude/
+.impeccable/
+.github/
+.playwright-mcp/
+/AGENTS.md
+/CLAUDE.md
+/DESIGN.md
+/PRODUCT.md
+
+# Tests and local ops scripts
+tests/
+scripts/
+supabase/
+playwright*.ts
+test-results/
+playwright-report/
+coverage/
+
+# Local build output and scratch
+dist/
+out/
+tmp/
+courses-images/
+*.tsbuildinfo
+*.log
+
+# Secrets (defence in depth; keep .env.example)
+.env
+.env.*
+!.env.example

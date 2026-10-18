@@ -19,6 +19,7 @@ export type CourseTileData = {
   instructorName: string;
   instructorInitials: string;
   ariaLabel: string;
+  contentLang: "en" | "ar";
 };
 
 export function toCourseTile(course: Course, locale: Locale, m: MarketingMessages): CourseTileData {
@@ -44,5 +45,6 @@ export function toCourseTile(course: Course, locale: Locale, m: MarketingMessage
     instructorName: course.instructor?.name ?? copy.defaultInstructor,
     instructorInitials: course.instructor?.initials ?? "ET",
     ariaLabel: formatMessage(locale, copy.viewNamed, { title: course.title }),
+    contentLang: course.contentLang ?? "en",
   };
 }

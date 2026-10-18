@@ -8,10 +8,10 @@ import { EcosystemExplorer, type ExplorerModule } from "./ecosystem-explorer";
 export async function OdooModulesPreview() {
   const { locale, m } = await getMarketing();
   const copy = m.home.ecosystem;
-  const modules = getAllModules();
+  const modules = getAllModules(locale);
 
   const explorerModules: ExplorerModule[] = modules.map((mod) => {
-    const [firstCourse] = getCoursesForModule(mod.slug);
+    const [firstCourse] = getCoursesForModule(mod.slug, locale);
     return {
       slug: mod.slug,
       name: mod.name,
@@ -21,7 +21,14 @@ export async function OdooModulesPreview() {
       workflow: mod.workflow,
       skills: mod.skills.slice(0, 3),
       relatedRole: mod.relatedRoles[0] ?? null,
-      featuredCourse: firstCourse ? { slug: firstCourse.slug, title: firstCourse.title } : null,
+      featuredCourse: firstCourse
+        ? {
+            slug: firstCourse.slug,
+            title:
+              m.paths.courseEditorial[firstCourse.slug as keyof typeof m.paths.courseEditorial]?.title ??
+              firstCourse.title,
+          }
+        : null,
     };
   });
 

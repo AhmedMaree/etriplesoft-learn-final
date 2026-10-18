@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CalendarDays, ChevronRight, ChevronLeft, ArrowRight, ListChecks, Flame, X } from 'lucide-react';
 import { events } from '@/features/calendar/data/demo-events';
 import { Button, Panel, Title, IconBox } from '@/components/ui/primitives';
@@ -21,6 +21,45 @@ export function CalendarPage() {
   const [selected, setSelected] = useState<(typeof events)[number] | null>(
     null,
   );
+  const openerRef = useRef<HTMLElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  function open(event: (typeof events)[number], opener: HTMLElement | null) {
+    openerRef.current = opener;
+    setSelected(event);
+  }
+  function close() {
+    setSelected(null);
+    openerRef.current?.focus();
+  }
+  useEffect(() => {
+    if (!selected) return;
+    dialogRef.current?.focus();
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        close();
+        return;
+      }
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const items = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(
+          "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+        ),
+      ).filter((el) => !el.hasAttribute("disabled") && el.tabIndex !== -1);
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [selected]);
   const date = new Date(2024, 3 + offset, 1);
   const days = new Date(2024, 4 + offset, 0).getDate();
   const start = date.getDay();
@@ -57,8 +96,8 @@ export function CalendarPage() {
                 {i < 2 ? (
                   <button
                     className="text-link"
-                    onClick={() =>
-                      i === 0 ? setView("Agenda") : setSelected(events[4])
+                    onClick={(e) =>
+                      i === 0 ? setView("Agenda") : open(events[4], e.currentTarget)
                     }
                   >
                     {i === 0 ? "View Today" : "View Deadlines"}
@@ -109,7 +148,7 @@ export function CalendarPage() {
           <Panel className="agenda">
             {offset === 0 ? (
               events.map((e) => (
-                <button key={e.day} onClick={() => setSelected(e)}>
+                <button key={e.day} onClick={(event) => open(e, event.currentTarget)}>
                   <b>{format.dateTime(new Date(2024, 3, e.day), { month: "short", numberingSystem: "latn" }).toUpperCase()} {format.number(e.day, { numberingSystem: "latn" })}</b>
                   <IconBox icon={e.icon} color={e.type} />
                   <span>
@@ -155,7 +194,7 @@ export function CalendarPage() {
                       {ev && (
                         <button
                           className={"calendar-event " + ev.type}
-                          onClick={() => setSelected(ev)}
+                          onClick={(event) => open(ev, event.currentTarget)}
                         >
                           <ev.icon size={17} />
                           <strong>{ev.title}</strong>
@@ -227,7 +266,7 @@ export function CalendarPage() {
             <button
               className="upcoming"
               key={e.title}
-              onClick={() => setSelected(e)}
+              onClick={(event) => open(e, event.currentTarget)}
             >
               <IconBox icon={e.icon} color={e.type} />
               <span>
@@ -253,7 +292,7 @@ export function CalendarPage() {
             <button
               className="upcoming flat"
               key={e.day}
-              onClick={() => setSelected(e)}
+              onClick={(event) => open(e, event.currentTarget)}
             >
               <IconBox icon={e.icon} color={e.type} />
               <span>
@@ -281,18 +320,20 @@ export function CalendarPage() {
         </Panel>
       </aside>
       {selected && (
-        <div className="modal-backdrop" onClick={() => setSelected(null)}>
+        <div className="modal-backdrop" onClick={close}>
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="event-title"
             className="modal panel"
+            ref={dialogRef}
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
           >
             <button
               className="modal-close icon-button"
               aria-label={messages("closeEvent")}
-              onClick={() => setSelected(null)}
+              onClick={close}
             >
               <X />
             </button>
@@ -303,7 +344,7 @@ export function CalendarPage() {
             </p>
             <Button
               onClick={() => {
-                setSelected(null);
+                close();
                 navigate(
                   selected.title.includes("Quiz")
                     ? "assessment"

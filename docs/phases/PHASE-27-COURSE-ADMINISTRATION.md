@@ -8,7 +8,7 @@ Evidence: No admin pages exist. Domain schema/publication contracts are planned;
 
 ## DEV implementation checkpoint — 2026-10-14
 
-User-authorized learning continuation implements the relevant domain/services and UI described in [the learning guide](../LEARNING-FEATURES-GUIDE.md). Local automated evidence and hosted transactional checks exist. Full phase manual, content, operational and predecessor acceptance gates remain open; this is not VERIFIED. The earlier current-state descriptions below are baseline audit evidence, superseded by this checkpoint for implemented paths. Phase 27 is partial: quiz authoring, video management and audited operator resource/curriculum operations exist; full course/path/resource administration is not complete.
+User-authorized learning continuation implements the relevant domain/services and UI described in [the learning guide](../LEARNING-FEATURES-GUIDE.md). Local automated evidence and hosted transactional checks exist. Full phase manual, content, operational and predecessor acceptance gates remain open; this is not VERIFIED. The earlier current-state descriptions below are baseline audit evidence, superseded by this checkpoint for implemented paths. Phase 27 is partial: course creation/editing, module and lesson editing, lesson ordering, required/preview flags, per-locale publication, private browser PDF upload, quiz authoring and video management exist. Learning-path authoring, archive/restore, instructor assignment, bulk operations, upload recovery and full manual acceptance remain open.
 
 ## 2. Goal
 

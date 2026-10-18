@@ -156,7 +156,7 @@ export async function Hero() {
             <span className="mk-mock-m-pill">{mock.modulesProgress}</span>
           </div>
           <div className="mk-mock-m-video" dir="ltr">
-            <p className="mk-mock-m-title">{mock.lessonTitle}</p>
+            <p className="mk-mock-m-title" dir="auto">{mock.lessonTitle}</p>
             <span className="mk-mock-play mk-mock-play--sm">
               <Play size={20} fill="currentColor" aria-hidden="true" />
             </span>

@@ -35,7 +35,7 @@ export default async function LandingPage({ params }: PageProps) {
   setRequestLocale(locale);
   const m = getMarketingMessages(locale);
 
-  const courseTiles = getPublishedCourses().map((course) => toCourseTile(course, locale, m));
+  const courseTiles = getPublishedCourses(locale).map((course) => toCourseTile(course, locale, m));
   const featuredPaths = learningPaths.map(({ role }) => ({ role, ...getPathCopy(m, role) }));
 
   return (

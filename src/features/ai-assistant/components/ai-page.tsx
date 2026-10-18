@@ -173,9 +173,10 @@ export function AIPage() {
           </div>
           <div className="context-info">
             <p><Info />{t("contextInfo")}</p>
-            <label>
+            <label htmlFor="ai-context-switch">
               {t("useContext")}
               <button
+                id="ai-context-switch"
                 role="switch"
                 aria-checked={context}
                 aria-label={t("useContextLabel")}

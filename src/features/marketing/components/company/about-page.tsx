@@ -108,7 +108,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
                   <span className="mk-marquee-icon">
                     <Icon size={24} aria-hidden="true" />
                   </span>
-                  <span>{label}</span>
+                  <span dir="auto">{label}</span>
                 </li>
               );
             })}

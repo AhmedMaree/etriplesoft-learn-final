@@ -6,7 +6,6 @@ import { Link } from "@/i18n/navigation";
 import { ModuleIcon } from "../module-icon";
 import type { ModuleAccent, ModuleIconKey } from "../../data/odoo-modules";
 import type { MarketingMessages } from "../../lib/messages";
-import { EN } from "../../lib/content-lang";
 
 export type ExplorerModule = {
   slug: string;
@@ -52,14 +51,14 @@ function ModuleDetails({
           </span>
           <div>
             <h3>{title}</h3>
-            <p {...EN}>{mod.shortDescription}</p>
+            <p dir="auto">{mod.shortDescription}</p>
           </div>
         </div>
       )}
 
       <div className="mk-eco-block">
         <p className="mk-eco-label">{copy.workflow}</p>
-        <ol className="mk-eco-flow" {...EN}>
+        <ol className="mk-eco-flow" dir="auto">
           {mod.workflow.map((step, index) => (
             <li key={step}>
               <span>{step}</span>
@@ -71,7 +70,7 @@ function ModuleDetails({
 
       <div className="mk-eco-block">
         <p className="mk-eco-label">{copy.skills}</p>
-        <ul className="mk-eco-skills" {...EN}>
+        <ul className="mk-eco-skills" dir="auto">
           {mod.skills.map((skill) => (
             <li key={skill}>{skill}</li>
           ))}
@@ -81,11 +80,11 @@ function ModuleDetails({
       <div className="mk-eco-facts">
         <div>
           <p className="mk-eco-label">{copy.relatedPath}</p>
-          <p className="mk-eco-fact" {...EN}>{mod.relatedRole ?? "—"}</p>
+          <p className="mk-eco-fact" dir="auto">{mod.relatedRole ?? "—"}</p>
         </div>
         <div>
           <p className="mk-eco-label">{copy.featuredCourse}</p>
-          <p className="mk-eco-fact" {...(course ? EN : {})}>{course?.title ?? copy.comingSoon}</p>
+          <p className="mk-eco-fact" dir="auto">{course?.title ?? copy.comingSoon}</p>
         </div>
       </div>
 
@@ -131,8 +130,8 @@ export function EcosystemExplorer({ modules, copy, titles }: EcosystemExplorerPr
                     <ModuleIcon icon={mod.icon} size={22} />
                   </span>
                   <span className="mk-eco-item-text">
-                    <span className="mk-eco-item-name" {...EN}>{mod.name}</span>
-                    <span className="mk-eco-item-desc" {...EN}>{mod.shortDescription}</span>
+                    <span className="mk-eco-item-name" dir="auto">{mod.name}</span>
+                    <span className="mk-eco-item-desc" dir="auto">{mod.shortDescription}</span>
                   </span>
                   <span className="mk-eco-plus" aria-hidden="true">
                     <Plus size={16} />
@@ -165,8 +164,8 @@ export function EcosystemExplorer({ modules, copy, titles }: EcosystemExplorerPr
                 <span className="mk-eco-icon">
                   <ModuleIcon icon={mod.icon} size={20} />
                 </span>
-                <span className="mk-eco-card-name" {...EN}>{mod.name}</span>
-                <span className="mk-eco-card-desc" {...EN}>{mod.shortDescription}</span>
+                <span className="mk-eco-card-name" dir="auto">{mod.name}</span>
+                <span className="mk-eco-card-desc" dir="auto">{mod.shortDescription}</span>
               </button>
             );
           })}

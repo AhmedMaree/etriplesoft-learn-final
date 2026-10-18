@@ -7,7 +7,6 @@ import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { ModuleIcon } from "../module-icon";
 import type { ModuleAccent, ModuleIconKey } from "../../data/odoo-modules";
 import type { MarketingMessages } from "../../lib/messages";
-import { EN } from "../../lib/content-lang";
 
 export type ModuleView = {
   slug: string;
@@ -68,8 +67,8 @@ export function ModuleExplorer({ modules, copy }: { modules: ModuleView[]; copy:
               <span className="mk-eco-icon">
                 <ModuleIcon icon={mod.icon} size={22} />
               </span>
-              <span className="mk-eco-card-name" {...EN}>{mod.name}</span>
-              <span className="mk-eco-card-desc mk-eco-card-desc--2" {...EN}>{mod.shortDescription}</span>
+              <span className="mk-eco-card-name" dir="auto">{mod.name}</span>
+              <span className="mk-eco-card-desc mk-eco-card-desc--2" dir="auto">{mod.shortDescription}</span>
             </button>
           ))}
         </div>
@@ -86,17 +85,17 @@ export function ModuleExplorer({ modules, copy }: { modules: ModuleView[]; copy:
             <span className="mk-eco-icon mk-eco-icon--lg">
               <ModuleIcon icon={selected.icon} size={26} />
             </span>
-            <div {...EN}>
+            <div dir="auto">
               <h3>{selected.name}</h3>
               <p>{selected.shortDescription}</p>
             </div>
           </div>
 
-          <p className="mk-body mk-eco-overview" {...EN}>{selected.overview}</p>
+          <p className="mk-body mk-eco-overview" dir="auto">{selected.overview}</p>
 
           <div className="mk-eco-block">
             <p className="mk-eco-label">{copy.workflow}</p>
-            <ol className="mk-eco-flow" {...EN}>
+            <ol className="mk-eco-flow" dir="auto">
               {selected.workflow.map((step, index) => (
                 <li key={step}>
                   <span>{step}</span>
@@ -110,7 +109,7 @@ export function ModuleExplorer({ modules, copy }: { modules: ModuleView[]; copy:
 
           <div className="mk-eco-block">
             <p className="mk-eco-label">{copy.skills}</p>
-            <ul className="mk-eco-skills" {...EN}>
+            <ul className="mk-eco-skills" dir="auto">
               {selected.skills.map((skill) => (
                 <li key={skill}>{skill}</li>
               ))}
@@ -119,7 +118,7 @@ export function ModuleExplorer({ modules, copy }: { modules: ModuleView[]; copy:
 
           <div className="mk-eco-block">
             <p className="mk-eco-label">{copy.roles}</p>
-            <ul className="mk-eco-skills mk-eco-skills--soft" {...EN}>
+            <ul className="mk-eco-skills mk-eco-skills--soft" dir="auto">
               {selected.relatedRoles.map((role) => (
                 <li key={role}>{role}</li>
               ))}
@@ -133,7 +132,7 @@ export function ModuleExplorer({ modules, copy }: { modules: ModuleView[]; copy:
                 {selected.courses.map((course) => (
                   <li key={course.slug}>
                     <Link href={`/catalog/${course.slug}`}>
-                      <span {...EN}>{course.title}</span>
+                      <span dir="auto">{course.title}</span>
                       <span className="mk-eco-course-level">
                         {course.levelLabel}
                         <ArrowRight size={14} className="mk-flip-rtl" aria-hidden="true" />

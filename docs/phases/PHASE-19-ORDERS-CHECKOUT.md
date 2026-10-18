@@ -2,9 +2,9 @@
 
 ## 1. Status
 
-PLANNED
+IN PROGRESS
 
-Evidence: payment.tsx calculates demo USD totals and LEARN10 discount locally. No order/order_items schema or authoritative checkout exists.
+Evidence (2026-10-14): migration `20261014104103_orders_and_payment_preparation.sql` is applied to local and confirmed `ets-learn` DEV after a public schema/data dump. The authenticated checkout route uses published EGP prices and owner-scoped order snapshots; Hosted DEV rollback checks passed for snapshot pricing, cross-user denial, no pending entitlement and function/table grants. The sandbox UI is wired but gated off until local test credentials and a public HTTPS webhook are configured. Provider checkout is covered by Phase 20.
 
 ## 2. Goal
 
@@ -24,7 +24,7 @@ Dependencies are mandatory verification gates, not implementation suggestions. H
 
 ## 5. Current Repository State
 
-payment.tsx calculates demo USD totals and LEARN10 discount locally. No order/order_items schema or authoritative checkout exists.
+See the dated evidence in section 1. Phase 19 currently provides server-priced, owner-scoped EGP orders and exact course-title/price snapshots. Kashier session handling and verified settlement are owned by Phase 20.
 
 ## 6. In Scope
 
@@ -40,7 +40,7 @@ Coupons, subscriptions, bundles, tax engine and fake card processing.
 
 APPROVED: follow repository requirements and the accepted domain architecture, not assumptions from demo UI.
 
-OPEN / DEFERRED: D01; D02 — see [decision register](OPEN-DECISIONS.md).
+APPROVED: D01 (EGP only). OPEN: D02 refund policy — see [decision register](OPEN-DECISIONS.md).
 
 ## 9. Database Work
 
@@ -149,13 +149,13 @@ Update this phase, ../PROJECT-ROADMAP.md, VERIFICATION-MATRIX.md, OPEN-DECISIONS
 ## 27. Completion Gate
 
 PHASE IMPLEMENTED:
-NO
+PARTIAL
 
 AUTOMATED VERIFICATION:
-NOT RUN
+PARTIAL — local commerce DB suite 25/25, Kashier contract checks 9/9, Hosted DEV rollback validator passed; typecheck, lint and production build passed.
 
 MANUAL VERIFICATION:
-NOT RUN
+NOT RUN — provider checkout is still disabled pending sandbox setup.
 
 SECURITY VERIFICATION:
 FAIL

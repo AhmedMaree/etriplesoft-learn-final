@@ -2,9 +2,9 @@
 
 ## 1. Status
 
-PLANNED
+IN PROGRESS
 
-Evidence: payment.tsx pay() only shows a no-payment-collected toast and navigates to detail-course. No provider adapter, webhook or payment records exist.
+Evidence (2026-10-15): migration `20261014104103_orders_and_payment_preparation.sql` and the server-only Kashier test-mode adapter, checkout API, status return UI and signed webhook/reconciliation route are present. Hosted DEV rollback checks passed for price/currency binding, idempotent paid enrollment, duplicate events and full-refund access revocation. Local `.env.local` has test-mode checkout enabled and the return URL is `http://127.0.0.1:3010`; the configured public HTTPS webhook URL returned 404 to a harmless POST probe, so provider callback acceptance is blocked until the current route is deployed there. A published paid course is available for verification. The status reconciliation adapter was corrected to validate the bound session and payment against Kashier's documented session APIs; sandbox success/failure/replay and refund remain untested. Production payments remain blocked by D02 and D15.
 
 ## 2. Goal
 
@@ -24,7 +24,7 @@ Dependencies are mandatory verification gates, not implementation suggestions. H
 
 ## 5. Current Repository State
 
-payment.tsx pay() only shows a no-payment-collected toast and navigates to detail-course. No provider adapter, webhook or payment records exist.
+See the dated evidence in section 1. Provider requests are fixed to Kashier test endpoints; signed webhooks only trigger reconciliation, which verifies the exact provider session, order reference, merchant, amount, currency, capture and refund state before atomic settlement. Local test settings are present. First deploy the webhook route at the configured HTTPS endpoint; then use [the sandbox checkout runbook](../FINISH-PROJECT-GUIDE.md#kashier-sandbox-checkout-smoke-test) to execute the outstanding provider acceptance.
 
 ## 6. In Scope
 
@@ -40,7 +40,7 @@ Collecting PAN/CVV, subscription billing and unapproved refund variants.
 
 APPROVED: follow repository requirements and the accepted domain architecture, not assumptions from demo UI.
 
-OPEN / DEFERRED: D01; D02; D15 — see [decision register](OPEN-DECISIONS.md).
+APPROVED: D01 (EGP only). OPEN: D02 (refund policy) and Kashier ownership/operations under D15 — see [decision register](OPEN-DECISIONS.md).
 
 ## 9. Database Work
 
@@ -149,13 +149,13 @@ Update this phase, ../PROJECT-ROADMAP.md, VERIFICATION-MATRIX.md, OPEN-DECISIONS
 ## 27. Completion Gate
 
 PHASE IMPLEMENTED:
-NO
+PARTIAL
 
 AUTOMATED VERIFICATION:
-NOT RUN
+PARTIAL — Kashier contract checks 9/9 and Hosted DEV commerce rollback validator passed; typecheck, lint and production build passed. No sandbox transaction has been run.
 
 MANUAL VERIFICATION:
-NOT RUN
+NOT RUN — sandbox credentials and reachable HTTPS webhook are still needed.
 
 SECURITY VERIFICATION:
 FAIL

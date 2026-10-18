@@ -75,8 +75,8 @@ Phase 02 checkpoint (2026-10-08): focused anonymous capture suite 16/16; typeche
 | [Phase 16](PHASE-16-ASSESSMENT-UI.md) | NO | NOT RUN | NOT RUN | FAIL | FAIL | NO |
 | [Phase 17](PHASE-17-COURSE-COMPLETION.md) | NO | NOT RUN | NOT RUN | FAIL | FAIL | NO |
 | [Phase 18](PHASE-18-CERTIFICATES.md) | NO | NOT RUN | NOT RUN | FAIL | FAIL | NO |
-| [Phase 19](PHASE-19-ORDERS-CHECKOUT.md) | NO | NOT RUN | NOT RUN | FAIL | FAIL | NO |
-| [Phase 20](PHASE-20-KASHIER-PAYMENTS.md) | NO | NOT RUN | NOT RUN | FAIL | FAIL | NO |
+| [Phase 19](PHASE-19-ORDERS-CHECKOUT.md) | PARTIAL (migration applied local/DEV) | PASS (commerce pgTAP 25/25, hosted rollback ownership/pricing checks; contract 9/9) | NOT RUN (checkout visual review) | PASS (hosted RLS and rollback transaction checks) | NOT RUN (all-width EN/AR review) | NO (provider setup and full phase gate pending) |
+| [Phase 20](PHASE-20-KASHIER-PAYMENTS.md) | PARTIAL (orders/payments migration applied local/DEV) | PARTIAL (contract 9/9; provider sandbox flow not configured) | NOT RUN (checkout visual review) | PASS (hosted settlement/idempotency/refund rollback checks; no provider transaction) | NOT RUN (all-width EN/AR review) | NO (sandbox credentials, webhook and policy gates pending) |
 | [Phase 21](PHASE-21-LEARNING-PATHS.md) | NO | NOT RUN | NOT RUN | FAIL | FAIL | NO |
 | [Phase 22](PHASE-22-LEARNER-DASHBOARD.md) | NO | NOT RUN | NOT RUN | FAIL | FAIL | NO |
 | [Phase 23](PHASE-23-CALENDAR.md) | NO | NOT RUN | NOT RUN | FAIL | FAIL | NO |
@@ -113,3 +113,5 @@ Phase 01 ran on 2026-10-07: typecheck, lint and build passed; 14 of 15 Playwrigh
 Historical QA-CHECKLIST.md records 13 Playwright tests on 2026-10-06 and 15 on 2026-10-07 plus prior typecheck/lint/build passes. It explicitly leaves full visual parity, Arabic font review and onboarding RLS behavior pending. Those remain later phase evidence and are not replaced by the Phase 01 route smoke.
 
 2026-10-14 learning continuation: Phases 14–18/22 and partial 27 are IN_PROGRESS with DEV implementations, local tests, both-locale captures and hosted transactional validation. [Learning checkpoint](../LEARNING-FEATURES-GUIDE.md) records scope and remaining checks. No full phase or production gate is waived.
+
+Course-editor continuation: 420 database checks, 11 learning browser tests, ten hosted rollback assertions and editor EN/AR eight-width captures pass. Build/lint/typecheck pass. No direct table privileges added. Phase 27 remains IN_PROGRESS; see the updated learning guide for workflows and remaining gates.

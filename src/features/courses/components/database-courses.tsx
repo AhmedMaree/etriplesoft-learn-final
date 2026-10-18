@@ -21,7 +21,7 @@ export function DatabaseCourses({
     <div className="course-grid">
       {courses.map((course, index) => (
         <article className="course-card panel" key={course.id}>
-          <Link href={`/catalog/${course.slug}`} className="course-image">
+          <Link href={`/catalog/${course.slug}`} className="course-image" tabIndex={-1} aria-hidden="true">
             <Image src="/marketing/all-courses-image.png" alt="" fill loading={index === 0 ? "eager" : "lazy"} sizes="(max-width: 700px) 100vw, (max-width: 1350px) 50vw, 33vw" />
           </Link>
           <div className="course-body">

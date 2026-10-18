@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import type { Locale } from "@/i18n/config";
 import { createClient } from "@/lib/supabase/server";
 type LearningCourse = {
@@ -44,11 +45,12 @@ function isSummary(value: unknown): value is LearningSummary {
       (c.resumeLessonId === null || typeof c.resumeLessonId === "string"),
   );
 }
-export async function getLearningSummary(locale: Locale) {
+// Memoized per request: the learner layout and the dashboard both need it.
+export const getLearningSummary = cache(async (locale: Locale) => {
   const { data, error } = await (
     await createClient()
   ).rpc("learner_learning_summary", { p_locale: locale });
   if (error || !isSummary(data))
     throw new Error("Learning summary unavailable.");
   return data;
-}
+});

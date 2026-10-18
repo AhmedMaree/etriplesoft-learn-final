@@ -2,7 +2,7 @@
 
 ## Learning checkpoint — 2026-10-14
 
-Overall remains NOT READY. Video learning is now PARTIAL: six signed DEV assets, protected five/preview one, a real player, private PDF delivery, audited manual access and saved video progress are implemented. Three new migrations are applied to DEV after a public schema/data backup. Local DB checks pass 347/347 and focused browser checks 7/7, with 48 EN/AR all-width captures. Course completion, broader progress/activity aggregation, payments, actual Arabic content/captions, fresh provider recovery checks, user sign-off and production infrastructure remain open. Older rows reporting no player/static-only progress are superseded by this checkpoint, not by a launch approval.
+Overall remains NOT READY. Video learning is now PARTIAL: six signed DEV assets, protected five/preview one, a real player, private PDF delivery, audited manual access and saved video progress are implemented. Learning/content, commerce, and admin-preview migrations are applied to DEV. Local DB checks pass 347/347; the hosted rollback commerce validator passes its pricing, ownership, settlement, idempotency and refund cases. Kashier test-mode credentials are configured locally, but the configured public webhook returned 404 to a harmless POST probe and no full sandbox checkout has been completed. D02 refund policy, provider recovery/manual acceptance, production payments, actual Arabic course content/captions, user sign-off and production infrastructure remain open. Older evidence is superseded by these dated checkpoints, not by a launch approval.
 
 Overall: **NOT READY**. Foundation is PARTIAL; no defensible completion percentage exists. Status vocabulary: NOT READY / PARTIAL / READY. READY requires current environment/revision-bound evidence and all applicable phase gates; no row is READY merely because a document reports prior work.
 
@@ -17,7 +17,7 @@ Overall: **NOT READY**. Foundation is PARTIAL; no defensible completion percenta
 | Progress/completion | NOT READY | 13, 17 | Static progress; no authoritative completion. |
 | Assessments | NOT READY | 14–16 | Client answers/timer/scoring and localStorage only. |
 | Certificates | NOT READY | 18 | Fixed name/date print UI; no issue/revoke/public verification. |
-| Payments | NOT READY | 19, 20, 29 | Demo checkout; no provider processing. |
+| Payments | NOT READY | 19, 20, 29 | DEV orders/checkout, test-mode integration and verified webhook scaffold are implemented; local test checkout is configured, but the configured public webhook currently returns 404 and no provider sandbox transaction is verified. D02 refund policy and D15 Kashier operations remain open. |
 | Learning paths/dashboard | PARTIAL | 21, 22 | Authenticated dashboard and visual widgets exist; metrics are fixtures. |
 | EN/AR | PARTIAL | 03 and all UI phases, 36 | Locale routing/messages exist; hardcoded UI and untranslated course data remain. |
 | Accessibility | PARTIAL | 31 | Some semantics/form labels exist; full audit absent. |
@@ -52,3 +52,5 @@ Before Phase 38, retain migration manifest, approved content manifest, artifact 
 Keep secrets, personal learner data, raw payment payloads and AI conversations out of evidence. Use redacted identifiers and approved disposable accounts. Record unresolved decisions by ID from OPEN-DECISIONS.md. Do not reset shared databases, delete historical purchases or weaken RLS to produce passing checks.
 
 2026-10-14 outcomes checkpoint: working DEV assessments, completion, certificate verification/print presentation and dashboard do not establish launch readiness. Missing media/questions, final EN/AR/certificate acceptance, payment/provider operations, full administration and release gates remain. See [the learning guide](../LEARNING-FEATURES-GUIDE.md).
+
+Course editing and private PDF browser upload are implemented in DEV (2026-10-14) and verified through local UI/database and hosted rollback checks. This does not change the NOT READY release assessment: content approval, manual EN/AR/certificate acceptance, payment setup and operational recovery gates remain open.

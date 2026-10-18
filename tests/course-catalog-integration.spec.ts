@@ -109,7 +109,7 @@ test("public detail includes the published outline and ordered instructor attrib
 test("learner course cards use canonical detail URLs and legacy routes resolve safely", async ({ page }) => {
   await page.goto("/en/courses?q=Python");
   await expect(page.getByRole("heading", { level: 2, name: "Python Fundamentals" })).toBeVisible();
-  await expect(page.getByRole("link", { name: /View Course/ }).first()).toHaveAttribute(
+  await expect(page.getByRole("link", { name: /Enroll now/ }).first()).toHaveAttribute(
     "href",
     "/en/catalog/python-fundamentals",
   );

@@ -6,7 +6,8 @@ import { Star, Mail, MapPin, Phone } from 'lucide-react';
 import { useDemoToast } from '@/lib/browser/demo-toast';
 import { ASSET_BASE } from '@/lib/assets';
 import { LocaleSwitcher } from '@/components/shared/locale-switcher';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { BUSINESS_DETAILS, getOdooPartnerUrl } from '@/features/marketing/lib/business';
 
 export const SOCIALS: [string, string, string][] = [
   [
@@ -55,6 +56,7 @@ export const FOOTER_LINKS: [string, [string, string][]][] = [
 
 export function SiteFooter() {
   const t = useTranslations("common");
+  const locale = useLocale();
   const notify = useDemoToast();
 
   const soon = () => notify(t("soon"));
@@ -132,10 +134,10 @@ export function SiteFooter() {
       </div>
       <div className="site-footer-bottom">
         <small>© 2026 ETripleSoft Learn. {t("copyright")}</small>
-        <span className="partner-badge">
+        <a className="partner-badge" href={getOdooPartnerUrl(locale)} target="_blank" rel="noopener noreferrer">
           <Star size={13} />
           Odoo Gold Partner · MENA Region
-        </span>
+        </a>
         <LocaleSwitcher className="site-footer-lang" />
       </div>
     </footer>

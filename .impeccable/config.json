@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/refinements.css"
+        ],
+        "createdAt": "2026-10-14T12:29:42.878Z",
+        "reason": "Agent: active lesson-module navigation state uses the inline-start border to identify the current lesson; .lesson-module a.active makes this a selected-state indicator, not a decorative card accent"
+      }
+    ]
+  }
+}

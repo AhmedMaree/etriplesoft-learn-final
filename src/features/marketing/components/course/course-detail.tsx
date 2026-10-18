@@ -1,5 +1,20 @@
 import Image from "next/image";
-import { ArrowDown, ArrowRight, ArrowUpRight, Award, CheckCircle2, ChevronDown, ClipboardCheck, ShieldCheck, User } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUpRight,
+  Award,
+  CheckCircle2,
+  ChevronDown,
+  ClipboardCheck,
+  Clock,
+  Layers,
+  MonitorPlay,
+  ShieldCheck,
+  Signal,
+  User,
+  type LucideIcon,
+} from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
 import type { Course } from "../../model/course";
@@ -12,7 +27,7 @@ import { CourseCard } from "../catalog/course-card";
 import { ModuleIcon } from "../module-icon";
 import { CourseCurriculum } from "./curriculum";
 import { CourseSectionNav } from "./section-nav";
-import { EN } from "../../lib/content-lang";
+import { contentAttrs } from "../../lib/content-lang";
 
 const FALLBACK_IMAGE = "/marketing/all-courses-image.png";
 
@@ -20,8 +35,18 @@ type Cta = { label: string; href: string; external: boolean };
 
 function primaryCta(course: Course, c: MarketingMessages["course"]): Cta {
   if (course.status === "coming-soon") return { label: c.askLaunch, href: "/contact", external: false };
-  if (course.externalCourseUrl) return { label: c.startLearning, href: course.externalCourseUrl, external: true };
-  return { label: c.exploreCourse, href: "/catalog", external: false };
+  // The start route signs the visitor in if needed, then opens the course on the platform.
+  return { label: c.startLearning, href: `/catalog/${course.slug}/start`, external: false };
+}
+
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
 }
 
 function CtaLink({ cta, className, children }: { cta: Cta; className: string; children: React.ReactNode }) {
@@ -33,7 +58,7 @@ function CtaLink({ cta, className, children }: { cta: Cta; className: string; ch
     );
   }
   return (
-    <Link href={cta.href} className={className}>
+    <Link href={cta.href} className={className} prefetch={false}>
       {children}
     </Link>
   );
@@ -48,10 +73,11 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
   const moduleCount = course.curriculum.length;
   const modulesLabel = formatMessage(locale, c.moduleCount, { n: moduleCount, count: String(moduleCount) });
   const related = course.relatedCourseSlugs
-    .map((slug) => getCourseBySlug(slug))
+    .map((slug) => getCourseBySlug(slug, locale))
     .filter((item): item is Course => item !== undefined)
     .map((item) => toCatalogCourse(item, locale, m));
-  const modules = getModulesForCourse(course);
+  const modules = getModulesForCourse(course, locale);
+  const content = contentAttrs(course.contentLang);
 
   const navItems = [
     { id: "overview", label: c.nav.overview },
@@ -72,6 +98,13 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
   if (moduleCount > 0) facts.push({ label: c.modules, value: String(moduleCount) });
   if (course.certificate) facts.push({ label: c.certificate, value: c.included });
 
+  const heroFacts: { Icon: LucideIcon; label: string; value: string; content?: boolean }[] = [
+    { Icon: Signal, label: c.level, value: levelText, content: true },
+    { Icon: Clock, label: c.duration, value: course.durationLabel, content: true },
+    { Icon: MonitorPlay, label: c.format, value: course.format, content: true },
+  ];
+  if (moduleCount > 0) heroFacts.push({ Icon: Layers, label: c.modules, value: String(moduleCount) });
+
   const statusClass = isComingSoon ? "mk-status mk-status--dark" : "mk-status";
 
   return (
@@ -80,50 +113,72 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
         <div className="mk-container mk-course-hero-grid">
           <div>
             <div className="mk-course-kicker">
-              <span className="mk-kicker" {...EN}>{course.track}</span>
+              <span className="mk-kicker" {...content}>{course.track}</span>
               <span aria-hidden="true">&bull;</span>
               <span className={statusClass}>{isComingSoon ? c.comingSoon : c.available}</span>
             </div>
-            <h1 className="mk-page-title" {...EN}>{course.title}</h1>
-            <p className="mk-lead" {...EN}>{course.tagline}</p>
+            <h1 className="mk-page-title" {...content}>{course.title}</h1>
+            <p className="mk-lead" {...content}>{course.tagline}</p>
 
             <dl className="mk-course-facts">
-              <div>
-                <dt>{c.level}</dt>
-                <dd {...EN}>{levelText}</dd>
-              </div>
-              <div>
-                <dt>{c.duration}</dt>
-                <dd {...EN}>{course.durationLabel}</dd>
-              </div>
-              <div>
-                <dt>{c.format}</dt>
-                <dd {...EN}>{course.format}</dd>
-              </div>
-              {course.instructor && (
-                <div>
-                  <dt>{c.instructor}</dt>
-                  <dd>
-                    <Link href={`/about#${teamAnchorId(course.instructor.name)}`}>{course.instructor.name}</Link>
-                  </dd>
+              {heroFacts.map(({ Icon, label, value, content: isContent }) => (
+                <div key={label}>
+                  <span className="mk-course-fact-icon" aria-hidden="true">
+                    <Icon size={18} />
+                  </span>
+                  <span>
+                    <dt>{label}</dt>
+                    <dd {...(isContent ? content : {})}>{value}</dd>
+                  </span>
                 </div>
-              )}
+              ))}
             </dl>
 
-            <a href="#curriculum" className="mk-link-arrow">
-              {c.viewCurriculum}
-              <ArrowDown size={18} aria-hidden="true" />
-            </a>
+            {course.instructor && (
+              <div className="mk-course-byline">
+                <span className="mk-course-avatar" aria-hidden="true">
+                  {initials(course.instructor.name)}
+                </span>
+                <span>
+                  <small>{c.instructor}</small>
+                  <Link href={`/about#${teamAnchorId(course.instructor.name)}`}>{course.instructor.name}</Link>
+                </span>
+              </div>
+            )}
+
+            <div className="mk-course-actions">
+              <CtaLink cta={cta} className="mk-btn mk-btn--primary">
+                {cta.label}
+                <ArrowRight size={18} className="mk-flip-rtl" aria-hidden="true" />
+              </CtaLink>
+              <a href="#curriculum" className="mk-btn mk-btn--outline">
+                {c.viewCurriculum}
+                <ArrowDown size={18} aria-hidden="true" />
+              </a>
+            </div>
           </div>
 
-          <div className="mk-course-image">
-            <Image
-              src={course.image || FALLBACK_IMAGE}
-              alt={formatMessage(locale, c.thumbnailAlt, { title: course.title })}
-              fill
-              priority
-              sizes="(max-width: 1023px) 100vw, 40vw"
-            />
+          <div className="mk-course-art">
+            <div className="mk-course-image">
+              <Image
+                src={course.image || FALLBACK_IMAGE}
+                alt={formatMessage(locale, c.thumbnailAlt, { title: course.title })}
+                fill
+                priority
+                sizes="(max-width: 1023px) 100vw, 40vw"
+              />
+            </div>
+            {course.certificate && (
+              <div className="mk-course-art-badge" aria-hidden="true">
+                <span>
+                  <Award size={20} />
+                </span>
+                <span>
+                  <strong>{c.certificate}</strong>
+                  <small>{c.included}</small>
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -135,7 +190,7 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
           <div className="mk-course-main">
             <div id="overview" className="mk-anchor">
               <h2 className="mk-h2-sm">{c.overview}</h2>
-              <div className="mk-prose" {...EN}>
+              <div className="mk-prose" {...content}>
                 {course.description.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
@@ -161,7 +216,7 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
             {course.learningOutcomes.length > 0 && (
               <div id="outcomes" className="mk-anchor">
                 <h2 className="mk-h2-sm">{c.outcomes}</h2>
-                <ul className="mk-checklist" {...EN}>
+                <ul className="mk-checklist mk-checklist--grid" {...content}>
                   {course.learningOutcomes.map((outcome) => (
                     <li key={outcome}>
                       <CheckCircle2 size={18} aria-hidden="true" />
@@ -175,16 +230,17 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
             <CourseCurriculum
               modules={course.curriculum}
               notice={course.curriculumNotice}
+              contentLang={course.contentLang}
               title={c.curriculum}
               countLabel={modulesLabel}
             />
 
             {(course.whoItsFor.length > 0 || course.requirements.length > 0) && (
-              <div id="who-its-for" className="mk-anchor mk-two-col">
+              <div id="who-its-for" className="mk-anchor mk-two-col mk-two-col--cards">
                 {course.whoItsFor.length > 0 && (
                   <div>
                     <h2 className="mk-h3-sm">{c.whoFor}</h2>
-                    <ul className="mk-checklist mk-checklist--person" {...EN}>
+                    <ul className="mk-checklist mk-checklist--person" {...content}>
                       {course.whoItsFor.map((item) => (
                         <li key={item}>
                           <User size={18} aria-hidden="true" />
@@ -197,7 +253,7 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
                 {course.requirements.length > 0 && (
                   <div>
                     <h2 className="mk-h3-sm">{c.prerequisites}</h2>
-                    <ul className="mk-checklist mk-checklist--tertiary" {...EN}>
+                    <ul className="mk-checklist mk-checklist--tertiary" {...content}>
                       {course.requirements.map((item) => (
                         <li key={item}>
                           <ClipboardCheck size={18} aria-hidden="true" />
@@ -213,9 +269,12 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
             {course.projects.length > 0 && (
               <div>
                 <h2 className="mk-h3-sm">{c.practical}</h2>
-                <div className="mk-projects" {...EN}>
-                  {course.projects.map((project) => (
+                <div className="mk-projects" {...content}>
+                  {course.projects.map((project, index) => (
                     <div key={project.title}>
+                      <span className="mk-project-index" aria-hidden="true">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
                       <p className="mk-project-title">{project.title}</p>
                       <p className="mk-body">{project.description}</p>
                     </div>
@@ -257,7 +316,7 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
                   <span className="mk-instructor-icon">
                     <User size={28} aria-hidden="true" />
                   </span>
-                  <div {...EN}>
+                  <div {...content}>
                     <Link href={`/about#${teamAnchorId(course.instructor.name)}`} className="mk-instructor-name">
                       {course.instructor.name}
                       <ArrowUpRight size={16} className="mk-flip-rtl" aria-hidden="true" />
@@ -272,7 +331,7 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
             {course.faq.length > 0 && (
               <div id="faq" className="mk-anchor">
                 <h2 className="mk-h2-sm">{c.faq}</h2>
-                <div className="mk-faq-list" {...EN}>
+                <div className="mk-faq-list" {...content}>
                   {course.faq.map((item) => (
                     <details key={item.question} className="mk-faq-item mk-faq-item--sm">
                       <summary>
@@ -294,10 +353,15 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
                 {facts.map((fact) => (
                   <div key={fact.label}>
                     <dt>{fact.label}</dt>
-                    <dd {...(fact.content ? EN : {})}>{fact.value}</dd>
+                    <dd {...(fact.content ? content : {})}>{fact.value}</dd>
                   </div>
                 ))}
               </dl>
+
+              <CtaLink cta={cta} className="mk-btn mk-btn--primary mk-btn--block mk-side-cta">
+                {cta.label}
+                <ArrowRight size={18} className="mk-flip-rtl" aria-hidden="true" />
+              </CtaLink>
 
               {course.certificate && (
                 <a href="#certificate" className="mk-side-cert">
@@ -319,11 +383,6 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
                   </p>
                 </div>
               )}
-
-              <CtaLink cta={cta} className="mk-btn mk-btn--primary mk-btn--block mk-side-cta">
-                {cta.label}
-                <ArrowRight size={18} className="mk-flip-rtl" aria-hidden="true" />
-              </CtaLink>
             </div>
           </aside>
         </div>

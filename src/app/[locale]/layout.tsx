@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import localFont from "next/font/local";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
@@ -9,14 +8,8 @@ import { LegacyHashRedirect } from "@/components/layout/legacy-hash-redirect";
 import { ToastViewport } from "@/components/shared/toast-viewport";
 import "../../styles.css";
 import "../../refinements.css";
+import "../../brand-fonts.css";
 import "../../arabic-font.css";
-
-const learnFont = localFont({
-  src: "../../../public/assets/learn-font.woff2",
-  display: "swap",
-  weight: "100 900",
-  variable: "--font-learn",
-});
 
 type LocaleLayoutProps = Readonly<{
   children: React.ReactNode;
@@ -51,7 +44,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
-      <body className={`${learnFont.className} ${learnFont.variable}`}>
+      <body>
         <NextIntlClientProvider>
           <LegacyHashRedirect />
           {children}

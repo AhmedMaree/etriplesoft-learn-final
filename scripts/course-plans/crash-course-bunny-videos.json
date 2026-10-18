@@ -1,0 +1,10 @@
+{
+  "courseSlug": "crash-course-odoo-erp",
+  "lessons": [
+    { "lessonId": "477c5960-7b23-317c-11b7-a4cd2d5a8056", "title": "Course Agenda", "bunnyTitle": "Session 1 - Agenda.mp4" },
+    { "lessonId": "46ccb981-5517-c89f-0bfe-696e8ea937b1", "title": "Business Workflows, ERP Systems & Odoo", "bunnyTitle": "Session 1 - Business Workflows, ERP Systems & Odoo.mp4" },
+    { "lessonId": "90d286ba-5b44-e049-6c2e-adba432970d3", "title": "Session 2 / Accounting Module", "bunnyTitle": "Session 2 _ Accounting Module - 2026_03_16 20_52 EET - Recording 2.mp4" },
+    { "lessonId": "751daba4-fac7-ce37-aa91-e72a7ebad4fd", "title": "Crm / Sales / Purchase / Inventory Session", "bunnyTitle": "Crm _ Sales _ Purchase _ Inventory Session - 2026_03_17 20_55 EET - Recording.mp4" },
+    { "lessonId": "fe7c3faf-2ffa-9ff6-c069-a55ea11f5970", "title": "Business Case", "bunnyTitle": "Business Case - 2026_03_18 20_58 EET - Recording.mp4" }
+  ]
+}

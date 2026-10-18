@@ -1,0 +1,11 @@
+{
+  "courseSlug": "python-fundamentals",
+  "locale": "en",
+  "videos": [
+    { "file": "list.mp4", "lessonTitle": "Lists" },
+    { "file": "tuple.mp4", "lessonTitle": "Tuples" },
+    { "file": "dict.mp4", "lessonTitle": "Dictionaries" },
+    { "file": "function.mp4", "lessonTitle": "Functions" },
+    { "file": "oop.mp4", "lessonTitle": "Intro To OOP" }
+  ]
+}

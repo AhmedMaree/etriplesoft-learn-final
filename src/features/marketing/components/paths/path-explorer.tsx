@@ -7,7 +7,6 @@ import { Link } from "@/i18n/navigation";
 import { PathRoleIcon } from "../path-role-icon";
 import { roleSlugs, type RoleSlug } from "../../model/course";
 import type { MarketingMessages } from "../../lib/messages";
-import { EN } from "../../lib/content-lang";
 
 export type RolePath = {
   role: RoleSlug;
@@ -79,8 +78,8 @@ export function PathExplorer({ paths, copy }: { paths: RolePath[]; copy: Marketi
                     <Link href={`/catalog/${course.slug}`} className="mk-pe-step">
                       <span className="mk-pe-step-number">{index + 1}</span>
                       <span>
-                        <span className="mk-pe-step-title" {...EN}>{course.title}</span>
-                        <span className="mk-pe-step-text" {...EN}>{course.tagline}</span>
+                        <span className="mk-pe-step-title" dir="auto">{course.title}</span>
+                        <span className="mk-pe-step-text" dir="auto">{course.tagline}</span>
                         <span className="mk-pe-step-cta">
                           {copy.viewCourse}
                           <ArrowRight size={12} className="mk-flip-rtl" aria-hidden="true" />
@@ -141,7 +140,7 @@ export function PathExplorer({ paths, copy }: { paths: RolePath[]; copy: Marketi
                     <li key={course.slug}>
                       <Link href={`/catalog/${course.slug}`}>
                         <span>{courseIndex + 1}</span>
-                        <bdi {...EN}>{course.title}</bdi>
+                        <bdi dir="auto">{course.title}</bdi>
                       </Link>
                     </li>
                   ))}

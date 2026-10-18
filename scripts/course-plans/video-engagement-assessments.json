@@ -1,0 +1,105 @@
+{
+  "locale": "en",
+  "videos": [
+    {
+      "courseSlug": "odoo-development",
+      "moduleId": "c7cc3099-c7f5-433f-b52b-09c34857811a",
+      "lessonId": "22ed63d7-e37c-4b19-91ca-ae04a876648a",
+      "title": "Create an Addon",
+      "questions": [
+        {"type":"single","prompt":"What does an Odoo add-on's `__init__.py` commonly do?","explanation":"It makes Python components such as models available when Odoo loads the add-on.","options":[{"label":"Imports the add-on's Python packages, such as models","correct":true},{"label":"Stores the PostgreSQL database password","correct":false},{"label":"Defines the browser's URL routes only","correct":false}]},
+        {"type":"single","prompt":"Where must Odoo be configured to find a custom add-on?","explanation":"The add-on must be inside a directory listed in Odoo's configured add-ons paths.","options":[{"label":"A directory included in Odoo's add-ons paths","correct":true},{"label":"Any folder on the learner's computer","correct":false},{"label":"The browser cache directory","correct":false}]}
+      ]
+    },
+    {
+      "courseSlug": "odoo-development",
+      "moduleId": "c7cc3099-c7f5-433f-b52b-09c34857811a",
+      "lessonId": "17152419-7f2a-4d2f-b64d-47baa1a99692",
+      "title": "The Module Manifest",
+      "questions": [
+        {"type":"single","prompt":"Which file declares an Odoo add-on's metadata and dependencies?","explanation":"The Python manifest file describes the module and its dependencies and data files.","options":[{"label":"`__manifest__.py`","correct":true},{"label":"`README.html`","correct":false},{"label":"`requirements.lock`","correct":false}]},
+        {"type":"single","prompt":"Why should a required Odoo module appear in the manifest's `depends` list?","explanation":"Odoo uses dependencies to ensure required modules are installed before this module.","options":[{"label":"So Odoo installs the required module first","correct":true},{"label":"To hide the dependency from the Apps list","correct":false},{"label":"To rename the PostgreSQL database","correct":false}]}
+      ]
+    },
+    {
+      "courseSlug": "odoo-development",
+      "moduleId": "c7cc3099-c7f5-433f-b52b-09c34857811a",
+      "lessonId": "d055cd65-1f0a-4767-8cf5-aba7b8efa356",
+      "title": "Adding a Model",
+      "questions": [
+        {"type":"single","prompt":"Which base class is commonly used for a regular Odoo model?","explanation":"Regular persistent Odoo models inherit from `models.Model`.","options":[{"label":"`models.Model`","correct":true},{"label":"`http.Controller`","correct":false},{"label":"`QWidget`","correct":false}]},
+        {"type":"single","prompt":"What does an Odoo model's `_name` attribute define?","explanation":"`_name` is the model's technical identity used by Odoo's ORM.","options":[{"label":"The model's technical name","correct":true},{"label":"The database user's password","correct":false},{"label":"The color of its form view","correct":false}]}
+      ]
+    },
+    {
+      "courseSlug": "odoo-development",
+      "moduleId": "c7cc3099-c7f5-433f-b52b-09c34857811a",
+      "lessonId": "0eb96a88-900d-4828-a32d-e8eb334e69cf",
+      "title": "Menu Items and Views",
+      "questions": [
+        {"type":"single","prompt":"In Odoo, what is the main purpose of a view?","explanation":"Views describe how users see and interact with records, for example in a form or list.","options":[{"label":"Define how records are presented to users","correct":true},{"label":"Store video files in the database","correct":false},{"label":"Install Python itself","correct":false}]},
+        {"type":"single","prompt":"What does a menu action typically connect?","explanation":"An action lets a menu open a model's records using the configured views.","options":[{"label":"A menu entry to the records or screen it should open","correct":true},{"label":"A menu entry to an unrelated operating-system process","correct":false},{"label":"A menu entry to a Mux access token","correct":false}]}
+      ]
+    },
+    {
+      "courseSlug": "odoo-development",
+      "moduleId": "7f89e829-5864-4279-9bd6-fd6506b59832",
+      "lessonId": "a8be1234-305a-4a99-b89d-04c8935aebc6",
+      "title": "Recap and Field Types",
+      "questions": [
+        {"type":"single","prompt":"Which Odoo field type represents a relation from many records to one related record?","explanation":"`Many2one` stores a reference to one related record for each current record.","options":[{"label":"`fields.Many2one`","correct":true},{"label":"`fields.Boolean`","correct":false},{"label":"`fields.Text`","correct":false}]},
+        {"type":"single","prompt":"Which field is generally intended for longer, multi-line text?","explanation":"`fields.Text` is intended for longer text; `fields.Char` is for shorter character values.","options":[{"label":"`fields.Text`","correct":true},{"label":"`fields.Integer`","correct":false},{"label":"`fields.Date`","correct":false}]}
+      ]
+    },
+    {
+      "courseSlug": "odoo-development",
+      "moduleId": "7f89e829-5864-4279-9bd6-fd6506b59832",
+      "lessonId": "6d01b312-a3ec-4546-a2ba-f08e867afd8b",
+      "title": "Model Representation and Ordering",
+      "questions": [
+        {"type":"single","prompt":"What does an Odoo model's `_rec_name` configure?","explanation":"`_rec_name` selects the field used as the record's display name in common relational widgets.","options":[{"label":"The field used to display a record's name","correct":true},{"label":"The number of records in the database","correct":false},{"label":"The module's installation directory","correct":false}]},
+        {"type":"single","prompt":"What does the `_order` model attribute control?","explanation":"`_order` sets the default ordering used when the model's records are retrieved.","options":[{"label":"The model's default record ordering","correct":true},{"label":"The order in which users create accounts","correct":false},{"label":"The order of menu icons in the browser toolbar","correct":false}]}
+      ]
+    },
+    {
+      "courseSlug": "python-fundamentals",
+      "moduleId": "e9584c79-8aa3-1211-30ba-cc6807b3b836",
+      "lessonId": "c75d5c23-dbbf-1440-f5e1-02ba07923ead",
+      "title": "Lists",
+      "questions": [
+        {"type":"single","prompt":"What does `items.append(value)` do to a Python list?","explanation":"`append` adds one value to the end of the existing list.","options":[{"label":"Adds `value` to the end of `items`","correct":true},{"label":"Sorts the list alphabetically","correct":false},{"label":"Removes the first item","correct":false}]},
+        {"type":"single","prompt":"What index refers to the first item in a Python list?","explanation":"Python sequences use zero-based indexing, so the first item is at index 0.","options":[{"label":"0","correct":true},{"label":"1","correct":false},{"label":"-1","correct":false}]}
+      ]
+    },
+    {
+      "courseSlug": "python-fundamentals",
+      "moduleId": "e9584c79-8aa3-1211-30ba-cc6807b3b836",
+      "lessonId": "1ebfc86f-a4d5-ba60-d21d-ace1c536a497",
+      "title": "Tuples",
+      "questions": [
+        {"type":"single","prompt":"What is a key difference between a tuple and a list?","explanation":"A tuple is immutable: its items cannot be reassigned or removed after it is created.","options":[{"label":"A tuple is immutable","correct":true},{"label":"A tuple can contain only numbers","correct":false},{"label":"A tuple always sorts itself","correct":false}]},
+        {"type":"single","prompt":"Which expression creates a one-item tuple containing `7`?","explanation":"The trailing comma makes `(7,)` a tuple; `(7)` is just the integer 7.","options":[{"label":"`(7,)`","correct":true},{"label":"`(7)`","correct":false},{"label":"`[7]`","correct":false}]}
+      ]
+    },
+    {
+      "courseSlug": "python-fundamentals",
+      "moduleId": "e9584c79-8aa3-1211-30ba-cc6807b3b836",
+      "lessonId": "ca3ca3ea-1abd-f470-f692-6711ca967fc5",
+      "title": "Dictionaries",
+      "questions": [
+        {"type":"single","prompt":"How does a Python dictionary organize its data?","explanation":"A dictionary associates keys with values so code can look up a value by its key.","options":[{"label":"As key-value pairs","correct":true},{"label":"Only as an ordered sequence of characters","correct":false},{"label":"As rows that can only be accessed by numeric position","correct":false}]},
+        {"type":"single","prompt":"What happens when a value is assigned to an existing dictionary key?","explanation":"Dictionary keys are unique; assigning the key again replaces its previous value.","options":[{"label":"The key's value is updated","correct":true},{"label":"A duplicate key is added beside it","correct":false},{"label":"The dictionary is automatically cleared","correct":false}]}
+      ]
+    },
+    {
+      "courseSlug": "python-fundamentals",
+      "moduleId": "3af7633a-571a-864a-4c31-4859bbc7cdfd",
+      "lessonId": "9a577192-3a33-ef8b-96b2-3c37d27a54f8",
+      "title": "Functions",
+      "questions": [
+        {"type":"single","prompt":"Which Python keyword begins a function definition?","explanation":"The `def` keyword introduces a function definition.","options":[{"label":"`def`","correct":true},{"label":"`func`","correct":false},{"label":"`method`","correct":false}]},
+        {"type":"single","prompt":"What does a `return` statement do inside a function?","explanation":"`return` sends a result back to the code that called the function.","options":[{"label":"Sends a value back to the caller","correct":true},{"label":"Repeats the function forever","correct":false},{"label":"Imports a package","correct":false}]}
+      ]
+    }
+  ]
+}

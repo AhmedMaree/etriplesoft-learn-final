@@ -21,8 +21,12 @@ const APP_ROUTES = new Set([
   'admin/audit',
 ])
 
+// The one query-string destination allowed: a course page (/<locale>/courses?course=<slug>).
+const COURSE_RETURN_PATH = /^\/(en|ar)\/courses\?course=[a-z0-9]+(?:-[a-z0-9]+)*$/
+
 export function safeReturnPath(locale: Locale, candidate?: string | null): string {
   const fallback = `/${locale}/overview`
+  if (candidate && COURSE_RETURN_PATH.test(candidate) && candidate.startsWith(`/${locale}/`)) return candidate
   if (!candidate || !candidate.startsWith('/') || candidate.startsWith('//')) return fallback
   if (candidate.includes('\\') || candidate.includes('%') || candidate.includes('?') || candidate.includes('#')) return fallback
 

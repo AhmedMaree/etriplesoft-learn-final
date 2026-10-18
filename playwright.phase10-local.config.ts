@@ -1,9 +1,7 @@
 import { defineConfig } from "@playwright/test";
-import fs from "node:fs";
+import { chromiumExecutable, nextDevCommand } from "./playwright.shared";
 
 const baseURL = "http://127.0.0.1:3015";
-const bundled =
-  "C:/Users/Ahmed/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe";
 
 if (!process.env.PHASE10_LOCAL_ANON_KEY) {
   throw new Error("Set PHASE10_LOCAL_ANON_KEY to a short-lived token for the local Supabase instance only.");
@@ -17,14 +15,10 @@ export default defineConfig({
   use: {
     baseURL,
     viewport: { width: 375, height: 1000 },
-    launchOptions: {
-      executablePath:
-        process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ||
-        (fs.existsSync(bundled) ? bundled : undefined),
-    },
+    launchOptions: { executablePath: chromiumExecutable() },
   },
   webServer: {
-    command: "npm.cmd exec -- next dev --hostname 127.0.0.1 --port 3015",
+    command: nextDevCommand(3015),
     url: baseURL,
     reuseExistingServer: false,
     timeout: 120_000,
