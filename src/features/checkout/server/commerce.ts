@@ -132,7 +132,7 @@ export async function startProviderCheckout(orderId: string, email: string) {
         currency: "EGP",
         order: orderId,
         merchantId: cfg.merchantId,
-        merchantRedirect: `${cfg.app}/${order.locale}/payment?order=${orderId}`,
+        merchantRedirect: `${cfg.app}/${order.locale}/payment?order=${orderId}&step=checkout&returned=1`,
         display: order.locale,
         type: "one-time",
         allowedMethods: "card,wallet",
@@ -158,6 +158,7 @@ export async function startProviderCheckout(orderId: string, email: string) {
     p_id: orderId,
     p_session_id: value._id,
     p_url: value.sessionUrl,
+    p_amount: Number(order.total),
   });
   if (bound.error) throw new Error("session_binding");
   return value.sessionUrl;

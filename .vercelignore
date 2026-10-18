@@ -2,8 +2,8 @@
 # Vercel already skips .git, .next, .vercel, node_modules and .env*.local.
 
 # Docs, agent and design tooling
-docs/
-EXPORTS/
+/docs/
+/EXPORTS/
 .agents/
 .claude/
 .impeccable/
@@ -15,19 +15,19 @@ EXPORTS/
 /PRODUCT.md
 
 # Tests and local ops scripts
-tests/
-scripts/
-supabase/
+/tests/
+/scripts/
+/supabase/
 playwright*.ts
-test-results/
-playwright-report/
-coverage/
+/test-results/
+/playwright-report/
+/coverage/
 
 # Local build output and scratch
-dist/
-out/
-tmp/
-courses-images/
+/dist/
+/out/
+/tmp/
+/courses-images/
 *.tsbuildinfo
 *.log
 

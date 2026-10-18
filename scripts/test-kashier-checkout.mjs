@@ -110,7 +110,7 @@ test("checkout sends authoritative order price and omits absent webhook", async 
       assert.equal(body.customer.reference, id);
       assert.equal(
         body.merchantRedirect,
-        `${env.AUTH_SITE_URL}/en/payment?order=${id}`,
+        `${env.AUTH_SITE_URL}/en/payment?order=${id}&step=checkout&returned=1`,
       );
       assert.equal(Object.hasOwn(body, "serverWebhook"), false);
       return Response.json({ _id: sessionId, sessionUrl });
@@ -118,6 +118,7 @@ test("checkout sends authoritative order price and omits absent webhook", async 
     assert.ok(String(url).endsWith("/rpc/commerce_bind_session"));
     bound = true;
     assert.equal(body.p_session_id, sessionId);
+    assert.equal(body.p_amount, 49900);
     return Response.json(null);
   });
   assert.equal(

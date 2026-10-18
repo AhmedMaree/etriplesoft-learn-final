@@ -15,6 +15,7 @@ export type Database = {
           action: string;
           actor_id: string;
           certificate_id: string | null;
+          coupon_id: string | null;
           course_id: string | null;
           enrollment_id: string | null;
           id: string;
@@ -33,6 +34,7 @@ export type Database = {
           action: string;
           actor_id: string;
           certificate_id?: string | null;
+          coupon_id?: string | null;
           course_id?: string | null;
           enrollment_id?: string | null;
           id?: string;
@@ -51,6 +53,7 @@ export type Database = {
           action?: string;
           actor_id?: string;
           certificate_id?: string | null;
+          coupon_id?: string | null;
           course_id?: string | null;
           enrollment_id?: string | null;
           id?: string;
@@ -230,6 +233,45 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      coupons: {
+        Row: {
+          amount_off_minor: number | null;
+          code: string;
+          course_id: string | null;
+          created_at: string;
+          created_by: string;
+          expires_at: string | null;
+          id: string;
+          is_active: boolean;
+          max_redemptions: number | null;
+          percent_off: number | null;
+        };
+        Insert: {
+          amount_off_minor?: number | null;
+          code: string;
+          course_id?: string | null;
+          created_at?: string;
+          created_by: string;
+          expires_at?: string | null;
+          id?: string;
+          is_active?: boolean;
+          max_redemptions?: number | null;
+          percent_off?: number | null;
+        };
+        Update: {
+          amount_off_minor?: number | null;
+          code?: string;
+          course_id?: string | null;
+          created_at?: string;
+          created_by?: string;
+          expires_at?: string | null;
+          id?: string;
+          is_active?: boolean;
+          max_redemptions?: number | null;
+          percent_off?: number | null;
+        };
+        Relationships: [];
       };
       course_completions: {
         Row: {
@@ -1136,36 +1178,67 @@ export type Database = {
       };
       orders: {
         Row: {
+          billing_country: string | null;
+          billing_name: string | null;
+          billing_phone: string | null;
+          coupon_attempts: number;
+          coupon_code: string | null;
+          coupon_id: string | null;
           created_at: string;
           currency: string;
+          discount_minor: number;
           expires_at: string;
           id: string;
           locale: string;
           status: string;
+          subtotal_minor: number;
           total_minor: number;
           user_id: string;
         };
         Insert: {
+          billing_country?: string | null;
+          billing_name?: string | null;
+          billing_phone?: string | null;
+          coupon_attempts?: number;
+          coupon_code?: string | null;
+          coupon_id?: string | null;
           created_at?: string;
           currency?: string;
+          discount_minor?: number;
           expires_at?: string;
           id?: string;
           locale: string;
           status?: string;
+          subtotal_minor: number;
           total_minor: number;
           user_id: string;
         };
         Update: {
+          billing_country?: string | null;
+          billing_name?: string | null;
+          billing_phone?: string | null;
+          coupon_attempts?: number;
+          coupon_code?: string | null;
+          coupon_id?: string | null;
           created_at?: string;
           currency?: string;
+          discount_minor?: number;
           expires_at?: string;
           id?: string;
           locale?: string;
           status?: string;
+          subtotal_minor?: number;
           total_minor?: number;
           user_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "orders_coupon_id_fkey";
+            columns: ["coupon_id"];
+            isOneToOne: false;
+            referencedRelation: "coupons";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "orders_user_id_fkey";
             columns: ["user_id"];
@@ -1903,6 +1976,32 @@ export type Database = {
         Args: { p_lesson_ids: string[]; p_module_id: string };
         Returns: undefined;
       };
+      admin_create_coupon: {
+        Args: {
+          p_amount_off_minor: number | null;
+          p_code: string;
+          p_course_slug: string | null;
+          p_expires_at: string | null;
+          p_max_redemptions: number | null;
+          p_percent_off: number | null;
+        };
+        Returns: string;
+      };
+      admin_list_coupons: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          amount_off_minor: number | null;
+          code: string;
+          course_slug: string | null;
+          created_at: string;
+          expires_at: string | null;
+          id: string;
+          is_active: boolean;
+          max_redemptions: number | null;
+          percent_off: number | null;
+          redemptions: number;
+        }[];
+      };
       admin_revoke_certificate: {
         Args: { p_certificate_id: string };
         Returns: undefined;
@@ -1912,6 +2011,10 @@ export type Database = {
         Returns: undefined;
       };
       admin_revoke_role: { Args: { p_role_id: string }; Returns: undefined };
+      admin_set_coupon_active: {
+        Args: { p_active: boolean; p_id: string };
+        Returns: undefined;
+      };
       admin_save_course_content: {
         Args: {
           p_category: string;
@@ -2128,7 +2231,12 @@ export type Database = {
         }[];
       };
       commerce_bind_session: {
-        Args: { p_id: string; p_session_id: string; p_url: string };
+        Args: {
+          p_amount: number;
+          p_id: string;
+          p_session_id: string;
+          p_url: string;
+        };
         Returns: undefined;
       };
       commerce_confirm_order: {
@@ -2165,9 +2273,26 @@ export type Database = {
         Args: { p_lesson_id: string; p_locale: string };
         Returns: undefined;
       };
+      learner_apply_coupon: {
+        Args: { p_code: string; p_order_id: string };
+        Returns: Json;
+      };
       learner_create_order: {
         Args: { p_course_id: string; p_locale: string };
         Returns: string;
+      };
+      learner_remove_coupon: {
+        Args: { p_order_id: string };
+        Returns: undefined;
+      };
+      learner_set_order_billing: {
+        Args: {
+          p_country: string;
+          p_name: string;
+          p_order_id: string;
+          p_phone: string;
+        };
+        Returns: undefined;
       };
       learner_evaluate_completion: {
         Args: { p_course_id: string; p_locale: string };

@@ -5,6 +5,7 @@
 - `/{locale}/courses/{slug}/lessons/{lessonId}`: authenticated player/resources/progress; missing exact-locale lessons offer an explicit other-language link.
 - `/{locale}/video-management`: current admin/assigned-instructor uploads and caption operations.
 - `/{locale}/admin/enrollments`: current administrator-only audited access grants.
+- `/{locale}/admin/coupons`: current administrator-only audited coupon creation and activation.
 - `POST /api/learning/progress`: start a session or submit a bounded serial checkpoint.
 - `GET /api/learning/resources/{resourceId}?lessonId=...&locale=...`: exact-resource authorization and private download redirect.
 - `GET /api/mux/lessons/{lessonId}`: authorized management status.
@@ -105,6 +106,10 @@ Current administrators can preview every published course and lesson in the requ
 ## Checkout and Kashier test mode — 2026-10-14
 
 `/{locale}/payment` displays a server-priced course order and only starts checkout when `KASHIER_CHECKOUT_ENABLED=true`, `KASHIER_MODE` is `test` or `live`, valid credentials for that mode exist and `AUTH_SITE_URL` is valid. In test mode, `KASHIER_WEBHOOK_URL` may be empty: after returning to the local payment page, the learner selects **Check payment status** to reconcile directly with Kashier on the server. If configured, the webhook must be a public HTTPS URL ending in `/api/webhooks/kashier`. `POST /api/checkout` starts or checks the signed-in learner's own order; `POST /api/webhooks/kashier` verifies the signature and reconciles the provider order before settlement. Keep credentials server-only in `.env.local`. The checked-in example disables checkout by default. `KASHIER_MODE=live` selects `api.kashier.io` and requires a public HTTPS `AUTH_SITE_URL` and a live webhook; it needs migration `20261015120000_commerce_live_session_url.sql` and has not been exercised against a live account. A configured test session is not evidence of a completed sandbox payment; see [SECURITY.md](SECURITY.md).
+
+## Checkout steps and coupons — 2026-10-18
+
+Checkout is three steps on `/{locale}/payment`: `?course={slug}` or `?order={id}` shows **Review Order**; `?order={id}&step=checkout` shows **Billing Details** and **Payment**; Kashier's return (`&step=checkout&returned=1` in the merchant redirect, display-only) or a non-pending order shows the server-verified result. Card details are entered only on Kashier's hosted page. `POST /api/checkout` adds `apply-coupon`, `remove-coupon` and requires `billing` (name, country, national phone) for `start-order`; the server builds the E.164 phone and computes discounts from the order snapshot. Coupons cannot change after a Kashier session is bound. Requires migration `20261018150000_checkout_coupons_billing.sql`.
 
 ## Demo-only learner pages
 

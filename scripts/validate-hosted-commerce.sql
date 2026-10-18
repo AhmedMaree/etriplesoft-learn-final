@@ -21,7 +21,7 @@ DO $$ BEGIN
 END $$;
 RESET ROLE;
 SET LOCAL ROLE service_role;
-SELECT public.commerce_bind_session(current_setting('h.order')::uuid,'0123456789abcdef01234567','https://payments.kashier.io/session/0123456789abcdef01234567?mode=test');
+SELECT public.commerce_bind_session(current_setting('h.order')::uuid,'0123456789abcdef01234567','https://payments.kashier.io/session/0123456789abcdef01234567?mode=test',49900);
 DO $$ BEGIN
  BEGIN PERFORM public.commerce_confirm_order(current_setting('h.order')::uuid,'0123456789abcdef01234567','provider-order',1,'EGP','paid','bad-amount');RAISE EXCEPTION 'wrong amount accepted';EXCEPTION WHEN check_violation THEN NULL;END;
  BEGIN PERFORM public.commerce_confirm_order(current_setting('h.order')::uuid,'0123456789abcdef01234567','provider-order',49900,'USD','paid','bad-currency');RAISE EXCEPTION 'wrong currency accepted';EXCEPTION WHEN check_violation THEN NULL;END;
@@ -42,7 +42,7 @@ DO $$ BEGIN
  IF (SELECT status FROM public.orders WHERE id=current_setting('h.order')::uuid)<>'refunded' THEN RAISE EXCEPTION 'late payment restored refunded order';END IF;
  IF (SELECT status FROM public.enrollments WHERE order_item_id IN(SELECT id FROM public.order_items WHERE order_id=current_setting('h.order')::uuid))<>'refunded' THEN RAISE EXCEPTION 'full refund retained paid access';END IF;
  IF has_function_privilege('anon','public.learner_create_order(uuid,text)','EXECUTE') OR has_table_privilege('authenticated','public.payments','SELECT') OR has_table_privilege('authenticated','public.payment_events','SELECT') THEN RAISE EXCEPTION 'payment privileges are too broad';END IF;
- IF has_function_privilege('authenticated','public.commerce_get_order(uuid)','EXECUTE') OR has_function_privilege('authenticated','public.commerce_bind_session(uuid,text,text)','EXECUTE') OR has_function_privilege('authenticated','public.commerce_confirm_order(uuid,text,text,bigint,text,text,text)','EXECUTE') THEN RAISE EXCEPTION 'privileged commerce function is client-executable';END IF;
+ IF has_function_privilege('authenticated','public.commerce_get_order(uuid)','EXECUTE') OR has_function_privilege('authenticated','public.commerce_bind_session(uuid,text,text,bigint)','EXECUTE') OR has_function_privilege('authenticated','public.commerce_confirm_order(uuid,text,text,bigint,text,text,text)','EXECUTE') THEN RAISE EXCEPTION 'privileged commerce function is client-executable';END IF;
  IF NOT has_function_privilege('service_role','public.commerce_confirm_order(uuid,text,text,bigint,text,text,text)','EXECUTE') THEN RAISE EXCEPTION 'trusted server role cannot settle orders';END IF;
 END $$;
 ROLLBACK;

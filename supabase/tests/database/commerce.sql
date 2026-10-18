@@ -22,7 +22,7 @@ SELECT is((SELECT count(*)::int FROM public.order_items),0,'another account cann
 RESET ROLE;
 SELECT is((SELECT count(*)::int FROM public.enrollments WHERE user_id='e1900000-0000-4000-8000-000000000002'),0,'pending order grants no access');
 SET LOCAL ROLE service_role;
-SELECT public.commerce_bind_session(current_setting('c.order')::uuid,'0123456789abcdef01234567','https://payments.kashier.io/session/0123456789abcdef01234567?mode=test');
+SELECT public.commerce_bind_session(current_setting('c.order')::uuid,'0123456789abcdef01234567','https://payments.kashier.io/session/0123456789abcdef01234567?mode=test',49900);
 SELECT throws_ok($$SELECT public.commerce_confirm_order(current_setting('c.order')::uuid,'0123456789abcdef01234567','provider',1,'EGP','paid','wrong-amount')$$,'23514',NULL,'wrong amount rejected');
 SELECT throws_ok($$SELECT public.commerce_confirm_order(current_setting('c.order')::uuid,'0123456789abcdef01234567','provider',49900,'USD','paid','wrong-currency')$$,'23514',NULL,'wrong currency rejected');
 SELECT throws_ok($$SELECT public.commerce_confirm_order(current_setting('c.order')::uuid,'wrong-session','provider',49900,'EGP','paid','wrong-session')$$,'23514',NULL,'wrong session rejected');
@@ -47,6 +47,6 @@ SELECT ok((SELECT refund_confirmed_at IS NOT NULL AND revoked_by IS NULL FROM pu
 SELECT ok(NOT has_function_privilege('anon','public.learner_create_order(uuid,text)','EXECUTE'),'anonymous order creation denied');
 SELECT ok(NOT has_table_privilege('authenticated','public.payments','SELECT'),'provider session records stay private');
 SELECT ok(NOT has_table_privilege('authenticated','public.payment_events','SELECT'),'payment event records stay private');
-SELECT ok(NOT has_function_privilege('authenticated','public.commerce_get_order(uuid)','EXECUTE') AND NOT has_function_privilege('authenticated','public.commerce_bind_session(uuid,text,text)','EXECUTE') AND NOT has_function_privilege('authenticated','public.commerce_confirm_order(uuid,text,text,bigint,text,text,text)','EXECUTE'),'privileged commerce functions stay service-only');
+SELECT ok(NOT has_function_privilege('authenticated','public.commerce_get_order(uuid)','EXECUTE') AND NOT has_function_privilege('authenticated','public.commerce_bind_session(uuid,text,text,bigint)','EXECUTE') AND NOT has_function_privilege('authenticated','public.commerce_confirm_order(uuid,text,text,bigint,text,text,text)','EXECUTE'),'privileged commerce functions stay service-only');
 SELECT ok(has_function_privilege('service_role','public.commerce_confirm_order(uuid,text,text,bigint,text,text,text)','EXECUTE'),'settlement is available to the trusted server role');
 SELECT * FROM finish();ROLLBACK;

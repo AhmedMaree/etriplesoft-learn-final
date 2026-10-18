@@ -61,51 +61,35 @@ export function Checkout({
     return t("durationMinutes", { m: String(Math.max(minutes, 1)) });
   };
 
-  async function act(action: "pay" | "check" = "pay") {
+  // Review is step 1: it only ensures a server-priced order exists, then moves to billing and payment.
+  async function continueToCheckout() {
+    if (orderId) {
+      router.push(`/payment?order=${orderId}&step=checkout`);
+      return;
+    }
     setBusy(true);
     setMessage("");
     try {
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: orderId
-            ? action === "check"
-              ? "check"
-              : "start-order"
-            : "start",
-          id: orderId || courseId,
-          locale,
-        }),
+        body: JSON.stringify({ action: "add-to-cart", id: courseId, locale }),
       });
       const value: unknown = await response.json();
-      if (!response.ok || !value || typeof value !== "object")
+      const created =
+        response.ok && value && typeof value === "object" && "url" in value && typeof value.url === "string"
+          ? new URL(value.url, window.location.origin).searchParams.get("order")
+          : null;
+      if (!created || !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(created))
         throw new Error("retry");
-      if ("url" in value && typeof value.url === "string") {
-        const url = new URL(value.url);
-        if (
-          url.origin !== "https://payments.kashier.io" ||
-          !/^\/session\/[a-f0-9]{24}$/.test(url.pathname) ||
-          !["?mode=test", "?mode=live"].includes(url.search)
-        )
-          throw new Error("retry");
-        window.location.assign(url.href);
-      } else if (
-        "status" in value &&
-        typeof value.status === "string" &&
-        ["pending", "paid", "refunded"].includes(value.status)
-      ) {
-        setMessage(value.status);
-        router.refresh();
-      } else throw new Error("retry");
+      router.push(`/payment?order=${created}&step=checkout`);
     } catch {
       setMessage("retry");
-    } finally {
       setBusy(false);
     }
   }
 
-  const stepLabels = [t("stepCart"), t("stepPayment"), t("stepConfirmation")];
+  const stepLabels = [t("stepReview"), t("stepBilling"), t("stepPay")];
 
   return (
     <div className="checkout-cart-page">
@@ -221,21 +205,12 @@ export function Checkout({
             <button
               className="checkout-continue-button"
               disabled={!enabled || busy || status === "paid" || status === "refunded"}
-              onClick={() => void act("pay")}
+              onClick={() => void continueToCheckout()}
             >
               <ShoppingCart aria-hidden="true" />
-              <span>{busy ? t("working") : t("continueToPayment")}</span>
+              <span>{busy ? t("working") : t("continueToBilling")}</span>
               <ArrowRight className="flip-rtl" aria-hidden="true" />
             </button>
-            {orderId && (
-              <button
-                className="checkout-check-button"
-                disabled={!enabled || busy}
-                onClick={() => void act("check")}
-              >
-                {t("check")}
-              </button>
-            )}
             <div className="checkout-secure-note">
               <ShieldCheck aria-hidden="true" />
               <p>{t("confirmation")}</p>

@@ -6,9 +6,14 @@ import { isLocale } from "@/i18n/config";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCatalogCourse } from "@/features/courses/server/course-repository";
-import { getCatalogCourseDurations } from "@/features/courses/server/course-repository";
+import {
+  getCatalogCourseDurations,
+  getCatalogCourseOutline,
+} from "@/features/courses/server/course-repository";
 import { Checkout, type CheckoutCartItem } from "@/features/checkout/components/checkout";
+import { CheckoutPayment } from "@/features/checkout/components/checkout-payment";
 import { checkoutConfiguration } from "@/features/checkout/server/commerce";
+import { billingCountryOptions } from "@/features/checkout/billing-countries";
 
 export async function generateMetadata({
   params,
@@ -23,7 +28,12 @@ export default async function PaymentRoute({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ course?: string; order?: string }>;
+  searchParams: Promise<{
+    course?: string;
+    order?: string;
+    step?: string;
+    returned?: string;
+  }>;
 }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
@@ -45,7 +55,9 @@ export default async function PaymentRoute({
   ) {
     const { data: order } = await client
       .from("orders")
-      .select("id,status,total_minor,currency")
+      .select(
+        "id,status,subtotal_minor,discount_minor,total_minor,coupon_code,billing_name,billing_country,billing_phone",
+      )
       .eq("id", query.order)
       .maybeSingle();
     const { data: orderItems } = await client
@@ -68,13 +80,47 @@ export default async function PaymentRoute({
       amountMinor: Number(item.amount_minor),
       durationSeconds: durations[item.course_id] ?? null,
     }));
+    // Our own Kashier return marker; it is display-only and only triggers server reconciliation.
+    const returned = query.returned === "1";
+    const enabled = Boolean(checkoutConfiguration());
+    if (order && user && (query.step === "checkout" || returned || order.status !== "pending")) {
+      const first = items[0];
+      const [{ data: profile }, detail, outline] = await Promise.all([
+        client.from("profiles").select("display_name").eq("id", user.id).maybeSingle(),
+        first?.slug ? getCatalogCourse(client, locale, first.slug) : Promise.resolve(null),
+        first?.slug ? getCatalogCourseOutline(client, locale, first.slug) : Promise.resolve([]),
+      ]);
+      return (
+        <CheckoutPayment
+          order={{
+            id: order.id,
+            status: order.status,
+            subtotalMinor: Number(order.subtotal_minor),
+            discountMinor: Number(order.discount_minor),
+            totalMinor: Number(order.total_minor),
+            couponCode: order.coupon_code,
+            billingName: order.billing_name,
+            billingCountry: order.billing_country,
+            billingPhone: order.billing_phone,
+          }}
+          items={items}
+          email={user.email ?? ""}
+          defaultName={profile?.display_name ?? ""}
+          instructor={detail?.instructors[0] ?? null}
+          lessonCount={outline.length || null}
+          enabled={enabled}
+          returned={returned}
+          countryNames={billingCountryOptions(locale)}
+        />
+      );
+    }
     content = order ? (
       <Checkout
         orderId={order.id}
         items={items}
         amount={order.total_minor}
         status={order.status}
-        enabled={Boolean(checkoutConfiguration())}
+        enabled={enabled}
       />
     ) : (
       <Panel>

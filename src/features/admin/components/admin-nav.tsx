@@ -12,6 +12,7 @@ export function AdminNav() {
     { href: '/admin/enrollments', label: t('nav.enrollments') },
     { href: '/admin/assessments', label: t('nav.assessments') },
     { href: '/admin/courses', label: t('nav.courses') },
+    { href: '/admin/coupons', label: t('nav.coupons') },
     { href: '/video-management', label: t('nav.videos') },
   ] as const
 

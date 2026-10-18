@@ -34,7 +34,7 @@ See the dated evidence in section 1. Phase 19 currently provides server-priced, 
 
 ## 7. Out of Scope
 
-Coupons, subscriptions, bundles, tax engine and fake card processing.
+Subscriptions, bundles, tax engine and fake card processing. Server-validated coupons were approved by the user on 2026-10-18 (D28) and are implemented by migration `20261018150000_checkout_coupons_billing.sql` with `supabase/tests/database/coupons.sql`.
 
 ## 8. Product Decisions
 
