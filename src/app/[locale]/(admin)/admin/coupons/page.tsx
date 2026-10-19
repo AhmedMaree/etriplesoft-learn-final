@@ -7,11 +7,13 @@ import {
   CouponTable,
   type AdminCoupon,
 } from "@/features/checkout/components/admin-coupons";
+import { AdminPageHeader } from "@/features/admin/components/admin-page-header";
 
 export const metadata = { robots: { index: false, follow: false } };
 export default async function CouponAdministration() {
   if ((await getAdminAccess()).status !== "admin") return null;
   const t = await getTranslations("coupons");
+  const admin = await getTranslations("admin");
   const client = await createClient();
   const [{ courses }, { data, error }] = await Promise.all([
     listAdminCourses(client, { status: "published", limit: 100 }),
@@ -32,10 +34,18 @@ export default async function CouponAdministration() {
       }));
   return (
     <>
-      <h1>{t("title")}</h1>
-      <p>{t("description")}</p>
-      <CouponCreateForm slugs={courses.map((course) => course.slug)} />
-      {error ? <p role="alert">{t("errors.failed")}</p> : <CouponTable coupons={coupons} />}
+      <AdminPageHeader eyebrow={admin("nav.groups.learners")} title={t("title")} description={t("description")} />
+      <section className="panel admin-card" aria-labelledby="admin-coupon-create">
+        <h2 id="admin-coupon-create">{t("create")}</h2>
+        <CouponCreateForm slugs={courses.map((course) => course.slug)} />
+      </section>
+      <section className="panel admin-card" aria-labelledby="admin-coupon-list">
+        <div className="admin-card-head">
+          <h2 id="admin-coupon-list">{t("listTitle")}</h2>
+          {!error && <span className="admin-count" dir="ltr">{coupons.length}</span>}
+        </div>
+        {error ? <p className="admin-status error" role="alert">{t("errors.failed")}</p> : <CouponTable coupons={coupons} />}
+      </section>
     </>
   );
 }

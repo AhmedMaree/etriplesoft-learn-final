@@ -73,6 +73,7 @@ test.beforeAll(async () => {
   await makeUser("main");
   await makeUser("unconfirmed", false);
   await makeUser("arabic", true, "ar");
+  await makeUser("settings");
 });
 
 test.afterAll(async () => {
@@ -158,6 +159,28 @@ test("destroyed session cookies lose protected access", async ({ page, context }
   await expect(page).toHaveURL(/\/en\/login\?next=%2Fen%2Fcertificates$/);
 });
 
+test("an idle session is signed out with a notice and its refresh token revoked", async ({ page, context }) => {
+  await login(page, "en", users.main.email);
+  await expect(page).toHaveURL(/\/en\/overview$/);
+  await page.reload(); // the proxy records activity from the first request after sign-in
+  const cookies = await context.cookies();
+  const activity = cookies.find((c) => c.name === "ets-session-activity");
+  expect(activity?.httpOnly).toBe(true);
+  const [sessionId, startedAt] = activity!.value.split(".");
+  const eightDaysAgo = Math.floor(Date.now() / 1000) - 8 * 24 * 60 * 60;
+  const auth = cookies.filter((c) => /^sb-.*-auth-token(\.\d+)?$/.test(c.name));
+  const joined = auth.sort((a, b) => a.name.localeCompare(b.name)).map((c) => c.value).join("");
+  const refreshToken = JSON.parse(Buffer.from(joined.slice(7), "base64url").toString("utf8")).refresh_token;
+  await context.addCookies([{ ...activity!, value: `${sessionId}.${startedAt}.${eightDaysAgo}` }]);
+
+  await page.goto("/en/settings");
+  await expect(page).toHaveURL(/\/en\/login\?next=%2Fen%2Fsettings&notice=sessionExpired$/);
+  await expect(page.locator("#auth-error")).toContainText("signed out");
+  const signedOut = createClient(url!, publishableKey!, { auth: { autoRefreshToken: false, persistSession: false } });
+  const { error } = await signedOut.auth.refreshSession({ refresh_token: refreshToken });
+  expect(error).not.toBeNull();
+});
+
 test("profile and preferences persist across reload and in the database", async ({ page }) => {
   await login(page, "en", users.main.email);
   await expect(page).toHaveURL(/\/en\/overview$/);
@@ -214,6 +237,63 @@ test("avatar upload, replacement, and rejected file keep the last valid image", 
   expect(await storedSize()).toBe(png2.length);
   const { data } = await service.from("profiles").select("avatar_object_key").eq("id", users.main.id).single();
   expect(data?.avatar_object_key).toBe(key);
+  await logout(page);
+});
+
+test("settings saves learner details and time zone, and tabs deep-link", async ({ page }) => {
+  await login(page, "en", users.settings.email);
+  await expect(page).toHaveURL(/\/en\/overview$/);
+  await page.goto("/en/settings");
+  await page.locator(".learner-type-options label", { hasText: /Professional/ }).click();
+  await page.locator('input[name="job_title"]').fill("Odoo Consultant");
+  await page.locator('input[name="years_experience"]').fill("4");
+  await page.locator("select[name='timezone']").selectOption("Asia/Dubai");
+  await page.locator(".settings-buttons button[type=submit]").click();
+  await expect(page.locator(".toast").first()).toBeVisible();
+  await expect.poll(async () => (await service.from("learner_profiles").select("learner_type, job_title, years_experience, university").eq("user_id", users.settings.id).single()).data)
+    .toEqual({ learner_type: "professional", job_title: "Odoo Consultant", years_experience: 4, university: null });
+  const { data: prefs } = await service.from("learner_preferences").select("timezone").eq("user_id", users.settings.id).single();
+  expect(prefs?.timezone).toBe("Asia/Dubai");
+
+  await page.locator(".settings-nav [role=tab]", { hasText: /Security/ }).click();
+  await expect(page).toHaveURL(/\/en\/settings\?tab=security$/);
+  await page.reload();
+  await expect(page.locator(".settings-nav [role=tab][aria-selected=true]")).toContainText("Security");
+  await logout(page);
+});
+
+test("data export returns only the signed-in learner's data", async ({ page }) => {
+  expect((await page.request.get("/api/account/export")).status()).toBe(401);
+  await login(page, "en", users.settings.email);
+  await expect(page).toHaveURL(/\/en\/overview$/);
+  const response = await page.request.get("/api/account/export");
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-disposition"]).toMatch(/^attachment;/);
+  const body = await response.json();
+  expect(body.account.id).toBe(users.settings.id);
+  expect(body.account.email).toBe(users.settings.email);
+  await logout(page);
+});
+
+test("settings password change requires the current password", async ({ page }) => {
+  await login(page, "en", users.settings.email);
+  await expect(page).toHaveURL(/\/en\/overview$/);
+  await page.goto("/en/settings?tab=security");
+  await page.locator('input[name="current_password"]').fill("wrong-password-1");
+  await page.locator('input[name="new_password"]').fill(newPassword);
+  await page.locator('input[name="confirm_password"]').fill(newPassword);
+  await page.locator("form.settings-subsection button[type=submit]").click();
+  await expect(page.locator(".settings-message.error")).toBeVisible();
+
+  await page.locator('input[name="current_password"]').fill(password);
+  await page.locator("form.settings-subsection button[type=submit]").click();
+  await expect(page.locator(".settings-message.success")).toBeVisible();
+  await logout(page);
+
+  await login(page, "en", users.settings.email, password);
+  await expect(page.locator("#auth-error")).toBeVisible();
+  await login(page, "en", users.settings.email, newPassword);
+  await expect(page).toHaveURL(/\/en\/overview$/);
   await logout(page);
 });
 

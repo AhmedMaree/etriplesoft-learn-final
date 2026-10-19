@@ -170,6 +170,19 @@ export async function listCatalogCourses(
   };
 }
 
+/** Count only: skips the row query when the caller needs just the total. */
+export async function countCatalogCourses(
+  client: Client,
+  options: { locale: Locale; category?: string },
+): Promise<number> {
+  const { data, error } = await client.rpc("catalog_count_courses", {
+    p_locale: options.locale,
+    p_category: options.category,
+  });
+  if (error) fail(error);
+  return Number(data ?? 0);
+}
+
 export async function listCatalogCategories(
   client: Client,
   locale: Locale,

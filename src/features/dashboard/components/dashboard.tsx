@@ -16,10 +16,11 @@ import { getCatalogCourseDurations, getCatalogCourseOutline, listCatalogCourses 
 import { AvailableCourses, YourCourses, type OverviewCourse } from '@/features/dashboard/components/overview-courses';
 import { getLearningSummary } from '@/features/learning/server/summary';
 import { LearningSummaryPanel, QuickLinksCard } from '@/features/learning/components/learning-summary';
+import { LearningStreakCard } from '@/features/learning/components/learning-streak';
+import { getLearningStreak } from '@/features/calendar/server/calendar';
 
 export function AICard() {
   const t = useTranslations("dashboard");
-  if (!demoFeaturesEnabled) return null;
   return (
     <Panel className="ai-small">
       <Title link="">
@@ -51,7 +52,7 @@ export async function Overview() {
   const locale = await getLocale();
   if (!isLocale(locale)) throw new Error('Unsupported locale.');
   const client = await createClient();
-  const [summary, catalog] = await Promise.all([getLearningSummary(locale),listCatalogCourses(client,{locale,limit:3})]);
+  const [summary, catalog, streak] = await Promise.all([getLearningSummary(locale),listCatalogCourses(client,{locale,limit:3}),getLearningStreak()]);
   const courses = await withCardDetails(client, locale, catalog.courses);
   return (
     <div className="columns">
@@ -109,13 +110,14 @@ export async function Overview() {
       </div>
       <aside className="right-rail">
         <LearningSummaryPanel summary={summary} />
+        <LearningStreakCard streak={streak} />
         <AICard />
         <QuickLinksCard
           links={[
             { href: "/courses", icon: BookOpen, title: t("browseCourses"), subtitle: learningT("browseSubtitle"), tone: "blue" },
             ...(demoFeaturesEnabled ? [{ href: "/community", icon: Users, title: t("joinCommunity"), subtitle: learningT("communitySubtitle"), tone: "green" }] : []),
             { href: "/certificates", icon: Award, title: t("certifications"), subtitle: learningT("certificatesSubtitle"), tone: "purple" },
-            ...(demoFeaturesEnabled ? [{ href: "/calendar", icon: CalendarDays, title: t("calendar"), subtitle: learningT("calendarSubtitle"), tone: "orange" }] : []),
+            { href: "/calendar", icon: CalendarDays, title: t("calendar"), subtitle: learningT("calendarSubtitle"), tone: "orange" },
           ]}
         />
       </aside>

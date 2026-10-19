@@ -20,7 +20,7 @@ Target architecture:
 - Supabase PostgreSQL and Auth in later phases
 - Mux for protected course video in later phases
 - Kashier for payments in later phases
-- OpenAI for the AI learning assistant in later phases
+- Google Gemini for the AI learning assistant
 - Vercel deployment
 
 Do not introduce additional major frameworks without a clear technical reason.
@@ -62,7 +62,7 @@ Instruction priority is: explicit user instructions, this `AGENTS.md`, relevant 
 | `visual-parity` | `.agents/skills/visual-parity/SKILL.md` | Preserve the approved interface and compare implementation with the approved reference. | Whenever modifying an existing approved interface, including frontend refactors, component extraction, UI architecture changes, responsive fixes, and existing-page implementation. It is not permission to redesign. |
 | `responsive-qa` | `.agents/skills/responsive-qa/SKILL.md` | Verify changed interfaces for responsive defects. | During verification after frontend or layout changes; check 320, 375, 430, 768, 1024, 1280, 1440, and 1920px. Use mainly for verification, not unrelated backend work. |
 | `code-quality` | `.agents/skills/code-quality/SKILL.md` | Review refactors, architecture cleanup, duplication/dead code, Server/Client boundaries, and maintainability. | During final maintainability review for refactors and architecture changes. It does not justify unrelated refactoring. |
-| `security-review` | `.agents/skills/security-review/SKILL.md` | Review trust boundaries, authorization, secrets, and security-sensitive behavior. | For authentication, authorization, Supabase, RLS, user data, payments/Kashier, webhooks, assessments, certificates, protected video/Mux, AI APIs/OpenAI, uploads, secrets, or admin permissions. Security-sensitive logic must never rely solely on browser-side checks. |
+| `security-review` | `.agents/skills/security-review/SKILL.md` | Review trust boundaries, authorization, secrets, and security-sensitive behavior. | For authentication, authorization, Supabase, RLS, user data, payments/Kashier, webhooks, assessments, certificates, protected video/Mux, AI APIs/Gemini, uploads, secrets, or admin permissions. Security-sensitive logic must never rely solely on browser-side checks. |
 | `i18n-rtl` | `.agents/skills/i18n-rtl/SKILL.md` | English/Arabic localization, locale routing, translated UI, and RTL/LTR behavior. | Whenever frontend work involves visible text, layouts, navigation, routing, forms, metadata, Arabic typography, direction, or locale behavior; mandatory for major frontend restructuring, new reusable UI with text/direction, locale routing changes, Arabic implementation, and RTL bug fixes. |
 | `lms-database-architecture` | `.agents/skills/lms-database-architecture/SKILL.md` | Model and review LMS PostgreSQL/Supabase schema, relationships, localization, migrations, and transaction boundaries. | For database architecture, schema design/review, or migration planning. Architecture-only requests do not authorize schema implementation. |
 | `supabase-security` | `.agents/skills/supabase-security/SKILL.md` | Design and review Supabase RLS, roles, storage policies, RPCs, and privileged data workflows. | For any Supabase schema, authentication, authorization, RLS, storage, or privileged workflow; use with `security-review`. |
@@ -134,7 +134,7 @@ Use an assessment skill when available, `security-review`, and tests. Ensure sco
 
 Use a certificate skill when available, `security-review`, and tests. Ensure eligibility is server-authoritative, identifiers are unique, certificates are verifiable, and client state alone cannot issue them.
 
-#### AI, OpenAI, or RAG
+#### AI, Gemini, or RAG
 
 Use an AI integration skill when available, `security-review`, and the evaluation/testing procedure. Review API key protection, rate limiting, prompt-injection exposure, tool permissions, retrieval scope, user authorization, course entitlement, and data-access boundaries.
 

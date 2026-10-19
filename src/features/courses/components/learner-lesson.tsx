@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
 import { LessonPlayer } from "@/features/learning/components/lesson-player";
 import { LearnerQuiz } from "@/features/assessments/components/learner-quiz";
+import { QuizLockNav } from "@/features/assessments/components/quiz-lock-nav";
 import { CompletionControls } from "@/features/learning/components/completion-controls";
 import type { CatalogCourseDetail, CatalogOutlineLesson, LearnerLesson } from "@/features/courses/server/course-repository";
 import { courseHref, lessonHref } from "./course-links";
@@ -19,6 +20,9 @@ type Props = {
   autoplayNext: boolean;
   progress: { lesson_id: string; status: string; percent: number; updated_at: string }[];
   resources: { resource_id: string; label: string; description: string }[];
+  enrolled: boolean;
+  /** Lessons the database lets the caller open now (sequential learning). */
+  unlocked: Set<string>;
 };
 
 /** "4:28" / "1:02:05" for a lesson row; null when the duration is not known yet. */
@@ -30,7 +34,7 @@ function clock(seconds: number | null) {
   return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${s}` : `${m}:${s}`;
 }
 
-export async function LearnerLessonView({ course, outline, lessonId, lesson, locale, trackProgress, adminPreview, autoplayNext, progress, resources }: Props) {
+export async function LearnerLessonView({ course, outline, lessonId, lesson, locale, trackProgress, adminPreview, autoplayNext, progress, resources, enrolled, unlocked }: Props) {
   const t = await getTranslations("courses");
   const navigationT = await getTranslations("navigation");
   const completionT = await getTranslations('completion');
@@ -40,6 +44,12 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
   const previous = outline[index - 1] ?? null;
   const next = outline[index + 1] ?? null;
   const moduleIndex = [...new Set(outline.map((item) => item.moduleId))].indexOf(current.moduleId);
+  const isCompleted = (id: string) => progress.some((row) => row.lesson_id === id && row.status === 'completed');
+  // An enrolled learner without access is waiting on earlier required lessons; point them at the first one left.
+  const sequenceLocked = !lesson && enrolled;
+  const resumeLesson = sequenceLocked
+    ? outline.find((item) => item.isRequired && unlocked.has(item.lessonId) && !isCompleted(item.lessonId)) ?? null
+    : null;
 
   const modules: { id: string; title: string; lessons: (CatalogOutlineLesson & { number: number })[] }[] = [];
   outline.forEach((item, position) => {
@@ -47,6 +57,79 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
     if (!group) modules.push(group = { id: item.moduleId, title: item.moduleTitle, lessons: [] });
     group.lessons.push({ ...item, number: position + 1 });
   });
+
+  const details = (
+    <>
+      {lesson && !readingReady && <p className="panel lesson-notes" role="status">{completionT('contentPending')}</p>}
+
+      {(lesson?.summary || lesson?.body) && (
+        <section className="panel lesson-notes">
+          <h2>{t("lessonNotes")}</h2>
+          {lesson.summary && <p dir="auto">{lesson.summary}</p>}
+          {lesson.body && <div dir="auto" className="lesson-body">{lesson.body}</div>}
+        </section>
+      )}
+      {resources.length > 0 && <section className="panel lesson-resources">
+        <h2>{t('resources')}</h2>
+        <ul>{resources.map((resource) => <li key={resource.resource_id}>
+          <a href={`/api/learning/resources/${resource.resource_id}?lessonId=${lessonId}&locale=${locale}`}>
+            <span className="lesson-resource-icon" aria-hidden="true"><FileText size={20} /></span>
+            <span className="lesson-resource-text">
+              <strong dir="auto">{resource.label}</strong>
+              {resource.description && <small dir="auto">{resource.description}</small>}
+            </span>
+            <Download size={18} className="lesson-resource-action" aria-hidden="true" />
+          </a>
+        </li>)}</ul>
+      </section>}
+
+      {trackProgress && lesson && readingReady && <CompletionControls courseId={course.id} locale={locale} {...(['article','resource'].includes(lesson.lessonType) ? {lessonId,lessonCompleted:progress.some(row=>row.lesson_id===lessonId&&row.status==='completed')} : {})} />}
+
+      <QuizLockNav className="lesson-pager" label={t("lessonNavigation")}>
+        {previous ? (
+          <Link className="lesson-pager-link" href={lessonHref(course.slug, previous.lessonId)}>
+            <ArrowLeft size={18} className="flip-rtl" aria-hidden="true" />
+            <span>
+              <small>{t("previousLesson")}</small>
+              <strong dir="auto">{previous.lessonTitle}</strong>
+            </span>
+          </Link>
+        ) : <span />}
+        {next ? (
+          <Link className="lesson-pager-link is-next" href={lessonHref(course.slug, next.lessonId)}>
+            <span>
+              <small>{t("nextLesson")}</small>
+              <strong dir="auto">{next.lessonTitle}</strong>
+            </span>
+            <ArrowRight size={18} className="flip-rtl" aria-hidden="true" />
+          </Link>
+        ) : (
+          <Link className="lesson-pager-link is-next" href={courseHref(course.slug)}>
+            <span><strong>{t("backToCourse")}</strong></span>
+            <ArrowRight size={18} className="flip-rtl" aria-hidden="true" />
+          </Link>
+        )}
+      </QuizLockNav>
+    </>
+  );
+
+  if (lesson?.lessonType === "assessment")
+    return (
+      <div className="assessment-page">
+        {adminPreview && <p className="panel lesson-notes" role="status">{t("adminPreviewNotice")}</p>}
+        <section className="panel assessment-shell">
+          <QuizLockNav className="crumb" label={navigationT("courseBreadcrumb")}>
+            <Link href="/courses">{t("allCourses")}</Link>
+            <ChevronRight className="flip-rtl" aria-hidden="true" />
+            <Link href={courseHref(course.slug)} dir="auto">{course.title}</Link>
+            <ChevronRight className="flip-rtl" aria-hidden="true" />
+            <span aria-current="page" dir="auto">{current.lessonTitle}</span>
+          </QuizLockNav>
+          <LearnerQuiz lessonId={lessonId} locale={locale} course={{ title: course.title, slug: course.slug }} />
+        </section>
+        {details}
+      </div>
+    );
 
   return (
     <div className="lesson-layout">
@@ -58,7 +141,7 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
           <Link href={courseHref(course.slug)} dir="auto">{course.title}</Link>
         </nav>
 
-        {lesson?.lessonType === 'assessment' ? <LearnerQuiz lessonId={lessonId} locale={locale} /> : lesson ? (
+        {lesson ? (
           lesson.lessonType === "video" && (
             <LessonPlayer
               key={lessonId}
@@ -72,11 +155,21 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
           )
         ) : (
           <div className="lesson-player lesson-player-message">
-            <div role="alert">
-              <Lock size={28} aria-hidden="true" />
-              <p>{t("lessonLocked")}</p>
-              <Link className="btn" href={courseHref(course.slug)}>{t("goToEnrollment")}</Link>
-            </div>
+            {sequenceLocked ? (
+              <div role="alert">
+                <Lock size={28} aria-hidden="true" />
+                <p>{t(current.lessonType === "assessment" && current.isRequired ? "assessmentSequenceLocked" : "lessonSequenceLocked")}</p>
+                <Link className="btn" href={resumeLesson ? lessonHref(course.slug, resumeLesson.lessonId) : courseHref(course.slug)}>
+                  {resumeLesson ? t("goToNextRequiredLesson") : t("backToCourse")}
+                </Link>
+              </div>
+            ) : (
+              <div role="alert">
+                <Lock size={28} aria-hidden="true" />
+                <p>{t("lessonLocked")}</p>
+                <Link className="btn" href={courseHref(course.slug)}>{t("goToEnrollment")}</Link>
+              </div>
+            )}
           </div>
         )}
 
@@ -88,56 +181,7 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
           <p className="lesson-position">{t("lessonOf", { n: index + 1, total: outline.length })}</p>
         </header>
 
-        {lesson && !readingReady && <p className="panel lesson-notes" role="status">{completionT('contentPending')}</p>}
-
-        {(lesson?.summary || lesson?.body) && (
-          <section className="panel lesson-notes">
-            <h2>{t("lessonNotes")}</h2>
-            {lesson.summary && <p dir="auto">{lesson.summary}</p>}
-            {lesson.body && <div dir="auto" className="lesson-body">{lesson.body}</div>}
-          </section>
-        )}
-        {resources.length > 0 && <section className="panel lesson-resources">
-          <h2>{t('resources')}</h2>
-          <ul>{resources.map((resource) => <li key={resource.resource_id}>
-            <a href={`/api/learning/resources/${resource.resource_id}?lessonId=${lessonId}&locale=${locale}`}>
-              <span className="lesson-resource-icon" aria-hidden="true"><FileText size={20} /></span>
-              <span className="lesson-resource-text">
-                <strong dir="auto">{resource.label}</strong>
-                {resource.description && <small dir="auto">{resource.description}</small>}
-              </span>
-              <Download size={18} className="lesson-resource-action" aria-hidden="true" />
-            </a>
-          </li>)}</ul>
-        </section>}
-
-        {trackProgress && lesson && readingReady && <CompletionControls courseId={course.id} locale={locale} {...(['article','resource'].includes(lesson.lessonType) ? {lessonId,lessonCompleted:progress.some(row=>row.lesson_id===lessonId&&row.status==='completed')} : {})} />}
-
-        <nav className="lesson-pager" aria-label={t("lessonNavigation")}>
-          {previous ? (
-            <Link className="lesson-pager-link" href={lessonHref(course.slug, previous.lessonId)}>
-              <ArrowLeft size={18} className="flip-rtl" aria-hidden="true" />
-              <span>
-                <small>{t("previousLesson")}</small>
-                <strong dir="auto">{previous.lessonTitle}</strong>
-              </span>
-            </Link>
-          ) : <span />}
-          {next ? (
-            <Link className="lesson-pager-link is-next" href={lessonHref(course.slug, next.lessonId)}>
-              <span>
-                <small>{t("nextLesson")}</small>
-                <strong dir="auto">{next.lessonTitle}</strong>
-              </span>
-              <ArrowRight size={18} className="flip-rtl" aria-hidden="true" />
-            </Link>
-          ) : (
-            <Link className="lesson-pager-link is-next" href={courseHref(course.slug)}>
-              <span><strong>{t("backToCourse")}</strong></span>
-              <ArrowRight size={18} className="flip-rtl" aria-hidden="true" />
-            </Link>
-          )}
-        </nav>
+        {details}
       </div>
 
       <aside className="panel lesson-sidebar" aria-label={t("courseContent")}>
@@ -153,17 +197,18 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
             <ol>
               {module.lessons.map((item) => {
                 const active = item.lessonId === lessonId;
-                const Icon = item.lessonType === "video" ? CirclePlay : FileText;
+                const locked = !unlocked.has(item.lessonId);
+                const Icon = locked ? Lock : item.lessonType === "video" ? CirclePlay : FileText;
                 return (
                   <li key={item.lessonId}>
                     <Link
                       href={lessonHref(course.slug, item.lessonId)}
-                      className={active ? "active" : undefined}
+                      className={[active && "active", locked && "is-locked"].filter(Boolean).join(" ") || undefined}
                       aria-current={active ? "page" : undefined}
                     >
-                      <Icon size={18} aria-hidden="true" />
+                      <Icon size={18} aria-hidden={!locked} aria-label={locked ? t("lessonLockedShort") : undefined} />
                       <span className="lesson-row-title" dir="auto">{item.number}. {item.lessonTitle}</span>
-                      {progress.some((row) => row.lesson_id === item.lessonId && row.status === 'completed') && <small>{t('lessonCompleted')}</small>}
+                      {isCompleted(item.lessonId) && <small>{t('lessonCompleted')}</small>}
                       {clock(item.durationSeconds) && <small>{clock(item.durationSeconds)}</small>}
                     </Link>
                   </li>

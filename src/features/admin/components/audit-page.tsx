@@ -2,16 +2,11 @@ import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n/config'
 import { createClient } from '@/lib/supabase/server'
 import { ADMIN_PAGE_SIZE } from '../roles'
+import { auditAction } from '../audit-actions'
 import { formatAdminDate } from '../format'
 import { AdminDenied } from './admin-denied'
+import { AdminPageHeader } from './admin-page-header'
 import { AdminPager } from './admin-pager'
-
-function actionKey(action: string): 'granted' | 'revoked' | 'lookedUp' | null {
-  if (action === 'user_role.granted') return 'granted'
-  if (action === 'user_role.revoked') return 'revoked'
-  if (action === 'user.looked_up') return 'lookedUp'
-  return null
-}
 
 export async function AuditPage({ locale, page }: { locale: Locale; page: number }) {
   const t = await getTranslations({ locale, namespace: 'admin' })
@@ -29,12 +24,14 @@ export async function AuditPage({ locale, page }: { locale: Locale; page: number
 
   return (
     <>
-      <h1>{t('audit.title')}</h1>
-      <p className="admin-lead">{t('audit.subtitle')}</p>
-      <section className="panel" aria-labelledby="admin-audit-title">
-        <h2 id="admin-audit-title" className="admin-visually-hidden">{t('audit.title')}</h2>
+      <AdminPageHeader eyebrow={t('nav.groups.security')} title={t('audit.title')} description={t('audit.subtitle')} />
+      <section className="panel admin-card" aria-labelledby="admin-audit-title">
+        <div className="admin-card-head">
+          <h2 id="admin-audit-title">{t('audit.entries')}</h2>
+          {total > 0 && <span className="admin-count" dir="ltr">{total}</span>}
+        </div>
         {rows.length === 0 ? (
-          <p>{t('audit.empty')}</p>
+          <p className="admin-empty">{t('audit.empty')}</p>
         ) : (
           <div className="admin-table-wrap" tabIndex={0} role="region" aria-labelledby="admin-audit-title">
             <table className="admin-table">
@@ -48,11 +45,11 @@ export async function AuditPage({ locale, page }: { locale: Locale; page: number
               </thead>
               <tbody>
                 {rows.map((row) => {
-                  const key = actionKey(row.action)
+                  const { key, tone } = auditAction(row.action)
                   return (
                     <tr key={row.id}>
                       <td>{formatAdminDate(row.occurred_at, locale)}</td>
-                      <td>{key ? t(`audit.actions.${key}`) : row.action}</td>
+                      <td><span className={`admin-tag ${tone}`}>{key ? t(`audit.actions.${key}`) : row.action}</span></td>
                       <td>
                         <strong>{row.actor_name ?? t('table.unnamed')}</strong>
                         <span className="admin-ltr" dir="ltr">{row.actor_email ?? ''}</span>

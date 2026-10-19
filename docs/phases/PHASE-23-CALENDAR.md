@@ -4,7 +4,7 @@
 
 PLANNED
 
-Evidence: calendar-page.tsx and demo-events.ts provide April 2024 events and local ICS export. Persistent calendar/live sessions are explicitly later in database architecture.
+Evidence (2026-10-18): D04 approved by user request; status IN PROGRESS. Migration `20261018230000_calendar_notifications_streaks.sql` adds `course_events` (+translations) and `learner_study_sessions` behind narrow RPCs; `/calendar` is authenticated and database-backed (month/week/agenda in the learner's time zone, ICS export at `/api/calendar/ics`); administrators schedule and cancel events at `/admin/calendar` (audited). Migration `20261019130000_instructor_course_scheduling.sql` (user request 2026-10-19) also lets an active instructor assigned to a course schedule and cancel that course's events at `/schedule`; suite `supabase/tests/database/instructor_scheduling.sql` passes 21/21. Local pgTAP suite `supabase/tests/database/calendar_notifications.sql` passes 50/50; typecheck, lint and build pass. Hosted DEV migration, eight-width EN/AR evidence and manual sign-off remain.
 
 ## 2. Goal
 

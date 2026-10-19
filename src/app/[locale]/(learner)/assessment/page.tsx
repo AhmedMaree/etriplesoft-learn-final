@@ -7,6 +7,9 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { lessonHref } from "@/features/courses/components/course-links";
+import { courseImage } from "@/features/courses/components/course-image";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 
 export async function generateMetadata({
   params,
@@ -36,21 +39,28 @@ export default async function AssessmentRoute({
         title="Let’s keep learning!"
         subtitle="Build in-demand skills with expert-led Odoo courses and take your career to the next level."
       />
-      <section className="panel assessment-shell">
+      <section className="panel assessment-shell assessment-directory">
         <h2>{t("directory")}</h2>
         {!data?.length && <p>{t("noAssessments")}</p>}
-        {data?.map((lesson) => (
-          <p key={lesson.lesson_id}>
-            <Link
-              className="btn outline"
-              href={lessonHref(lesson.course_slug, lesson.lesson_id)}
-            >
-              <span dir="auto">
-                {lesson.course_title} — {lesson.title}
-              </span>
-            </Link>
-          </p>
-        ))}
+        {!!data?.length && (
+          <ul>
+            {data.map((lesson) => (
+              <li key={lesson.lesson_id} className="assessment-heading">
+                <span className="odoo-tile assessment-tile">
+                  <Image src={courseImage(lesson.course_slug)} alt="" fill sizes="72px" />
+                </span>
+                <div>
+                  <div className="eyebrow" dir="auto">{lesson.title}</div>
+                  <h3 dir="auto">{lesson.course_title}</h3>
+                </div>
+                <Link className="btn" href={lessonHref(lesson.course_slug, lesson.lesson_id)}>
+                  {t("open")}
+                  <ArrowRight size={18} className="flip-rtl" aria-hidden="true" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </>
   );

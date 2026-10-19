@@ -2,6 +2,8 @@
 -- Runs in a rolled-back transaction under `npm run db:test` (disposable local/CI Supabase).
 -- Own fixtures use the 'pgtap-' slug prefix; the seeded demo courses are only read, never changed.
 BEGIN;
+-- Test sessions are MFA-verified (aal2) unless a test clears this; admin authority requires it.
+SELECT pg_catalog.set_config('request.jwt.claim', '{"aal":"aal2"}', true);
 
 SELECT plan(84);
 

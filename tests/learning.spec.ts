@@ -187,43 +187,32 @@ test("legacy assessment entry requires authentication instead of client grading"
   // Persisted grading/resume/certificate eligibility are covered by assessment-flow.spec.ts
   // against real local Supabase, rather than fixed public answer arrays.
 });
-test("assistant sends local replies and context switch is interactive", async ({
+test("AI assistant requires sign-in and its API rejects anonymous or cross-origin calls", async ({
   page,
+  request,
 }) => {
-  await page.goto("/en/ai-page");
-  await page
-    .getByRole("textbox", { name: "Ask the AI assistant" })
-    .fill("Recommend a course");
-  await page.getByRole("button", { name: "Send message" }).click();
-  await expect(page.locator(".message.user").last()).toContainText(
-    "Recommend a course",
-  );
-  await expect(page.locator(".message.assistant").last()).toContainText(
-    "Python Fundamentals",
-  );
-  const toggle = page.getByRole("switch", {
-    name: "Use current course context",
+  await page.goto("/ar/ai-page");
+  await expect(page).toHaveURL(/\/ar\/login\?next=%2Far%2Fai-page$/);
+  const origin = new URL(page.url()).origin;
+  const anonymous = await request.post("/api/ai/chat", {
+    headers: { origin },
+    data: { locale: "en", message: "Explain Odoo CRM", conversationId: null, courseSlug: null, mode: "fast" },
   });
-  await toggle.click();
-  await expect(toggle).toHaveAttribute("aria-checked", "false");
+  expect([401, 503]).toContain(anonymous.status());
+  const foreign = await request.post("/api/ai/chat", {
+    headers: { origin: "https://attacker.example" },
+    data: { locale: "en", message: "Explain Odoo CRM" },
+  });
+  expect(foreign.status()).toBe(403);
+  const history = await request.get("/api/ai/conversations/00000000-0000-4000-8000-000000000000");
+  expect(history.status()).toBe(401);
 });
-test("calendar changes months, switches views and downloads an import file", async ({
-  page,
-}) => {
+test("calendar and its export require authentication", async ({ page, request }) => {
   await page.goto("/en/calendar");
-  await page.getByRole("button", { name: "Next month" }).click();
-  await expect(page.locator(".calendar-toolbar")).toContainText("May 2024");
-  await page.getByRole("button", { name: "Today", exact: true }).click();
-  await page.getByRole("button", { name: "Agenda", exact: true }).click();
-  await expect(page.locator(".agenda button")).toHaveCount(11);
-  await page.locator(".agenda button").first().click();
-  await expect(page.getByRole("dialog")).toContainText("Odoo ERP Live Session");
-  await page.getByRole("button", { name: "Close event" }).click();
-  const file = page.waitForEvent("download");
-  await page
-    .getByRole("button", { name: "Sync Calendar", exact: true })
-    .click();
-  expect((await file).suggestedFilename()).toBe("etriplesoft-learning.ics");
+  await expect(page).toHaveURL(/\/en\/login\?next=%2Fen%2Fcalendar/);
+  const ics = await request.get("/api/calendar/ics");
+  expect(ics.status()).toBe(401);
+  expect(await ics.text()).not.toContain("BEGIN:VCALENDAR");
 });
 test("checkout requires authentication and never renders demo card collection", async ({
   page,
@@ -263,7 +252,7 @@ test("legacy routes, query strings, and language switching preserve the page", a
   const legacy = [
     ["/courses?q=Python", "/en/courses?q=Python"],
     ["/detail-course", "/en/courses"],
-    ["/ai-page", "/en/ai-page"],
+    ["/ai-page", "/en/login?next=%2Fen%2Fai-page"],
     ["/community", "/en/community"],
     ["/messages", "/en/messages"],
     ["/calendar", "/en/calendar"],

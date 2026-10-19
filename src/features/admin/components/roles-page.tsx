@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { ADMIN_PAGE_SIZE } from '../roles'
 import { formatAdminDate } from '../format'
 import { AdminDenied } from './admin-denied'
+import { AdminPageHeader } from './admin-page-header'
 import { AdminPager } from './admin-pager'
 import { GrantRoleForm } from './grant-role-form'
 import { RevokeRoleButton } from './revoke-role-button'
@@ -25,19 +26,21 @@ export async function RolesPage({ locale, page }: { locale: Locale; page: number
 
   return (
     <>
-      <h1>{t('roles.title')}</h1>
-      <p className="admin-lead">{t('roles.subtitle')}</p>
+      <AdminPageHeader eyebrow={t('nav.groups.security')} title={t('roles.title')} description={t('roles.subtitle')} />
 
-      <section className="panel" aria-labelledby="admin-grant-title">
+      <section className="panel admin-card" aria-labelledby="admin-grant-title">
         <h2 id="admin-grant-title">{t('grant.title')}</h2>
         <p className="admin-hint">{t('grant.hint')}</p>
         <GrantRoleForm />
       </section>
 
-      <section className="panel" aria-labelledby="admin-grants-title">
-        <h2 id="admin-grants-title">{t('table.title')}</h2>
+      <section className="panel admin-card" aria-labelledby="admin-grants-title">
+        <div className="admin-card-head">
+          <h2 id="admin-grants-title">{t('table.title')}</h2>
+          {total > 0 && <span className="admin-count" dir="ltr">{total}</span>}
+        </div>
         {rows.length === 0 ? (
-          <p>{t('table.empty')}</p>
+          <p className="admin-empty">{t('table.empty')}</p>
         ) : (
           <div className="admin-table-wrap" tabIndex={0} role="region" aria-labelledby="admin-grants-title">
             <table className="admin-table">
@@ -58,10 +61,15 @@ export async function RolesPage({ locale, page }: { locale: Locale; page: number
                   return (
                     <tr key={row.id}>
                       <td>
-                        <strong>{name}</strong>
-                        <span className="admin-ltr" dir="ltr">{row.email ?? ''}</span>
+                        <span className="admin-person">
+                          <span className="admin-avatar" aria-hidden="true">{(row.display_name || row.email || '?').slice(0, 1).toUpperCase()}</span>
+                          <span>
+                            <strong>{name}</strong>
+                            <span className="admin-ltr" dir="ltr">{row.email ?? ''}</span>
+                          </span>
+                        </span>
                       </td>
-                      <td>{roleLabel}</td>
+                      <td><span className={`admin-tag ${row.role === 'admin' ? 'security' : 'content'}`}>{roleLabel}</span></td>
                       <td>
                         {formatAdminDate(row.granted_at, locale)}
                         <span className="admin-sub">{t('table.by', { name: row.granted_by_name ?? t('table.unnamed') })}</span>
@@ -81,7 +89,7 @@ export async function RolesPage({ locale, page }: { locale: Locale; page: number
             </table>
           </div>
         )}
-        <AdminPager href="/admin" page={page} total={total} />
+        <AdminPager href="/admin/roles" page={page} total={total} />
       </section>
     </>
   )

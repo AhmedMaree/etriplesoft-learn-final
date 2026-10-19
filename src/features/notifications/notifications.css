@@ -1,0 +1,133 @@
+/* Header notification inbox. The bell keeps the approved header button styling. */
+.notification-count {
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border: 2px solid white;
+  border-radius: 9px;
+  background: var(--blue);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+}
+.popover.notification-popover {
+  width: min(380px, calc(100vw - 24px));
+  padding: 0;
+  /* Reset the physical `right` from .popover, then anchor to the logical end (left in RTL). */
+  right: auto;
+  inset-inline-end: 0;
+  overflow: hidden;
+}
+.notification-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 10px;
+}
+.notification-head .text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  border: 0;
+  background: none;
+  padding: 0;
+}
+.popover .notification-state {
+  margin: 0;
+  padding: 6px 16px 16px;
+  font-size: 14px;
+}
+.notification-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: min(420px, 60vh);
+  overflow-y: auto;
+  border-top: 1px solid var(--line);
+}
+.popover a.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: inherit;
+  border-bottom: 1px solid var(--line);
+}
+.popover a.notification-item:hover,
+.popover a.notification-item:focus-visible {
+  background: #f5f8fe;
+}
+.notification-item.unread {
+  background: #f3f8ff;
+}
+.notification-icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--lightblue);
+  color: var(--blue);
+}
+.notification-icon.green {
+  background: #dcf7ef;
+  color: #00895c;
+}
+.notification-icon.purple {
+  background: #f0eafe;
+  color: #7740ee;
+}
+.notification-icon.orange {
+  background: #fff5e8;
+  color: #c86a00;
+}
+.notification-icon.red {
+  background: #fff0f1;
+  color: #d52e43;
+}
+.notification-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.notification-text small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.notification-unread-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+.popover a.notification-footer {
+  justify-content: center;
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue);
+}
+@media (max-width: 640px) {
+  /* The bell is not at the screen edge on phones, so the panel spans the viewport instead. */
+  .popover.notification-popover {
+    position: fixed;
+    top: 64px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+}

@@ -4,6 +4,7 @@ import path from "node:path";
 import { test, expect, type Page } from "@playwright/test";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../src/types/database";
+import { completeAdminMfa, enrollTestAdminTotp, passAdminMfa } from "./support/admin-mfa";
 
 // Phase 06 screen evidence: admin pages and the denied state in both locales at the eight
 // required widths, plus keyboard/focus checks. Writes users and append-only audit rows that can
@@ -55,13 +56,15 @@ test.describe("admin screens", () => {
   const emailOf = (label: string) => `codex-screens-${runId}-${label}@example.test`;
   const ids: Record<string, string> = {};
   let service: SupabaseClient<Database>;
+  let adminSecret = "";
 
-  async function login(page: Page, locale: "en" | "ar", label: string) {
+  async function login(page: Page, locale: "en" | "ar", label: string, { mfa = true } = {}) {
     await page.goto(`/${locale}/login`);
     await page.locator('input[name="email"]').fill(emailOf(label));
     await page.locator('input[name="password"]').fill(password);
     await page.locator("form.auth-fields button[type=submit]").click();
     await expect(page).not.toHaveURL(/\/login/);
+    if (label === "admin" && mfa) await completeAdminMfa(page, locale, adminSecret);
   }
 
   test.beforeAll(async () => {
@@ -77,6 +80,7 @@ test.describe("admin screens", () => {
       const { error } = await service.from("user_roles").insert({ user_id: ids[label], role, granted_by: ids.admin });
       if (error) throw new Error(`grant ${label} failed: ${error.message}`);
     }
+    adminSecret = await enrollTestAdminTotp(url!, publishableKey!, emailOf("admin"), password);
   });
 
   for (const locale of ["en", "ar"] as const) {
@@ -84,10 +88,20 @@ test.describe("admin screens", () => {
       test.setTimeout(240000);
       const dir = locale === "ar" ? "rtl" : "ltr";
 
-      await login(page, locale, "admin");
+      // The authentication-code screen comes first for a password-only admin session.
+      await login(page, locale, "admin", { mfa: false });
+      await page.goto(`/${locale}/admin`);
       for (const width of widths) {
         await page.setViewportSize({ width, height: 900 });
-        for (const route of ["admin", "admin/audit"]) {
+        await expect(page.locator("#admin-mfa-title")).toBeVisible();
+        expect(await overflowReport(page), `MFA screen overflows at ${width}`).toBe("");
+        await page.screenshot({ path: path.join(shots, `${locale}-mfa-${width}.png`) });
+      }
+      await passAdminMfa(page, adminSecret);
+
+      for (const width of widths) {
+        await page.setViewportSize({ width, height: 900 });
+        for (const route of ["admin/roles", "admin/audit"]) {
           await page.goto(`/${locale}/${route}`);
           await page.waitForLoadState("networkidle");
           await expect(page.locator("html")).toHaveAttribute("dir", dir);
@@ -111,7 +125,7 @@ test.describe("admin screens", () => {
 
     test(`the grant form is keyboard operable with named controls and visible focus (${locale})`, async ({ page }) => {
       await login(page, locale, "admin");
-      await page.goto(`/${locale}/admin`);
+      await page.goto(`/${locale}/admin/roles`);
 
       // Every form control and button has an accessible name.
       for (const control of await page.locator("main form input:not([type=hidden]), main form select, main form button").all()) {

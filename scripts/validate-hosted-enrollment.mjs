@@ -12,6 +12,7 @@ import { readFile } from 'node:fs/promises'
 import { randomBytes } from 'node:crypto'
 import { spawnSync } from 'node:child_process'
 import { createClient } from '@supabase/supabase-js'
+import { enrollAdminTotp, verifyAdminTotp } from './lib/admin-mfa.mjs'
 
 const wanted = new Set([
   'NEXT_PUBLIC_SUPABASE_URL',
@@ -72,8 +73,18 @@ async function makeAdmin() {
   const link = must(await svc.auth.admin.generateLink({ type: 'magiclink', email: adminEmail }), 'generateLink')
   const client = mk(publishableKey)
   must(await client.auth.verifyOtp({ token_hash: link.properties.hashed_token, type: 'magiclink' }), 'verifyOtp')
+  // Admin RPCs need an MFA-verified (aal2) session. A synthetic admin without a factor gets a
+  // temporary one for this run (removed in cleanup); one with a factor needs its secret.
+  const factors = must(await client.auth.mfa.listFactors(), 'list MFA factors')
+  if (factors.totp.some((factor) => factor.status === 'verified')) {
+    await verifyAdminTotp(client, process.env.PHASE10_ADMIN_TOTP_SECRET)
+  } else {
+    await enrollAdminTotp(client)
+    temporaryFactorId = must(await client.auth.mfa.listFactors(), 'list MFA factors').totp.find((factor) => factor.status === 'verified')?.id
+  }
   return client
 }
+let temporaryFactorId
 
 const denied = (res) => Boolean(res.error)
 const codeOf = (res) => res.error?.code ?? res.error?.message ?? 'none'
@@ -212,6 +223,7 @@ try {
   try {
     if (courseId && admin) await admin.rpc('admin_set_course_status', { p_course_id: courseId, p_status: 'archived' })
     for (const l of Object.values(learners)) await svc.auth.admin.updateUserById(l.id, { ban_duration: '876000h' })
+    if (temporaryFactorId && admin) await admin.auth.mfa.unenroll({ factorId: temporaryFactorId })
   } catch (error) {
     console.error('cleanup warning:', error.message)
   }

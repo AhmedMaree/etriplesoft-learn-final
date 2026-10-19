@@ -52,9 +52,9 @@ Outside the 41 phases: the standalone `odoo-learn` site was ported into this app
 | [Phase 20](phases/PHASE-20-KASHIER-PAYMENTS.md) | Kashier Payments | IN PROGRESS | 19, 06 | 29, 34, 35 | Initialize provider checkout server-side using order snapshots |
 | [Phase 21](phases/PHASE-21-LEARNING-PATHS.md) | Learning Paths | PLANNED | 07, 17 | 22, 27, 30 | Publish translated ordered course paths |
 | [Phase 22](phases/PHASE-22-LEARNER-DASHBOARD.md) | Real Learner Dashboard | IN_PROGRESS | 09, 18, 21 | 23, 24, 31, 32, 33, 34, 35, 36 | Aggregate own enrollments, recent lessons, progress, completions and certificates |
-| [Phase 23](phases/PHASE-23-CALENDAR.md) | Calendar Scope & Integration | PLANNED | 22 | — | Maintain a DEFERRED V1 disposition until D04 changes |
-| [Phase 24](phases/PHASE-24-NOTIFICATIONS.md) | Notifications Scope & Integration | PLANNED | 22 | — | Maintain DEFERRED V1 disposition pending D05 |
-| [Phase 25](phases/PHASE-25-AI-ASSISTANT.md) | AI Learning Assistant | PLANNED | 08, 10, 12 | 31, 32, 33, 34, 35, 36 | Authorize course-scoped retrieval from real published content |
+| [Phase 23](phases/PHASE-23-CALENDAR.md) | Calendar Scope & Integration | IN PROGRESS | 22 | — | D04 approved 2026-10-18; local implementation and pgTAP suite pass; Hosted DEV migration pending |
+| [Phase 24](phases/PHASE-24-NOTIFICATIONS.md) | Notifications Scope & Integration | IN PROGRESS | 22 | — | D05 approved 2026-10-18 (in-app only); local implementation and pgTAP suite pass; Hosted DEV migration pending |
+| [Phase 25](phases/PHASE-25-AI-ASSISTANT.md) | AI Learning Assistant | IN_PROGRESS | 08, 10, 12 | 31, 32, 33, 34, 35, 36 | Authorize course-scoped retrieval from real published content |
 | [Phase 26](phases/PHASE-26-COMMUNITY-MESSAGES.md) | Community / Messages Disposition | PLANNED | 00 | — | Record DEFERRED scope for community/messages under current evidence |
 | [Phase 27](phases/PHASE-27-COURSE-ADMINISTRATION.md) | Course & Content Administration | IN_PROGRESS | 06, 08, 11, 14, 21 | 31, 32, 33, 34, 35, 36 | Build create/edit/preview/publish/archive course and curriculum workflows |
 | [Phase 28](phases/PHASE-28-LEARNER-ADMINISTRATION.md) | Learner / Enrollment Administration | PLANNED | 06, 18 | 31, 32, 33, 34, 35 | Provide least-privilege learner lookup and manual entitlement grant/revoke |
@@ -118,9 +118,9 @@ These existing files were not rewritten over user edits. This roadmap records re
 | Checkout/coupon | `payment.tsx` USD/LEARN10/local total/no-payment toast | Server order snapshots + verified Kashier webhook fulfillment | 19/20; no V1 coupon engine |
 | Paths | `learning-widgets.tsx` three static paths | Published translated ordered paths and derived completion | 21 |
 | Dashboard learning activity | `dashboard.tsx` fixture courses/lesson positions | Owner queries across verified domain models | 22 |
-| Calendar | `demo-events.ts`, calendar-page.tsx April 2024/ICS | Approved authoritative event sources only if activated | 23 DEFERRED |
-| Notifications | learner-header.tsx static dot/popover | Owner notifications/event delivery if activated; stored preferences already real | 24 DEFERRED |
-| AI | ai-page.tsx seeded in-memory messages/regex replies | Authorized grounded OpenAI service with citations/limits, no V1 history | 25 |
+| Calendar | `course_events` + `learner_study_sessions` via `learner_calendar_events`; demo events removed | Administrator-scheduled course events and personal study time | 23 IN PROGRESS |
+| Notifications | `notifications` inbox written by database triggers and reminder sync; header bell | In-app owner inbox; email delivery not approved | 24 IN PROGRESS |
+| AI | Gemini-backed assistant with enrolled-course grounding, database rate limits and saved owner-scoped history (2026-10-18) | Evaluation set, citation review, retention (D03), cost budget | 25 |
 | Community/messages | Route placeholder panels and community-promo.tsx | Approved exclusion first; separately scoped future service | 26 DEFERRED |
 | Settings/auth | Real Supabase actions/profile/avatar plus deferred tabs | Verify existing persistence; do not rebuild as missing backend | 05 |
 | Footer/legal/social/mobile app | site-footer.tsx, learner-sidebar.tsx, payment.tsx demo toasts | Approved real destinations/legal pages or truthful excluded state | 34 legal; 36 launch content |
@@ -174,9 +174,9 @@ Proposed, not implemented: course-identifier public detail (09); entitlement les
 | orders/order_items | 19 | Proposed only |
 | payments/payment_webhook_events / optional refund ledger | 20 | Proposed; refund detail OPEN |
 | learning_paths/path_translations/learning_path_courses | 21 | Proposed only |
-| Calendar event/audience domain | 23 | DEFERRED |
-| Notification/event delivery domain | 24 | DEFERRED |
-| AI retrieval contract, no V1 conversation storage | 25 | Planned; conversations/messages DEFERRED |
+| Calendar event/audience domain | 23 | IN PROGRESS (migration `20261018230000`) |
+| Notification/event delivery domain | 24 | IN PROGRESS (migration `20261018230000`, in-app only) |
+| AI retrieval contract and conversation storage | 25 | In progress; `ai_conversations`/`ai_messages` per user instruction |
 | Community/messages | 26 | DEFERRED; no speculative tables |
 | Typed admin audit extensions | 06 contract; 27/28/29 extend for actual domain targets | Existing audit permits role actions only |
 | organizations/members/invitations/course_assignments | Future separately approved phase, decision F01 | DEFERRED; not hidden inside auth |

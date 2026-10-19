@@ -14,6 +14,8 @@ import { forgotPasswordAction, loginAction, resendConfirmationAction, resetPassw
 import type { AuthActionState } from '@/features/auth/action-state'
 import { RATE_LIMIT_COOLDOWN_SECONDS } from '@/features/auth/rate-limit'
 import { useCooldown } from '@/features/auth/use-cooldown'
+import { FACULTIES, UNIVERSITIES } from '@/features/auth/academic-options'
+import { ChoiceOrOtherField } from '@/features/auth/components/choice-or-other-field'
 
 export type AuthPageMode = 'signup' | 'login' | 'forgot' | 'reset'
 
@@ -43,7 +45,7 @@ export function AuthPage({
   const resendCooldown = useCooldown(resend[0].error === 'rateLimited' ? resend[0] : null, RATE_LIMIT_COOLDOWN_SECONDS)
   const heading = mode === 'signup' ? t('signUp') : mode === 'login' ? t('welcomeAgain') : mode === 'forgot' ? t('forgotTitle') : t('resetTitle')
   const copy = mode === 'signup' ? t('createFuture') : mode === 'login' ? t('loginCopy') : mode === 'forgot' ? t('forgotCopy') : t('resetCopy')
-  const approvedNotices = ['recoveryExpired', 'invalidLink', 'expiredLink'] as const
+  const approvedNotices = ['recoveryExpired', 'invalidLink', 'expiredLink', 'sessionExpired'] as const
   const noticeKey = approvedNotices.find((key) => key === notice)
   const error = state.error ? t(`errors.${state.error}`) : noticeKey ? t(`notices.${noticeKey}`) : ''
   const success = state.success ? t(`notices.${state.success}`) : ''
@@ -133,8 +135,8 @@ export function AuthPage({
                 <div className="learner-fields" key={learnerType}>
                   {learnerType === 'student' && <div className="form-grid">
                     <Field label={t('birthYear')} name="birth_year" icon={CalendarDays} type="number" placeholder={t('birthYearExample')} min={1900} max={new Date().getFullYear()} invalid={state.error === 'invalidLearnerFields'} errorId="auth-error" />
-                    <Field label={t('university')} name="university" icon={Building2} placeholder={t('universityExample')} maxLength={120} required invalid={state.error === 'studentFieldsRequired' || state.error === 'invalidLearnerFields'} errorId="auth-error" />
-                    <Field label={t('faculty')} name="faculty" icon={GraduationCap} placeholder={t('facultyExample')} maxLength={120} required invalid={state.error === 'studentFieldsRequired' || state.error === 'invalidLearnerFields'} errorId="auth-error" />
+                    <ChoiceOrOtherField label={t('university')} name="university" icon={Building2} options={UNIVERSITIES} selectPlaceholder={t('selectUniversity')} otherLabel={t('other')} otherInputLabel={t('otherUniversity')} otherPlaceholder={t('universityExample')} maxLength={120} required invalid={state.error === 'studentFieldsRequired' || state.error === 'invalidLearnerFields'} errorId="auth-error" />
+                    <ChoiceOrOtherField label={t('faculty')} name="faculty" icon={GraduationCap} options={FACULTIES} selectPlaceholder={t('selectFaculty')} otherLabel={t('other')} otherInputLabel={t('otherFaculty')} otherPlaceholder={t('facultyExample')} maxLength={120} required invalid={state.error === 'studentFieldsRequired' || state.error === 'invalidLearnerFields'} errorId="auth-error" />
                     <Field label={t('graduationYear')} name="graduation_year" icon={CalendarDays} type="number" placeholder={t('graduationYearExample')} min={1900} max={2100} invalid={state.error === 'invalidLearnerFields'} errorId="auth-error" />
                   </div>}
                   {learnerType === 'professional' && <div className="form-grid">

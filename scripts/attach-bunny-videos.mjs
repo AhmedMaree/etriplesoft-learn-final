@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import nextEnv from '@next/env'
 import { createClient } from '@supabase/supabase-js'
+import { signInAdmin } from './lib/admin-mfa.mjs'
 
 // One-off operator command that attaches finished Bunny Stream videos to existing video lessons through the
 // audited admin_attach_bunny_video RPC. The Bunny GUID and duration come from the Bunny API, never from the plan.
@@ -19,7 +20,7 @@ if (!planPath) throw new Error('Pass --plan=<bunny-videos.json>.')
 const plan = JSON.parse(await readFile(planPath, 'utf8'))
 if (!plan.courseSlug || !Array.isArray(plan.lessons) || !plan.lessons.length) throw new Error('The plan is invalid.')
 
-const requiredEnv = ['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'UPLOAD_ADMIN_EMAIL', 'UPLOAD_ADMIN_PASSWORD', 'BUNNY_LIBRARY_ID', 'BUNNY_API_KEY']
+const requiredEnv = ['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'UPLOAD_ADMIN_EMAIL', 'UPLOAD_ADMIN_PASSWORD', 'UPLOAD_ADMIN_TOTP_SECRET', 'BUNNY_LIBRARY_ID', 'BUNNY_API_KEY']
 const missing = requiredEnv.filter((name) => !process.env[name]?.trim())
 if (missing.length) throw new Error(`Missing local operator settings: ${missing.join(', ')}`)
 if (process.env.MUX_ENVIRONMENT !== 'development') throw new Error('Content publishing is restricted to the development environment.')
@@ -52,8 +53,7 @@ const videos = await listAll(videosRoute)
 const client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
   auth: { autoRefreshToken: true, persistSession: false },
 })
-const { error: signInError } = await client.auth.signInWithPassword({ email: process.env.UPLOAD_ADMIN_EMAIL, password: process.env.UPLOAD_ADMIN_PASSWORD })
-if (signInError) throw new Error('Administrator sign-in failed; credentials were not printed.')
+await signInAdmin(client, { email: process.env.UPLOAD_ADMIN_EMAIL, password: process.env.UPLOAD_ADMIN_PASSWORD, totpSecret: process.env.UPLOAD_ADMIN_TOTP_SECRET })
 async function rpc(name, params) {
   const { data, error } = await client.rpc(name, params)
   if (error) throw new Error(`${name} failed with database code ${error.code ?? 'unknown'}.`)

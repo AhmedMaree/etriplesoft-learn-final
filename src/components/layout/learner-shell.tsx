@@ -8,7 +8,7 @@ import { usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
 import type { LearningSummary } from "@/features/learning/server/summary";
 
-export function LearnerShell({ children, footer, locale, displayName, avatarUrl, authenticated, continueLearning }: {
+export function LearnerShell({ children, footer, locale, displayName, avatarUrl, authenticated, continueLearning, isAdmin = false, canSchedule = false, unreadNotifications = 0, unreadMessages = 0, timeZone = "UTC" }: {
   children: ReactNode
   footer: ReactNode
   locale: Locale
@@ -16,6 +16,11 @@ export function LearnerShell({ children, footer, locale, displayName, avatarUrl,
   avatarUrl: string | null
   authenticated: boolean
   continueLearning: LearningSummary["courses"][number] | null
+  isAdmin?: boolean
+  canSchedule?: boolean
+  unreadNotifications?: number
+  unreadMessages?: number
+  timeZone?: string
 }) {
   const pathname = usePathname();
   const common = useTranslations("common");
@@ -35,9 +40,12 @@ export function LearnerShell({ children, footer, locale, displayName, avatarUrl,
         mobileOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
         continueLearning={continueLearning}
+        isAdmin={isAdmin}
+        canSchedule={canSchedule}
+        unreadMessages={unreadMessages}
       />
       <main className="main" id="learner-main" tabIndex={-1}>
-        <LearnerHeader onOpenMenu={() => setMobileOpen(true)} locale={locale} displayName={displayName} avatarUrl={avatarUrl} authenticated={authenticated} />
+        <LearnerHeader onOpenMenu={() => setMobileOpen(true)} locale={locale} displayName={displayName} avatarUrl={avatarUrl} authenticated={authenticated} unreadNotifications={unreadNotifications} timeZone={timeZone} />
         {children}
         {footer}
       </main>

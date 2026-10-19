@@ -3,12 +3,18 @@ import {
   ArrowRight,
   BarChart3,
   Check,
+  BookOpen,
   ChevronRight,
   CirclePlay,
   Clock,
+  Download,
+  ExternalLink,
   Eye,
+  FileText,
   Layers,
   ListChecks,
+  MessageSquare,
+  Star,
 } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { Panel, Title } from "@/components/ui/primitives";
@@ -32,9 +38,17 @@ import {
   LearnerCourseTabs,
   type ModuleGroup,
 } from "./learner-course-tabs";
-import { demoFeaturesEnabled } from "@/lib/features";
-import { getCourseProgress } from "@/features/learning/server/progress";
+import { getCourseProgress, getUnlockedLessons } from "@/features/learning/server/progress";
 import { CompletionControls } from "@/features/learning/components/completion-controls";
+import { createClient } from "@/lib/supabase/server";
+import {
+  FEEDBACK_PAGE_SIZE,
+  getCourseFeedbackSummary,
+  listCourseQuestions,
+  listCourseResources,
+  listCourseReviews,
+} from "@/features/courses/server/course-feedback";
+import { CourseQuestions, CourseReviews } from "./course-feedback";
 
 type Props = {
   course: CatalogCourseDetail;
@@ -59,6 +73,7 @@ export async function LearnerCourseDetail({
 }: Props) {
   const t = await getTranslations("courses");
   const navigationT = await getTranslations("navigation");
+  const feedbackT = await getTranslations("courseFeedback");
   const format = await getFormatter();
   const messages = getMarketingMessages(locale);
   const marketing = messages.course;
@@ -88,6 +103,8 @@ export async function LearnerCourseDetail({
     enrollment?.status === "active" || enrollment?.status === "completed";
   const adminOnlyPreview = adminPreview && !enrolled;
   const entitled = enrolled || adminOnlyPreview;
+  // Enrolled learners follow the curriculum in order; admins and previews are never sequence-locked.
+  const unlocked = enrolled ? await getUnlockedLessons(course.id) : null;
   const typeLabel = (type: string) =>
     type === "video"
       ? t("lessonTypeVideo")
@@ -118,10 +135,14 @@ export async function LearnerCourseDetail({
       typeLabel: typeLabel(item.lessonType),
       duration: item.durationSeconds ? duration(item.durationSeconds) : null,
       href:
-        entitled || item.isPreview
-          ? lessonHref(course.slug, item.lessonId)
-          : null,
-      lockedLabel: t("lessonLocked"),
+        unlocked
+          ? unlocked.has(item.lessonId)
+            ? lessonHref(course.slug, item.lessonId)
+            : null
+          : entitled || item.isPreview
+            ? lessonHref(course.slug, item.lessonId)
+            : null,
+      lockedLabel: unlocked ? t("lessonLockedShort") : t("lessonLocked"),
     });
   }
   for (const group of modules) {
@@ -205,12 +226,43 @@ export async function LearnerCourseDetail({
     },
   ].filter((fact): fact is Fact => Boolean(fact));
 
+  const client = await createClient();
+  const [summary, reviews, questions, resources] = await Promise.all([
+    getCourseFeedbackSummary(client, course.id),
+    listCourseReviews(client, course.id),
+    signedIn ? listCourseQuestions(client, course.id) : Promise.resolve(null),
+    listCourseResources(client, course.id, locale),
+  ]);
+  const access = { signedIn, entitled: enrolled, loginHref };
+  const compact = (n: number) =>
+    format.number(n, { notation: "compact", numberingSystem: "latn" });
+  const paragraphs = (course.description || course.summary)
+    .split(/\r?\n/)
+    .map((text) => text.trim())
+    .filter(Boolean);
+  const topics = [
+    categoryName,
+    level,
+    ...Array.from(new Set(outline.map((item) => item.lessonType))).map(
+      typeLabel,
+    ),
+  ].filter((topic): topic is string => Boolean(topic));
+
   const overview = (
     <>
       <h2>{t("aboutCourse")}</h2>
-      <p dir="auto" className="cd-about">
-        {course.description || course.summary}
-      </p>
+      {paragraphs.map((text, index) => (
+        <p key={index} dir="auto" className="cd-about">
+          {text}
+        </p>
+      ))}
+      {topics.length > 0 && (
+        <ul className="tags cd-tags" aria-label={feedbackT("topics")}>
+          {topics.map((topic) => (
+            <li key={topic}>{topic}</li>
+          ))}
+        </ul>
+      )}
       {modules.length > 0 && (
         <>
           <h2>{t("whatYoullLearn")}</h2>
@@ -244,6 +296,92 @@ export async function LearnerCourseDetail({
             .filter(Boolean)
             .join(" · ")}
         />
+      )}
+    </>
+  );
+
+  const reviewsPanel = (
+    <CourseReviews
+      courseId={course.id}
+      locale={locale}
+      summary={summary}
+      reviews={reviews}
+      access={access}
+      limit={FEEDBACK_PAGE_SIZE}
+    />
+  );
+  const questionsPanel = (
+    <CourseQuestions
+      courseId={course.id}
+      locale={locale}
+      questions={questions}
+      questionCount={summary.questionCount}
+      access={access}
+      limit={FEEDBACK_PAGE_SIZE}
+    />
+  );
+  const resourcesPanel = (
+    <>
+      <h2>{feedbackT("resourcesTitle")}</h2>
+      {!entitled && resources.length > 0 && (
+        <p className="cf-access">{feedbackT("resourcesPreviewOnly")}</p>
+      )}
+      {!signedIn && resources.length > 0 && (
+        <p className="cf-access">
+          {feedbackT("resourcesSignIn")}{" "}
+          <Link className="text-link" href={loginHref}>
+            {feedbackT("signIn")}
+          </Link>
+        </p>
+      )}
+      {resources.length === 0 ? (
+        <p className="cf-empty">
+          {entitled
+            ? feedbackT("resourcesEmpty")
+            : feedbackT("resourcesPreviewOnly")}
+        </p>
+      ) : (
+        <ul className="lesson-resources cd-resources">
+          {resources.map((resource) => {
+            const external = resource.kind === "external_url";
+            const ActionIcon = external ? ExternalLink : Download;
+            const content = (
+              <>
+                <span className="lesson-resource-icon" aria-hidden="true">
+                  <FileText size={20} />
+                </span>
+                <span className="lesson-resource-text">
+                  <strong dir="auto">{resource.label}</strong>
+                  <small dir="auto">
+                    {resource.description ||
+                      feedbackT("fromLesson", { title: resource.lessonTitle })}
+                  </small>
+                </span>
+                <ActionIcon
+                  size={18}
+                  className={`lesson-resource-action${external ? " flip-rtl" : ""}`}
+                  aria-hidden="true"
+                />
+              </>
+            );
+            return (
+              <li key={resource.resourceId}>
+                {signedIn ? (
+                  <a
+                    href={`/api/learning/resources/${resource.resourceId}?lessonId=${resource.lessonId}&locale=${locale}`}
+                    {...(external
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  <Link href={loginHref}>{content}</Link>
+                )}
+              </li>
+            );
+          })}
+        </ul>
       )}
     </>
   );
@@ -294,21 +432,12 @@ export async function LearnerCourseDetail({
                 ))}
               </ul>
             )}
-            <div className="cd-instructor">
-              <Avatar alt={course.instructors[0] ?? marketing.instructor} />
-              <span>
-                <small>{marketing.instructor}</small>
-                <strong dir="auto">{instructorName}</strong>
-              </span>
-            </div>
           </div>
           <div className="cd-hero-media">
             <Image
               src={
-                course.slug === "crash-course-odoo-erp"
-                  ? locale === "ar"
-                    ? ASSET_BASE + "odoo-erp-course-ar.png"
-                    : ASSET_BASE + "learner-hero.png"
+                course.slug === "crash-course-odoo-erp" && locale === "ar"
+                  ? ASSET_BASE + "odoo-erp-course-ar.webp"
                   : courseImage(course.slug)
               }
               alt=""
@@ -319,6 +448,49 @@ export async function LearnerCourseDetail({
           </div>
           </div>
         </section>
+        <section className="panel instructor-row cd-instructor-row">
+          <Avatar alt={course.instructors[0] ?? marketing.instructor} />
+          <div>
+            <h3 dir="auto">{instructorName}</h3>
+            <p>{feedbackT("instructorRole")}</p>
+            {enrolled && (
+              <Link
+                className="text-link cd-message-instructor"
+                href={`/messages?new=${encodeURIComponent(course.slug)}`}
+              >
+                <MessageSquare size={15} aria-hidden="true" />
+                {feedbackT("messageInstructor")}
+              </Link>
+            )}
+          </div>
+          <ul className="detail-meta" aria-label={feedbackT("courseStats")}>
+            <li>
+              <Star className="star" aria-hidden="true" />
+              {summary.averageRating !== null ? (
+                <span
+                  dir="ltr"
+                  aria-label={feedbackT("ratingAria", {
+                    rating: summary.averageRating.toFixed(1),
+                  })}
+                >
+                  {summary.averageRating.toFixed(1)}
+                </span>
+              ) : (
+                feedbackT("newCourse")
+              )}
+            </li>
+            {totalSeconds > 0 && (
+              <li>
+                <Clock aria-hidden="true" />
+                {duration(totalSeconds)}
+              </li>
+            )}
+            <li>
+              <BookOpen aria-hidden="true" />
+              {lessonsText}
+            </li>
+          </ul>
+        </section>
         <LearnerCourseTabs
           tabs={[
             { id: "overview", label: t("overviewTab"), content: overview },
@@ -326,6 +498,25 @@ export async function LearnerCourseDetail({
               id: "curriculum",
               label: t("curriculumTab"),
               content: curriculum,
+            },
+            {
+              id: "reviews",
+              label: feedbackT("tabReviews", {
+                count: compact(summary.reviewCount),
+              }),
+              content: reviewsPanel,
+            },
+            {
+              id: "questions",
+              label: feedbackT("tabQuestions", {
+                count: compact(summary.questionCount),
+              }),
+              content: questionsPanel,
+            },
+            {
+              id: "resources",
+              label: t("resourcesTab"),
+              content: resourcesPanel,
             },
           ]}
         />
@@ -472,24 +663,22 @@ export async function LearnerCourseDetail({
           )}
         </section>
 
-        {demoFeaturesEnabled && (
-          <Panel className="ai-small">
-            <Title>{t("courseAi")}</Title>
-            <p>{t("courseContext")}</p>
-            <div className="course-ai">
-              <Image
-                src={ASSET_BASE + "ai-character.png"}
-                alt=""
-                width={512}
-                height={512}
-              />
-            </div>
-            <Link className="btn outline" href="/ai-page">
-              {t("openAssistant")}{" "}
-              <ArrowRight size={18} className="flip-rtl" aria-hidden="true" />
-            </Link>
-          </Panel>
-        )}
+        <Panel className="ai-small">
+          <Title>{t("courseAi")}</Title>
+          <p>{t("courseContext")}</p>
+          <div className="course-ai">
+            <Image
+              src={ASSET_BASE + "ai-character.png"}
+              alt=""
+              width={512}
+              height={512}
+            />
+          </div>
+          <Link className="btn outline" href="/ai-page">
+            {t("openAssistant")}{" "}
+            <ArrowRight size={18} className="flip-rtl" aria-hidden="true" />
+          </Link>
+        </Panel>
       </aside>
     </div>
   );

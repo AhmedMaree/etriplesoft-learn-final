@@ -16,13 +16,17 @@ import {
 import { Avatar } from "@/components/shared/profile-avatar";
 import { logoutAction } from "@/features/auth/actions";
 import type { Locale } from "@/i18n/config";
+import { useQuizLock } from "@/features/assessments/quiz-lock";
+import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
-export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, authenticated }: {
+export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, authenticated, unreadNotifications, timeZone }: {
   onOpenMenu: () => void
   locale: Locale
   displayName: string | null
   avatarUrl: string | null
   authenticated: boolean
+  unreadNotifications: number
+  timeZone: string
 }) {
   const t = useTranslations();
   const pathname = usePathname();
@@ -31,6 +35,7 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
   const [query, setQuery] = useState("");
   const [menu, setMenu] = useState(false);
   const [notification, setNotification] = useState(false);
+  const quizLocked = useQuizLock();
   const page = pathname.split("/").filter(Boolean).at(-1) || "overview";
 
   function search(e: FormEvent<HTMLFormElement>) {
@@ -68,7 +73,7 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
           page !== "certificates" && <span>{t("dashboard.welcome")},</span>
         )}
       </div>
-      <form className="search" onSubmit={search}>
+      <form className="search" onSubmit={search} inert={quizLocked}>
         <Search size={21} />
         <input
           aria-label={t("common.search")}
@@ -77,22 +82,27 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
           onChange={(e) => changeQuery(e.target.value)}
         />
       </form>
-      <div className="header-action">
-        <button
-          className="icon-button notification-button"
-          aria-label={t("common.notifications")}
-          onClick={() => setNotification(!notification)}
-        >
-          <Bell />
-        </button>
-        {notification && (
-          <div className="popover">
-            <strong>{t("common.notifications")}</strong>
-            <p>{t("common.noNotifications")}</p>
-          </div>
-        )}
-      </div>
-      <div className="header-action">
+      {authenticated ? (
+        <NotificationBell initialUnread={unreadNotifications} timeZone={timeZone} />
+      ) : (
+        <div className="header-action">
+          <button
+            className="icon-button notification-button"
+            aria-label={t("common.notifications")}
+            aria-expanded={notification}
+            onClick={() => setNotification(!notification)}
+          >
+            <Bell />
+          </button>
+          {notification && (
+            <div className="popover">
+              <strong>{t("common.notifications")}</strong>
+              <p>{t("common.noNotifications")}</p>
+            </div>
+          )}
+        </div>
+      )}
+      <div className="header-action" inert={quizLocked}>
         <button className="user-menu" onClick={() => setMenu(!menu)}>
           <Avatar src={avatarUrl} alt={learnerName} />
           <span>

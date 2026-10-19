@@ -1,5 +1,7 @@
 -- Phase 10 enrollment / entitlement security and lifecycle regression suite.
 BEGIN;
+-- Test sessions are MFA-verified (aal2) unless a test clears this; admin authority requires it.
+SELECT pg_catalog.set_config('request.jwt.claim', '{"aal":"aal2"}', true);
 SELECT plan(69);
 
 INSERT INTO auth.users (id, aud, role, email, raw_user_meta_data, created_at, updated_at) VALUES

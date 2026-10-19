@@ -1,5 +1,7 @@
 node_modules/
 .next/
+# Alternate build dirs from NEXT_DIST_DIR (e.g. .next-qa)
+.next-*/
 out/
 dist/
 tmp/

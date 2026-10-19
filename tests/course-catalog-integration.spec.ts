@@ -102,7 +102,7 @@ test("public detail includes the published outline and ordered instructor attrib
   await page.goto("/en/catalog/crash-course-odoo-erp");
   await expect(page.getByRole("heading", { level: 2, name: "Course outline" })).toBeVisible();
   await expect(page.getByText("Business Workflow & Introduction Erp")).toBeVisible();
-  await expect(page.getByText("Ahmed Raza")).toBeVisible();
+  await expect(page.getByText("Khaled Ahmed")).toBeVisible();
   await expect(page.locator("main")).not.toContainText("Protected body");
 });
 

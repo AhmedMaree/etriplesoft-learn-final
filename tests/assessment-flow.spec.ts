@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { test, expect, type Page } from "@playwright/test";
 import type { Database } from "../src/types/database";
+import { completeAdminMfa, enrollAdminTotp } from "./support/admin-mfa";
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const secret = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -16,6 +17,7 @@ const adminEmail = `admin-${email}`;
 const password = `Aa1-${randomUUID()}!`;
 const slug = `quiz-${run}`;
 let adminId: string;
+let adminSecret: string;
 let courseId: string;
 let quizId: string;
 let readingId: string;
@@ -66,6 +68,7 @@ test.beforeAll(async () => {
     auth: { persistSession: false, autoRefreshToken: false },
   });
   await client.auth.signInWithPassword({ email: adminEmail, password });
+  adminSecret = await enrollAdminTotp(client);
   async function rpc<N extends keyof Database["public"]["Functions"]>(
     name: N,
     args: Database["public"]["Functions"][N]["Args"],
@@ -203,6 +206,7 @@ async function login(page: Page, admin = false) {
   await page.locator("form.auth-fields button[type=submit]").click();
   await page.waitForURL((current) => !current.pathname.endsWith("/login"));
   await expect(page.locator(".rl-stats")).toBeVisible();
+  if (admin) await completeAdminMfa(page, "en", adminSecret);
 }
 test("real quiz autosaves, resumes, grades and enables course completion", async ({
   page,
@@ -211,11 +215,23 @@ test("real quiz autosaves, resumes, grades and enables course completion", async
   await login(page);
   await page.goto("/en/assessment");
   await expect(
-    page.getByRole("link", {
-      name: "Assessment verification — Test quiz",
-      exact: true,
-    }),
+    page.getByRole("heading", { name: "Assessment verification", exact: true }),
   ).toBeVisible();
+  // Sequential learning: the required assessment stays locked until every required lesson is done.
+  await page.goto(`/en/courses/${slug}/lessons/${quizId}`);
+  await expect(
+    page.getByText("The final assessment unlocks when you finish all the course lessons."),
+  ).toBeVisible();
+  const lockedStart = await page.request.post("/api/learning/quiz", {
+    headers: { Origin: "http://127.0.0.1:3016" },
+    data: { lessonId: quizId, locale: "en", action: "start" },
+  });
+  expect(lockedStart.ok()).toBe(false);
+  await page.goto(`/en/courses/${slug}/lessons/${readingId}`);
+  await page
+    .getByRole("button", { name: "Mark complete", exact: true })
+    .click();
+  await expect(page.getByRole("status")).toContainText("Lesson complete");
   await page.goto(`/en/courses/${slug}/lessons/${quizId}`);
   const forbiddenOrigin = await page.request.post("/api/learning/quiz", {
     headers: { Origin: "https://untrusted.example" },
@@ -271,11 +287,12 @@ test("real quiz autosaves, resumes, grades and enables course completion", async
   await expect(
     page.getByRole("heading", { name: "Correct answers" }),
   ).toBeVisible();
-  await page.goto(`/en/courses/${slug}/lessons/${readingId}`);
   await page
-    .getByRole("button", { name: "Mark complete", exact: true })
+    .getByRole("button", { name: "Check course completion", exact: true })
     .click();
-  await expect(page.getByRole("status")).toContainText("Course completed");
+  await expect(
+    page.getByRole("status").filter({ hasText: "Course completed" }),
+  ).toBeVisible();
   expect(
     Number(
       sql(

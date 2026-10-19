@@ -1,0 +1,10 @@
+/* The instructor schedule reuses the admin form styles inside the learner shell: keep the admin
+   variables from .admin-scope but drop its sidebar grid and page background. */
+.admin-scope.instructor-schedule {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  min-height: 0;
+  background: none;
+  margin: 0 10px 24px;
+}

@@ -1,0 +1,669 @@
+{
+  "courseSlug": "odoo-system-admin",
+  "lessonId": "4008817c-0f0e-b2f6-02e1-67e3b342fa5c",
+  "locale": "en",
+  "title": "Odoo System Admin — Certification Assessment",
+  "instructions": "21 questions covering ERP basics, Accounting, CRM, Sales, Purchase, Inventory and Implementation. Choose one answer per question. Pass mark: 70%. Time limit: 30 minutes. You may make up to three attempts.",
+  "source": "Odoo eLearning certification survey #6 (etriple.odoo.com, read 2026-10-18); same 21 questions and answers as the Odoo User Guide and Crash Course certifications",
+  "questions": [
+    {
+      "type": "single",
+      "prompt": "What is the main purpose of an ERP system like Odoo?",
+      "options": [
+        {
+          "label": "Data storage only",
+          "correct": false
+        },
+        {
+          "label": "Integrate business processes",
+          "correct": true
+        },
+        {
+          "label": "Website building only",
+          "correct": false
+        },
+        {
+          "label": "Email management",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What is a “module” in Odoo?",
+      "options": [
+        {
+          "label": "A database",
+          "correct": false
+        },
+        {
+          "label": "A feature/app that adds functionality",
+          "correct": true
+        },
+        {
+          "label": "A report",
+          "correct": false
+        },
+        {
+          "label": "A user",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "Which of the following is required before starting implementation?",
+      "options": [
+        {
+          "label": "Server installation",
+          "correct": false
+        },
+        {
+          "label": "Business requirement analysis",
+          "correct": true
+        },
+        {
+          "label": "Printing reports",
+          "correct": false
+        },
+        {
+          "label": "Sending emails",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What is the first step when configuring Accounting in Odoo?",
+      "options": [
+        {
+          "label": "Create invoices",
+          "correct": false
+        },
+        {
+          "label": "Configure Chart of Accounts",
+          "correct": true
+        },
+        {
+          "label": "Add products",
+          "correct": false
+        },
+        {
+          "label": "Create CRM pipeline",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What is the purpose of a journal?",
+      "options": [
+        {
+          "label": "Store customers",
+          "correct": false
+        },
+        {
+          "label": "Record financial transactions",
+          "correct": true
+        },
+        {
+          "label": "Manage inventory",
+          "correct": false
+        },
+        {
+          "label": "Track leads",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "Scenario: A customer invoice is created but not paid. What is its status?",
+      "options": [
+        {
+          "label": "Draft",
+          "correct": false
+        },
+        {
+          "label": "Paid",
+          "correct": false
+        },
+        {
+          "label": "Posted / Open",
+          "correct": true
+        },
+        {
+          "label": "Cancelled",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What is a “lead” in CRM?",
+      "options": [
+        {
+          "label": "Confirmed customer",
+          "correct": false
+        },
+        {
+          "label": "Potential customer",
+          "correct": true
+        },
+        {
+          "label": "Supplier",
+          "correct": false
+        },
+        {
+          "label": "Invoice",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What is the purpose of a pipeline in CRM?",
+      "options": [
+        {
+          "label": "Store products",
+          "correct": false
+        },
+        {
+          "label": "Track sales stages",
+          "correct": true
+        },
+        {
+          "label": "Manage invoices",
+          "correct": false
+        },
+        {
+          "label": "Track stock",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "Scenario: A sales person converts a lead into an opportunity. What does this mean?",
+      "options": [
+        {
+          "label": "Lead is deleted",
+          "correct": false
+        },
+        {
+          "label": "Lead becomes a qualified sales deal",
+          "correct": true
+        },
+        {
+          "label": "Payment is received",
+          "correct": false
+        },
+        {
+          "label": "Product is delivered",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What document is created first in the sales process?",
+      "options": [
+        {
+          "label": "Invoice",
+          "correct": false
+        },
+        {
+          "label": "Delivery Order",
+          "correct": false
+        },
+        {
+          "label": "Quotation",
+          "correct": true
+        },
+        {
+          "label": "Purchase Order",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What happens when a quotation is confirmed?",
+      "options": [
+        {
+          "label": "It is deleted",
+          "correct": false
+        },
+        {
+          "label": "It becomes a Sales Order",
+          "correct": true
+        },
+        {
+          "label": "It becomes an invoice automatically",
+          "correct": false
+        },
+        {
+          "label": "It becomes a CRM lead",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "Scenario: You confirmed a sales order for a stocked product. What is generated?",
+      "options": [
+        {
+          "label": "Invoice only",
+          "correct": false
+        },
+        {
+          "label": "Delivery Order",
+          "correct": true
+        },
+        {
+          "label": "Purchase Order",
+          "correct": false
+        },
+        {
+          "label": "Payment",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What is the purpose of a Purchase Order (PO)?",
+      "options": [
+        {
+          "label": "Sell products",
+          "correct": false
+        },
+        {
+          "label": "Buy products from vendors",
+          "correct": true
+        },
+        {
+          "label": "Track leads",
+          "correct": false
+        },
+        {
+          "label": "Manage accounting",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What triggers a purchase automatically in Odoo?",
+      "options": [
+        {
+          "label": "CRM lead",
+          "correct": false
+        },
+        {
+          "label": "Reordering rule / low stock",
+          "correct": true
+        },
+        {
+          "label": "Invoice",
+          "correct": false
+        },
+        {
+          "label": "Payment",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "Scenario: You receive products from a vendor. What should you do next?",
+      "options": [
+        {
+          "label": "Delete PO",
+          "correct": false
+        },
+        {
+          "label": "Validate receipt",
+          "correct": true
+        },
+        {
+          "label": "Create CRM lead",
+          "correct": false
+        },
+        {
+          "label": "Cancel order",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What is a “stock move”?",
+      "options": [
+        {
+          "label": "Financial transaction",
+          "correct": false
+        },
+        {
+          "label": "Movement of products between locations",
+          "correct": true
+        },
+        {
+          "label": "Customer record",
+          "correct": false
+        },
+        {
+          "label": "Sales report",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What is the difference between “on hand” and “forecasted” quantity?",
+      "options": [
+        {
+          "label": "No difference",
+          "correct": false
+        },
+        {
+          "label": "Forecast includes future transactions",
+          "correct": true
+        },
+        {
+          "label": "On hand includes future stock",
+          "correct": false
+        },
+        {
+          "label": "Forecast is manual",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "Scenario: A product is out of stock but a sales order is confirmed. What happens?",
+      "options": [
+        {
+          "label": "Nothing",
+          "correct": false
+        },
+        {
+          "label": "Backorder or procurement is triggered",
+          "correct": true
+        },
+        {
+          "label": "Invoice is cancelled",
+          "correct": false
+        },
+        {
+          "label": "Customer is deleted",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What is the role of an Odoo Functional Consultant?",
+      "options": [
+        {
+          "label": "Write code only",
+          "correct": false
+        },
+        {
+          "label": "Analyze business needs & configure system",
+          "correct": true
+        },
+        {
+          "label": "Manage servers only",
+          "correct": false
+        },
+        {
+          "label": "Design logos",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What is “master data”?",
+      "options": [
+        {
+          "label": "Temporary data",
+          "correct": false
+        },
+        {
+          "label": "Core data like customers, products",
+          "correct": true
+        },
+        {
+          "label": "Reports",
+          "correct": false
+        },
+        {
+          "label": "Logs",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "type": "single",
+      "prompt": "What is the correct implementation sequence?",
+      "options": [
+        {
+          "label": "Training → Analysis → Go-live",
+          "correct": false
+        },
+        {
+          "label": "Analysis → Configuration → Testing → Training → Go-live",
+          "correct": true
+        },
+        {
+          "label": "Go-live → Testing",
+          "correct": false
+        },
+        {
+          "label": "Configuration only",
+          "correct": false
+        }
+      ]
+    }
+  ],
+  "translations": {
+    "ar": {
+      "title": "إدارة نظام Odoo — اختبار الشهادة",
+      "instructions": "21 سؤالًا تغطي أساسيات ERP والمحاسبة وCRM والمبيعات والمشتريات والمخزون والتطبيق. اختر إجابة واحدة لكل سؤال. درجة النجاح: 70%. المدة: 30 دقيقة. يمكنك إجراء ثلاث محاولات كحد أقصى.",
+      "questions": [
+        {
+          "prompt": "ما الهدف الرئيسي من نظام ERP مثل Odoo؟",
+          "options": [
+            "تخزين البيانات فقط",
+            "تكامل العمليات التجارية",
+            "بناء المواقع الإلكترونية فقط",
+            "إدارة البريد الإلكتروني"
+          ]
+        },
+        {
+          "prompt": "ما المقصود بـ«الموديول» (Module) في Odoo؟",
+          "options": [
+            "قاعدة بيانات",
+            "ميزة أو تطبيق يضيف وظائف جديدة",
+            "تقرير",
+            "مستخدم"
+          ]
+        },
+        {
+          "prompt": "أيٌّ مما يلي مطلوب قبل بدء التطبيق؟",
+          "options": [
+            "تثبيت الخادم",
+            "تحليل متطلبات العمل",
+            "طباعة التقارير",
+            "إرسال رسائل البريد الإلكتروني"
+          ]
+        },
+        {
+          "prompt": "ما الخطوة الأولى عند إعداد المحاسبة في Odoo؟",
+          "options": [
+            "إنشاء الفواتير",
+            "إعداد دليل الحسابات",
+            "إضافة المنتجات",
+            "إنشاء مسار CRM"
+          ]
+        },
+        {
+          "prompt": "ما الغرض من دفتر اليومية (Journal)؟",
+          "options": [
+            "تخزين العملاء",
+            "تسجيل المعاملات المالية",
+            "إدارة المخزون",
+            "تتبع العملاء المحتملين"
+          ]
+        },
+        {
+          "prompt": "سيناريو: تم إنشاء فاتورة عميل ولم تُدفع بعد. ما حالتها؟",
+          "options": [
+            "مسودة",
+            "مدفوعة",
+            "مُرحّلة / مفتوحة",
+            "ملغاة"
+          ]
+        },
+        {
+          "prompt": "ما المقصود بـ«العميل المحتمل» (Lead) في CRM؟",
+          "options": [
+            "عميل مؤكد",
+            "عميل محتمل",
+            "مورّد",
+            "فاتورة"
+          ]
+        },
+        {
+          "prompt": "ما الغرض من مسار المبيعات (Pipeline) في CRM؟",
+          "options": [
+            "تخزين المنتجات",
+            "تتبع مراحل البيع",
+            "إدارة الفواتير",
+            "تتبع المخزون"
+          ]
+        },
+        {
+          "prompt": "سيناريو: قام مندوب المبيعات بتحويل عميل محتمل إلى فرصة (Opportunity). ماذا يعني ذلك؟",
+          "options": [
+            "حذف العميل المحتمل",
+            "أصبح العميل المحتمل صفقة بيع مؤهلة",
+            "تم استلام الدفعة",
+            "تم تسليم المنتج"
+          ]
+        },
+        {
+          "prompt": "ما المستند الذي يُنشأ أولًا في دورة المبيعات؟",
+          "options": [
+            "الفاتورة",
+            "أمر التسليم",
+            "عرض السعر",
+            "أمر الشراء"
+          ]
+        },
+        {
+          "prompt": "ماذا يحدث عند تأكيد عرض السعر؟",
+          "options": [
+            "يتم حذفه",
+            "يصبح أمر بيع",
+            "يتحول إلى فاتورة تلقائيًا",
+            "يصبح عميلًا محتملًا في CRM"
+          ]
+        },
+        {
+          "prompt": "سيناريو: أكدت أمر بيع لمنتج مخزّن. ما الذي يتم إنشاؤه؟",
+          "options": [
+            "فاتورة فقط",
+            "أمر تسليم",
+            "أمر شراء",
+            "دفعة"
+          ]
+        },
+        {
+          "prompt": "ما الغرض من أمر الشراء (PO)؟",
+          "options": [
+            "بيع المنتجات",
+            "شراء المنتجات من المورّدين",
+            "تتبع العملاء المحتملين",
+            "إدارة المحاسبة"
+          ]
+        },
+        {
+          "prompt": "ما الذي يُنشئ عملية شراء تلقائيًا في Odoo؟",
+          "options": [
+            "عميل محتمل في CRM",
+            "قاعدة إعادة الطلب / انخفاض المخزون",
+            "فاتورة",
+            "دفعة"
+          ]
+        },
+        {
+          "prompt": "سيناريو: استلمت منتجات من مورّد. ما الخطوة التالية؟",
+          "options": [
+            "حذف أمر الشراء",
+            "تأكيد الاستلام",
+            "إنشاء عميل محتمل في CRM",
+            "إلغاء الطلب"
+          ]
+        },
+        {
+          "prompt": "ما المقصود بـ«حركة المخزون» (Stock Move)؟",
+          "options": [
+            "معاملة مالية",
+            "نقل المنتجات بين المواقع",
+            "سجل عميل",
+            "تقرير مبيعات"
+          ]
+        },
+        {
+          "prompt": "ما الفرق بين الكمية «المتوفرة» (On Hand) والكمية «المتوقعة» (Forecasted)؟",
+          "options": [
+            "لا يوجد فرق",
+            "الكمية المتوقعة تشمل المعاملات المستقبلية",
+            "الكمية المتوفرة تشمل المخزون المستقبلي",
+            "الكمية المتوقعة تُدخل يدويًا"
+          ]
+        },
+        {
+          "prompt": "سيناريو: منتج غير متوفر في المخزون ولكن تم تأكيد أمر البيع. ماذا يحدث؟",
+          "options": [
+            "لا شيء",
+            "يتم إنشاء طلب متأخر (Backorder) أو تفعيل التوريد",
+            "يتم إلغاء الفاتورة",
+            "يتم حذف العميل"
+          ]
+        },
+        {
+          "prompt": "ما دور الاستشاري الوظيفي (Functional Consultant) في Odoo؟",
+          "options": [
+            "كتابة الأكواد فقط",
+            "تحليل احتياجات العمل وإعداد النظام",
+            "إدارة الخوادم فقط",
+            "تصميم الشعارات"
+          ]
+        },
+        {
+          "prompt": "ما المقصود بـ«البيانات الرئيسية» (Master Data)؟",
+          "options": [
+            "بيانات مؤقتة",
+            "البيانات الأساسية مثل العملاء والمنتجات",
+            "التقارير",
+            "السجلات (Logs)"
+          ]
+        },
+        {
+          "prompt": "ما التسلسل الصحيح لتطبيق النظام؟",
+          "options": [
+            "التدريب ← التحليل ← التشغيل الفعلي",
+            "التحليل ← الإعداد ← الاختبار ← التدريب ← التشغيل الفعلي",
+            "التشغيل الفعلي ← الاختبار",
+            "الإعداد فقط"
+          ]
+        }
+      ]
+    }
+  }
+}

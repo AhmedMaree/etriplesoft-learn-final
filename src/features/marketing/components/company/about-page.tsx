@@ -1,6 +1,5 @@
 import {
   ArrowRight,
-  BadgeCheck,
   BarChart3,
   BookOpen,
   Brain,
@@ -10,11 +9,15 @@ import {
   Code,
   Eye,
   Globe,
+  GraduationCap,
   Hammer,
   Hand,
+  Layers,
   MapPin,
   Network,
+  Settings,
   Star,
+  Target,
   TrendingUp,
   User,
   Wrench,
@@ -28,6 +31,14 @@ import { teamAnchorId } from "../../lib/team";
 const storyIcons: LucideIcon[] = [ClipboardList, Wrench, BookOpen, Brain, Star];
 const benefitIcons: LucideIcon[] = [Hammer, User, Hand, Building2, TrendingUp, Globe];
 const valueIcons: LucideIcon[] = [Hammer, Eye, Briefcase, TrendingUp];
+const pillarIcons: LucideIcon[] = [Target, Eye, Layers];
+
+/** Pillars are stored as "Label: statement"; show the label as a kicker above the statement. */
+function splitPillar(text: string) {
+  const index = text.indexOf(":");
+  if (index === -1) return { label: "", statement: text };
+  return { label: text.slice(0, index).trim(), statement: text.slice(index + 1).trim() };
+}
 
 function initialsOf(name: string) {
   return name
@@ -42,14 +53,20 @@ export function AboutPage({ locale }: { locale: Locale }) {
   const m = getMarketingMessages(locale);
   const a = m.about;
   const steps = [...a.storySteps, ...a.storySteps];
+  const accentAt = a.title.lastIndexOf(a.titleAccent);
+  const titleStart = accentAt > 0 ? a.title.slice(0, accentAt) : a.title;
+  const titleAccent = accentAt > 0 ? a.titleAccent : "";
 
   return (
     <>
-      <section className="mk-container mk-block">
-        <div className="mk-about-hero">
+      <section className="mk-about-top">
+        <div className="mk-container mk-block mk-about-hero">
           <div className="mk-page-hero-text">
             <span className="mk-kicker">{a.eyebrow}</span>
-            <h1 className="mk-page-title">{a.title}</h1>
+            <h1 className="mk-page-title">
+              {titleStart}
+              {titleAccent ? <span className="mk-about-accent">{titleAccent}</span> : null}
+            </h1>
             <p className="mk-lead">{a.lead}</p>
             <div className="mk-hero-actions">
               <Link href="/catalog" className="mk-btn mk-btn--primary">
@@ -63,30 +80,48 @@ export function AboutPage({ locale }: { locale: Locale }) {
           </div>
 
           <div className="mk-about-art" role="img" aria-label={a.ecosystem.label}>
+            <span className="mk-about-chip mk-about-chip--1" aria-hidden="true">
+              <Target size={20} />
+            </span>
+            <span className="mk-about-chip mk-about-chip--2" aria-hidden="true">
+              <GraduationCap size={20} />
+            </span>
+            <span className="mk-about-chip mk-about-chip--3" aria-hidden="true">
+              <BarChart3 size={18} />
+            </span>
+            <span className="mk-about-chip mk-about-chip--4" aria-hidden="true">
+              <Settings size={20} />
+            </span>
             <div className="mk-about-orbit">
+              <span className="mk-about-ring" aria-hidden="true" />
+              <span className="mk-about-glow" aria-hidden="true" />
+              <span className="mk-about-link mk-about-link--v" aria-hidden="true" />
+              <span className="mk-about-link mk-about-link--h" aria-hidden="true" />
               <div className="mk-about-core">
-                <Network size={32} aria-hidden="true" />
+                <Network size={36} aria-hidden="true" />
                 <span>{a.ecosystem.center}</span>
               </div>
               <div className="mk-about-node mk-about-node--top">
-                <BarChart3 size={20} aria-hidden="true" />
+                <BarChart3 size={28} aria-hidden="true" />
                 <span>{a.ecosystem.analysis}</span>
               </div>
               <div className="mk-about-node mk-about-node--bottom">
-                <Wrench size={20} aria-hidden="true" />
+                <Wrench size={28} aria-hidden="true" />
                 <span>{a.ecosystem.implementation}</span>
               </div>
               <div className="mk-about-node mk-about-node--start">
-                <Code size={20} aria-hidden="true" />
+                <Code size={28} aria-hidden="true" />
                 <span>{a.ecosystem.development}</span>
               </div>
               <div className="mk-about-node mk-about-node--end">
-                <BookOpen size={20} aria-hidden="true" />
+                <BookOpen size={28} aria-hidden="true" />
                 <span>{a.ecosystem.content}</span>
               </div>
             </div>
             <div className="mk-about-badge">
-              <BadgeCheck size={16} aria-hidden="true" />
+              <span className="mk-about-badge-star">
+                <Star size={14} aria-hidden="true" />
+              </span>
               {a.partner}
             </div>
           </div>
@@ -118,12 +153,24 @@ export function AboutPage({ locale }: { locale: Locale }) {
 
       <section className="mk-container mk-block">
         <div className="mk-pillars">
-          {a.pillars.map((pillar, index) => (
-            <article key={pillar}>
-              <span className="mk-pillar-number">{String(index + 1).padStart(2, "0")}</span>
-              <h3>{pillar}</h3>
-            </article>
-          ))}
+          {a.pillars.map((pillar, index) => {
+            const { label, statement } = splitPillar(pillar);
+            const Icon = pillarIcons[index] ?? Target;
+            return (
+              <article key={pillar}>
+                <div className="mk-pillar-top">
+                  <span className="mk-about-icon">
+                    <Icon size={22} aria-hidden="true" />
+                  </span>
+                  <span className="mk-pillar-number" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                {label ? <span className="mk-pillar-label">{label}</span> : null}
+                <h3>{statement}</h3>
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -135,7 +182,9 @@ export function AboutPage({ locale }: { locale: Locale }) {
               const Icon = benefitIcons[index] ?? Hammer;
               return (
                 <div key={benefit}>
-                  <Icon size={32} aria-hidden="true" />
+                  <span className="mk-about-icon">
+                    <Icon size={22} aria-hidden="true" />
+                  </span>
                   <h3>{benefit}</h3>
                 </div>
               );
@@ -150,7 +199,9 @@ export function AboutPage({ locale }: { locale: Locale }) {
           <div className="mk-regions">
             {a.regions.map((region) => (
               <div key={region.title}>
-                <MapPin size={48} aria-hidden="true" />
+                <span className="mk-region-pin">
+                  <MapPin size={28} aria-hidden="true" />
+                </span>
                 <h3>{region.title}</h3>
                 <p>{region.note}</p>
               </div>
@@ -196,7 +247,9 @@ export function AboutPage({ locale }: { locale: Locale }) {
             const Icon = valueIcons[index] ?? Hammer;
             return (
               <div key={value}>
-                <Icon size={48} aria-hidden="true" />
+                <span className="mk-about-icon mk-about-icon--lg">
+                  <Icon size={28} aria-hidden="true" />
+                </span>
                 <h3>{value}</h3>
               </div>
             );
@@ -204,8 +257,8 @@ export function AboutPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="mk-band mk-band--primary">
-        <div className="mk-container mk-about-cta">
+      <section className="mk-container mk-block">
+        <div className="mk-about-cta">
           <h2>{a.ctaTitle}</h2>
           <Link href="/catalog" className="mk-btn mk-btn--white">
             {a.ctaButton}

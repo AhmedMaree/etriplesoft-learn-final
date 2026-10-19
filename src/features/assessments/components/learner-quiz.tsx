@@ -1,24 +1,40 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
-  ClipboardCheck,
+  ArrowRight,
+  Bookmark,
+  Check,
+  ChevronLeft,
+  CircleCheck,
   Clock,
+  FileText,
+  Info,
   ListChecks,
   Play,
   RotateCcw,
+  Send,
   Target,
+  Trophy,
 } from "lucide-react";
+import { IconBox, Panel, Progress, Title } from "@/components/ui/primitives";
 import { useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
+import { courseImage } from "@/features/courses/components/course-image";
 import { isQuizState, type QuizState } from "../types";
+import { setQuizLock, useLeaveGuard } from "../quiz-lock";
+
+const LETTERS: Record<Locale, string> = { en: "ABCDEFGHIJ", ar: "أبجدهوزحطي" };
 
 export function LearnerQuiz({
   lessonId,
   locale,
+  course,
 }: {
   lessonId: string;
   locale: Locale;
+  course: { title: string; slug: string };
 }) {
   const t = useTranslations("realQuiz");
   const router = useRouter();
@@ -26,6 +42,7 @@ export function LearnerQuiz({
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [question, setQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [remaining, setRemaining] = useState(0);
@@ -106,6 +123,7 @@ export function LearnerQuiz({
   const submit = useCallback(async () => {
     setBusy(true);
     setError("");
+    setNotice("");
     try {
       await queue.current;
       await request("submit", answersRef.current);
@@ -134,6 +152,21 @@ export function LearnerQuiz({
     }, 1000);
     return () => clearInterval(timer);
   }, [state?.attempt?.status, submit]);
+  const locked = state?.attempt?.status === "active" && !state.adminPreview;
+  useEffect(() => {
+    setQuizLock(locked);
+    return () => setQuizLock(false);
+  }, [locked]);
+  useLeaveGuard(locked, t("leaveConfirm"));
+  function enqueueSave(snapshot: Record<string, string[]>) {
+    const saved = queue.current
+      .catch(() => {})
+      .then(() => request("save", snapshot));
+    queue.current = saved.catch(() => {
+      setError("saveFailed");
+    });
+    return saved;
+  }
   function select(option: string, multiple: boolean) {
     const q = state?.questions[question];
     if (!q) return;
@@ -147,16 +180,25 @@ export function LearnerQuiz({
     answersRef.current = snapshot;
     setAnswers(snapshot);
     setError("");
-    queue.current = queue.current
-      .catch(() => {})
-      .then(() => request("save", snapshot))
-      .catch(() => {
-        setError("saveFailed");
-      });
+    setNotice("");
+    void enqueueSave(snapshot);
+  }
+  async function saveAnswer() {
+    setBusy(true);
+    setError("");
+    try {
+      await enqueueSave(answersRef.current);
+      setNotice("answerSaved");
+    } catch {
+      setError("saveFailed");
+    } finally {
+      setBusy(false);
+    }
   }
   async function start() {
     setBusy(true);
     setError("");
+    setNotice("");
     timeoutRequested.current = false;
     try {
       await request("start");
@@ -167,214 +209,415 @@ export function LearnerQuiz({
       setBusy(false);
     }
   }
-  if (loading)
+  function go(index: number) {
+    setQuestion(index);
+    setNotice("");
+  }
+
+  const heading = (
+    <Panel className="assessment-heading">
+      <span className="odoo-tile assessment-tile">
+        <Image src={courseImage(course.slug)} alt="" fill sizes="102px" />
+      </span>
+      <div>
+        <div className="eyebrow" dir="auto">
+          {state?.title || t("eyebrow")}
+        </div>
+        <h1 dir="auto">{course.title}</h1>
+        <p className="assessment-intro" dir="auto">
+          {state?.instructions || t("intro")}
+        </p>
+      </div>
+    </Panel>
+  );
+
+  if (loading || !state)
     return (
-      <section className="panel question-card" aria-busy="true">
-        {t("loading")}
-      </section>
+      <div className="primary assessment-single">
+        {heading}
+        <Panel className="question-card real-quiz">
+          {loading ? (
+            <p aria-busy="true">{t("loading")}</p>
+          ) : (
+            <>
+              <p role="status">{t(error ? "failed" : "unavailable")}</p>
+              {error && (
+                <button
+                  className="btn outline"
+                  onClick={() => {
+                    setLoading(true);
+                    request("get")
+                      .then(() => setError(""))
+                      .catch(() => setError("failed"))
+                      .finally(() => setLoading(false));
+                  }}
+                >
+                  {t("reload")}
+                </button>
+              )}
+            </>
+          )}
+        </Panel>
+      </div>
     );
-  if (!state)
-    return (
-      <section className="panel question-card">
-        <p role="status">{t(error ? "failed" : "unavailable")}</p>
-        {error && (
-          <button
-            className="btn outline"
-            onClick={() => {
-              setLoading(true);
-              request("get")
-                .then(() => setError(""))
-                .catch(() => setError("failed"))
-                .finally(() => setLoading(false));
-            }}
-          >
-            {t("reload")}
-          </button>
-        )}
-      </section>
-    );
-  const current = state.questions[question];
-  const active = state.attempt?.status === "active";
-  const review = state.review?.find((item) => item.questionId === current?.id);
+
   if (state.adminPreview)
     return (
-      <section className="panel question-card real-quiz">
-        <h2 dir="auto">{state.title}</h2>
-        <p dir="auto">{state.instructions}</p>
-        <p role="status">{t("adminPreview")}</p>
-        {state.questions.map((item, index) => (
-          <fieldset key={item.id} disabled>
-            <legend>
-              {t("question", { n: index + 1, total: state.questions.length })}: {" "}
-              <span dir="auto">{item.prompt}</span>
-            </legend>
-            <ul>
-              {item.options.map((option) => (
-                <li key={option.id} dir="auto">{option.label}</li>
-              ))}
-            </ul>
-          </fieldset>
-        ))}
-      </section>
-    );
-  return (
-    <section className="panel question-card real-quiz">
-      <header className="quiz-head">
-        <span className="quiz-chip">
-          <ClipboardCheck size={16} aria-hidden="true" /> {t("eyebrow")}
-        </span>
-        <h2 dir="auto">{state.title}</h2>
-        {state.instructions && (
-          <p className="quiz-instructions" dir="auto">
-            {state.instructions}
-          </p>
-        )}
-      </header>
-      {!active && (
-        <dl className="quiz-facts">
-          {state.questions.length > 0 && (
-            <div>
-              <ListChecks size={20} aria-hidden="true" />
-              <dt>{t("questionsLabel")}</dt>
-              <dd>{state.questions.length}</dd>
-            </div>
-          )}
-          <div>
-            <Target size={20} aria-hidden="true" />
-            <dt>{t("passMark")}</dt>
-            <dd dir="ltr">{state.passPercent}%</dd>
-          </div>
-          <div>
-            <Clock size={20} aria-hidden="true" />
-            <dt>{t("timeLimit")}</dt>
-            <dd>{t("minutesValue", { n: state.durationSeconds / 60 })}</dd>
-          </div>
-          <div>
-            <RotateCcw size={20} aria-hidden="true" />
-            <dt>{t("attemptLimit")}</dt>
-            <dd>
-              {t("attemptsValue", {
-                n: state.attemptsUsed,
-                total: state.maxAttempts,
-              })}
-            </dd>
-          </div>
-        </dl>
-      )}
-      {error && <p role="alert">{t(error)}</p>}
-      {!state.attempt ? (
-        <div className="quiz-start">
-          <button className="btn" disabled={busy} onClick={start}>
-            <Play size={18} aria-hidden="true" /> {t("start")}
-          </button>
-          <p>{t("startHint")}</p>
-        </div>
-      ) : (
-        <>
-          {active ? (
-            <p className="timer" aria-label={t("remaining")}>
-              {t("remaining")}{" "}
-              <b dir="ltr">
-                {Math.floor(remaining / 60)}:
-                {String(remaining % 60).padStart(2, "0")}
-              </b>
-            </p>
-          ) : (
-            <div role="status">
-              <h3>{t(state.attempt.passed ? "passed" : "notPassed")}</h3>
-              <p>
-                {t("score", {
-                  earned: state.attempt.score ?? 0,
-                  total: state.attempt.possibleScore ?? 0,
-                })}
-              </p>
-              {state.attempt.status === "timed_out" && <p>{t("timedOut")}</p>}
-            </div>
-          )}
-          {current && (
-            <fieldset disabled={!active || busy}>
+      <div className="primary assessment-single">
+        {heading}
+        <Panel className="question-card real-quiz">
+          <p role="status">{t("adminPreview")}</p>
+          {state.questions.map((item, index) => (
+            <fieldset key={item.id} disabled>
               <legend>
-                {t("question", {
-                  n: question + 1,
-                  total: state.questions.length,
-                })}
-                : <span dir="auto">{current.prompt}</span>
+                {t("question", { n: index + 1, total: state.questions.length })}
+                : <span dir="auto">{item.prompt}</span>
               </legend>
-              <p>
-                {t(current.type === "multiple" ? "selectMany" : "selectOne")}
-              </p>
-              <div className="answers">
-                {current.options.map((option) => (
-                  <label
-                    key={option.id}
-                    className={
-                      (answers[current.id] ?? []).includes(option.id)
-                        ? "chosen"
-                        : ""
-                    }
-                  >
-                    <input
-                      type={current.type === "multiple" ? "checkbox" : "radio"}
-                      name={current.id}
-                      checked={(answers[current.id] ?? []).includes(option.id)}
-                      onChange={() =>
-                        select(option.id, current.type === "multiple")
-                      }
-                    />
-                    <span dir="auto">{option.label}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-          )}
-          {review && (
-            <div className="lesson-notes">
-              <h3>{t("correctAnswers")}</h3>
               <ul>
-                {current.options
-                  .filter((option) => review.correctOptions.includes(option.id))
-                  .map((option) => (
-                    <li key={option.id} dir="auto">
-                      {option.label}
-                    </li>
-                  ))}
+                {item.options.map((option) => (
+                  <li key={option.id} dir="auto">
+                    {option.label}
+                  </li>
+                ))}
               </ul>
-              <p dir="auto">{review.explanation}</p>
-            </div>
-          )}
-          <div className="lesson-pager">
-            <button
-              className="btn outline"
-              disabled={question === 0 || busy}
-              onClick={() => setQuestion((n) => n - 1)}
-            >
-              {t("previous")}
-            </button>
-            <button
-              className="btn outline"
-              disabled={question >= state.questions.length - 1 || busy}
-              onClick={() => setQuestion((n) => n + 1)}
-            >
-              {t("next")}
-            </button>
-          </div>
-          {active ? (
-            <button
-              className="btn"
-              disabled={busy}
-              onClick={() => void submit()}
-            >
-              {t(busy ? "saving" : "submit")}
-            </button>
-          ) : (
-            state.attemptsUsed < state.maxAttempts && (
-              <button className="btn" disabled={busy} onClick={start}>
-                {t("retry")}
-              </button>
-            )
-          )}
-        </>
+            </fieldset>
+          ))}
+        </Panel>
+      </div>
+    );
+
+  const total = state.questions.length;
+  const attempt = state.attempt;
+  const active = attempt?.status === "active";
+  const current = state.questions[question];
+  const review = state.review?.find((item) => item.questionId === current?.id);
+  const isAnswered = (id: string) => (answers[id] ?? []).length > 0;
+  const answeredCount = state.questions.filter((q) => isAnswered(q.id)).length;
+  const percentDone = total ? Math.round((answeredCount / total) * 100) : 0;
+  const scorePercent =
+    attempt?.possibleScore
+      ? Math.round(((attempt.score ?? 0) / attempt.possibleScore) * 100)
+      : 0;
+  const minutes = Math.round(state.durationSeconds / 60);
+  const attemptsLeft = state.attemptsUsed < state.maxAttempts;
+  const messages = (
+    <>
+      {error && <p role="alert">{t(error)}</p>}
+      {notice && (
+        <p className="quiz-notice" role="status">
+          <CircleCheck size={16} aria-hidden="true" /> {t(notice)}
+        </p>
       )}
-    </section>
+    </>
+  );
+
+  const instructions = (
+    <Panel className="instructions">
+      <Title>{t("instructionsTitle")}</Title>
+      <div>
+        <FileText aria-hidden="true" />
+        <p>{t("instructionQuestions", { n: total })}</p>
+      </div>
+      <div>
+        <Clock aria-hidden="true" />
+        <p>{t("instructionTime", { n: minutes })}</p>
+      </div>
+      <div>
+        <CircleCheck aria-hidden="true" />
+        <p>{t("instructionSave")}</p>
+      </div>
+      <div>
+        <RotateCcw aria-hidden="true" />
+        <p>
+          {t("instructionAttempts", {
+            n: state.attemptsUsed,
+            total: state.maxAttempts,
+          })}
+        </p>
+      </div>
+      <div>
+        <Info aria-hidden="true" />
+        <p>{t("instructionSubmit")}</p>
+      </div>
+      {active ? (
+        <button
+          className="btn green-button"
+          disabled={busy}
+          onClick={() => void submit()}
+        >
+          <Send aria-hidden="true" />
+          {t(busy ? "saving" : "submit")}
+        </button>
+      ) : (
+        attempt &&
+        attemptsLeft && (
+          <button
+            className="btn green-button"
+            disabled={busy}
+            onClick={start}
+          >
+            <RotateCcw aria-hidden="true" />
+            {t("retry")}
+          </button>
+        )
+      )}
+    </Panel>
+  );
+
+  return (
+    <div className="columns assessment-columns real-quiz">
+      <div className="primary">
+        {heading}
+        {active && (
+          <div className="assessment-status">
+            <Panel>
+              <b>{t("question", { n: question + 1, total })}</b>
+              <div className="inline-progress">
+                <Progress value={percentDone} />
+                <span>{t("percentComplete", { n: percentDone })}</span>
+              </div>
+            </Panel>
+            <Panel className="timer">
+              <Clock aria-hidden="true" />
+              <div role="timer" aria-label={t("remaining")}>
+                <small>{t("remaining")}</small>
+                <b dir="ltr">
+                  {Math.floor(remaining / 60)}:
+                  {String(remaining % 60).padStart(2, "0")}
+                </b>
+              </div>
+            </Panel>
+          </div>
+        )}
+        <Panel className="question-card">
+          {!attempt ? (
+            <>
+              <dl className="quiz-facts">
+                {total > 0 && (
+                  <div>
+                    <ListChecks size={20} aria-hidden="true" />
+                    <dt>{t("questionsLabel")}</dt>
+                    <dd>{total}</dd>
+                  </div>
+                )}
+                <div>
+                  <Target size={20} aria-hidden="true" />
+                  <dt>{t("passMark")}</dt>
+                  <dd dir="ltr">{state.passPercent}%</dd>
+                </div>
+                <div>
+                  <Clock size={20} aria-hidden="true" />
+                  <dt>{t("timeLimit")}</dt>
+                  <dd>{t("minutesValue", { n: minutes })}</dd>
+                </div>
+                <div>
+                  <RotateCcw size={20} aria-hidden="true" />
+                  <dt>{t("attemptLimit")}</dt>
+                  <dd>
+                    {t("attemptsValue", {
+                      n: state.attemptsUsed,
+                      total: state.maxAttempts,
+                    })}
+                  </dd>
+                </div>
+              </dl>
+              {messages}
+              <div className="quiz-start">
+                <button className="btn" disabled={busy} onClick={start}>
+                  <Play size={18} aria-hidden="true" /> {t("start")}
+                </button>
+                <p>{t("startHint")}</p>
+              </div>
+            </>
+          ) : (
+            <>
+              {!active && (
+                <div className="assessment-result quiz-result" role="status">
+                  <IconBox icon={Trophy} color="green" />
+                  <h2>{t(attempt.passed ? "passed" : "notPassed")}</h2>
+                  <p className="score-value" dir="ltr">
+                    {scorePercent}%
+                  </p>
+                  <p>
+                    {t("score", {
+                      earned: attempt.score ?? 0,
+                      total: attempt.possibleScore ?? 0,
+                    })}
+                  </p>
+                  {attempt.status === "timed_out" && <p>{t("timedOut")}</p>}
+                </div>
+              )}
+              {current && (
+                <>
+                  <span className="question-label">
+                    {t("questionChip", { n: question + 1 })}
+                  </span>
+                  <h2 id={`q-${current.id}`} dir="auto">
+                    {current.prompt}
+                  </h2>
+                  <p>
+                    {t(
+                      current.type === "multiple" ? "selectMany" : "selectOne",
+                    )}
+                  </p>
+                  <fieldset
+                    className="answers"
+                    aria-labelledby={`q-${current.id}`}
+                    disabled={!active || busy}
+                  >
+                    {current.options.map((option, index) => {
+                      const chosen = (answers[current.id] ?? []).includes(
+                        option.id,
+                      );
+                      const correct = review?.correctOptions.includes(
+                        option.id,
+                      );
+                      return (
+                        <label
+                          key={option.id}
+                          className={[
+                            chosen ? "chosen" : "",
+                            review && correct ? "is-correct" : "",
+                            review && chosen && !correct ? "is-incorrect" : "",
+                          ].join(" ")}
+                        >
+                          <input
+                            type={
+                              current.type === "multiple" ? "checkbox" : "radio"
+                            }
+                            name={current.id}
+                            checked={chosen}
+                            onChange={() =>
+                              select(option.id, current.type === "multiple")
+                            }
+                          />
+                          <b aria-hidden="true">
+                            {LETTERS[locale][index] ?? index + 1}.
+                          </b>
+                          <div>
+                            <strong dir="auto">{option.label}</strong>
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </fieldset>
+                  {review && (
+                    <div className="lesson-notes quiz-review">
+                      <h3>{t("correctAnswers")}</h3>
+                      <ul>
+                        {current.options
+                          .filter((option) =>
+                            review.correctOptions.includes(option.id),
+                          )
+                          .map((option) => (
+                            <li key={option.id} dir="auto">
+                              {option.label}
+                            </li>
+                          ))}
+                      </ul>
+                      {review.explanation && (
+                        <p dir="auto">{review.explanation}</p>
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
+              {messages}
+              <div className="question-buttons">
+                <button
+                  className="btn outline"
+                  disabled={question === 0 || busy}
+                  onClick={() => go(question - 1)}
+                >
+                  <ChevronLeft className="flip-rtl" aria-hidden="true" />
+                  {t("previous")}
+                </button>
+                <span />
+                {active && (
+                  <button
+                    className="btn outline"
+                    disabled={busy || !current || !isAnswered(current.id)}
+                    onClick={() => void saveAnswer()}
+                  >
+                    <Bookmark size={19} aria-hidden="true" />
+                    {t("saveAnswer")}
+                  </button>
+                )}
+                <button
+                  className="btn"
+                  disabled={question >= total - 1 || busy}
+                  onClick={() => go(question + 1)}
+                >
+                  {t("next")}
+                  <ArrowRight className="flip-rtl" aria-hidden="true" />
+                </button>
+              </div>
+            </>
+          )}
+        </Panel>
+      </div>
+      <aside className="right-rail" aria-label={t("sidebarLabel")}>
+        {attempt && total > 0 && (
+          <Panel>
+            <Title>
+              {t("progressTitle")}{" "}
+              <span className="muted" dir="ltr">
+                {question + 1}/{total}
+              </span>
+            </Title>
+            <nav className="question-numbers" aria-label={t("progressTitle")}>
+              {state.questions.map((item, index) => {
+                const isCurrent = index === question;
+                const done = isAnswered(item.id);
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => go(index)}
+                    className={isCurrent ? "current" : done ? "answered" : ""}
+                    aria-current={isCurrent ? "step" : undefined}
+                    aria-label={t("goToQuestion", {
+                      n: index + 1,
+                      status: t(done ? "answered" : "notAnswered"),
+                    })}
+                  >
+                    {done && !isCurrent ? (
+                      <Check size={21} aria-hidden="true" />
+                    ) : (
+                      index + 1
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
+            <div className="legend" aria-hidden="true">
+              <span>
+                <i className="green-dot" />
+                {t("answered")}
+              </span>
+              <span>
+                <i className="dot" />
+                {t("current")}
+              </span>
+              <span>
+                <i />
+                {t("notAnswered")}
+              </span>
+            </div>
+          </Panel>
+        )}
+        <Panel className="pass-mark">
+          <IconBox icon={Trophy} color="green" />
+          <div>
+            <p>{t("passMark")}</p>
+            <p className="pass-value" dir="ltr">
+              {state.passPercent}%
+            </p>
+          </div>
+          <p>{t("passDescription", { n: state.passPercent })}</p>
+        </Panel>
+        {instructions}
+      </aside>
+    </div>
   );
 }

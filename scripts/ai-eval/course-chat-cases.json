@@ -1,0 +1,97 @@
+{
+  "description": "Course chat retrieval evaluation: each question must find one of the expected lessons (module.lesson) in the top 3 results. Questions are in English and Egyptian Arabic; most answers live in Arabic video transcripts.",
+  "cases": [
+    {
+      "course": "odoo-system-admin",
+      "question": "How do I back up my database on Odoo.sh?",
+      "expect": [
+        "1.9"
+      ]
+    },
+    {
+      "course": "odoo-system-admin",
+      "question": "إزاي أضيف مستخدم جديد وأحدد صلاحياته؟",
+      "expect": [
+        "1.3",
+        "1.4",
+        "1.5"
+      ]
+    },
+    {
+      "course": "odoo-system-admin",
+      "question": "How do I activate a new language in Odoo?",
+      "expect": [
+        "1.7"
+      ]
+    },
+    {
+      "course": "odoo-implementation",
+      "question": "إزاي أسجّل فاتورة مورد وأدفعها؟",
+      "expect": [
+        "3.3",
+        "1.5"
+      ]
+    },
+    {
+      "course": "odoo-implementation",
+      "question": "What are the phases of an Odoo implementation project?",
+      "expect": [
+        "1.2"
+      ]
+    },
+    {
+      "course": "python-fundamentals",
+      "question": "How do I read user input and print output in Python?",
+      "expect": [
+        "2.3"
+      ]
+    },
+    {
+      "course": "python-fundamentals",
+      "question": "إيه الفرق بين list و tuple في بايثون؟",
+      "expect": [
+        "5.1",
+        "5.3"
+      ]
+    },
+    {
+      "course": "python-fundamentals",
+      "question": "What features must the to-do list CLI project support?",
+      "expect": [
+        "8.2"
+      ]
+    },
+    {
+      "course": "odoo-development",
+      "question": "What goes in the manifest file of an Odoo module?",
+      "expect": [
+        "1.3"
+      ]
+    },
+    {
+      "course": "odoo-development",
+      "question": "إزاي أعمل model جديد في Odoo؟",
+      "expect": [
+        "1.5",
+        "2.1"
+      ]
+    },
+    {
+      "course": "odoo-user-guide",
+      "question": "How do I create a quotation and confirm a sales order?",
+      "expect": [
+        "1.4"
+      ]
+    },
+    {
+      "course": "crash-course-odoo-erp",
+      "question": "يعني إيه ERP وإزاي بيربط أقسام الشركة ببعض؟",
+      "expect": [
+        "1.2",
+        "1.3",
+        "1.4"
+      ],
+      "note": "Lesson 1.2 is a 41-minute live session whose recording also introduces ERP systems."
+    }
+  ]
+}

@@ -1,8 +1,10 @@
 -- Phase 06: admin authorization, grant/revoke lifecycle and append-only audit.
 -- Runs in a rolled-back transaction under `npm run db:test` (disposable local/CI Supabase).
 BEGIN;
+-- Test sessions are MFA-verified (aal2) unless a test clears this; admin authority requires it.
+SELECT pg_catalog.set_config('request.jwt.claim', '{"aal":"aal2"}', true);
 
-SELECT plan(28);
+SELECT plan(31);
 
 INSERT INTO auth.users (id, aud, role, email, raw_user_meta_data, created_at, updated_at)
 VALUES
@@ -61,9 +63,35 @@ RESET ROLE;
 SET LOCAL ROLE authenticated;
 SELECT pg_catalog.set_config('request.jwt.claim.sub', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', true);
 SELECT pg_catalog.set_config('request.jwt.claims', '{"sub":"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb","role":"authenticated"}', true);
+SELECT pg_catalog.set_config('request.jwt.claim', '{"sub":"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb","aal":"aal1"}', true);
+SELECT throws_ok(
+  $$SELECT public.admin_grant_role('cccccccc-cccc-cccc-cccc-cccccccccccc', 'instructor')$$,
+  '42501',
+  NULL,
+  'an admin with a password-only (aal1) session cannot execute admin RPCs'
+);
+SELECT pg_catalog.set_config('request.jwt.claim', '', true);
+SELECT throws_ok(
+  $$SELECT public.admin_grant_role('cccccccc-cccc-cccc-cccc-cccccccccccc', 'instructor')$$,
+  '42501',
+  NULL,
+  'an admin session without an aal claim cannot execute admin RPCs'
+);
+-- The development switch: with mfa_required off, a password-only admin session is accepted.
+RESET ROLE;
+UPDATE learning_private.admin_security SET mfa_required = false;
+SET LOCAL ROLE authenticated;
+SELECT lives_ok(
+  $$SELECT public.admin_list_role_grants(1, 0)$$,
+  'with the MFA requirement switched off, a password-only admin session is accepted'
+);
+RESET ROLE;
+UPDATE learning_private.admin_security SET mfa_required = true;
+SET LOCAL ROLE authenticated;
+SELECT pg_catalog.set_config('request.jwt.claim', '{"aal":"aal2"}', true);
 SELECT lives_ok(
   $$SELECT public.admin_grant_role('cccccccc-cccc-cccc-cccc-cccccccccccc', 'instructor')$$,
-  'an active admin can grant instructor'
+  'an active admin with an MFA-verified (aal2) session can grant instructor'
 );
 SELECT throws_ok(
   $$SELECT public.admin_grant_role('cccccccc-cccc-cccc-cccc-cccccccccccc', 'instructor')$$,

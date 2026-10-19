@@ -3,7 +3,8 @@
 ## Learning additions — 2026-10-14
 
 - `/{locale}/courses/{slug}/lessons/{lessonId}`: authenticated player/resources/progress; missing exact-locale lessons offer an explicit other-language link.
-- `/{locale}/video-management`: current admin/assigned-instructor uploads and caption operations.
+- `/{locale}/admin/videos`: current administrator uploads and caption operations inside the admin console (`?lesson=<uuid>` preselects a lesson).
+- `/{locale}/video-management`: assigned-instructor uploads and caption operations; current administrators are redirected to `/{locale}/admin/videos`.
 - `/{locale}/admin/enrollments`: current administrator-only audited access grants.
 - `/{locale}/admin/coupons`: current administrator-only audited coupon creation and activation.
 - `POST /api/learning/progress`: start a session or submit a bounded serial checkpoint.
@@ -22,9 +23,9 @@ The learner and authentication routes are shared beneath `[locale]`. Route group
 | AI Assistant | `/en/ai-page` and `/ar/ai-page` |
 | Community | `/en/community` and `/ar/community` |
 | Messages | `/en/messages` and `/ar/messages` |
-| Calendar | `/en/calendar` and `/ar/calendar` |
+| Calendar | `/en/calendar` and `/ar/calendar` (authentication required): entitled course events plus the learner's own study sessions, in the learner's saved time zone. `GET /api/calendar/ics?locale=en|ar` downloads the signed-in learner's events (30 days back to 365 ahead) as an `.ics` file (401 when signed out). Administrators schedule events at `/{locale}/admin/calendar`; instructors with the `instructor` role who are assigned to a course schedule events for that course at `/{locale}/schedule` (404 for everyone else). |
 | Certifications | `/en/certificates` and `/ar/certificates` (authentication required; certificate data remains demo-only) |
-| Settings | `/en/settings` and `/ar/settings` (authentication required) |
+| Settings | `/en/settings` and `/ar/settings` (authentication required); `?tab=` (`account`, `security`, `notifications`, `learning`, `ai`) opens a tab. `GET /api/account/export` downloads the signed-in learner's own data as JSON (401 when signed out). |
 | Login | `/en/login` and `/ar/login` |
 | Signup | `/en/sign-up` and `/ar/sign-up` |
 | Password recovery | `/en/forgot-password`, `/ar/forgot-password`, `/en/reset-password`, and `/ar/reset-password` |
@@ -32,7 +33,8 @@ The learner and authentication routes are shared beneath `[locale]`. Route group
 | Course details | `/en/catalog/[slug]` and `/ar/catalog/[slug]` |
 | Assessment | `/en/assessment` and `/ar/assessment` |
 | Checkout demo | `/en/payment` and `/ar/payment` |
-| Admin roles (admin role required) | `/en/admin` and `/ar/admin` |
+| Admin overview (admin role required) | `/en/admin` and `/ar/admin` |
+| Admin roles (admin role required) | `/en/admin/roles` and `/ar/admin/roles` |
 | Admin audit log (admin role required) | `/en/admin/audit` and `/ar/admin/audit` |
 
 Phase 11 infrastructure endpoints are locale-neutral App Router handlers:
@@ -113,4 +115,14 @@ Checkout is three steps on `/{locale}/payment`: `?course={slug}` or `?order={id}
 
 ## Demo-only learner pages
 
-`/ai-page`, `/community`, `/messages` and `/calendar` (and the dashboard AI card, community banners and related quick links) show fixture content. They are hidden and return 404 unless `NEXT_PUBLIC_SHOW_DEMO_FEATURES=true`; the Playwright config sets it so the existing tests still cover them. Keep it off for real learners until decisions D04, D05, D21 and D22 are resolved.
+`/community` (and community banners and related quick links) shows fixture content. It is hidden and returns 404 unless `NEXT_PUBLIC_SHOW_DEMO_FEATURES=true`; the Playwright config sets it so the existing tests still cover it. Keep it off for real learners; community remains deferred under D22.
+
+`/{locale}/messages` is real, private messaging (authentication required; anonymous visits go to login). A learner talks to the instructors of a course they are entitled to (`course` topic) or to the ETripleSoft team (`support` topic, answered by MFA-verified admins); learners never message each other. Instructors (active role and course link) and admins also get a **Learner inbox** tab. Query parameters: `?thread={id}` opens a conversation, `?box=staff` selects the learner inbox (ignored for non-staff), `?new={courseSlug}` or `?new=support` opens the new-message dialog (the course page links here for enrolled learners). New messages notify the other side through the header bell; the sidebar shows a dot when a conversation is unread. Requires migration `20261019150000_learner_messages.sql` (local only; not applied to Hosted DEV). See [Phase 26](phases/PHASE-26-COMMUNITY-MESSAGES.md). The calendar is a real, database-backed feature (D04 approved 2026-10-18) and is no longer gated.
+
+`/{locale}/ai-page` is the Gemini-backed AI assistant (authentication required; anonymous visits go to login). It shows an unavailable state when `GEMINI_API_KEY` is not configured. `POST /api/ai/chat` streams one reply as NDJSON and saves the turn; `GET /api/ai/conversations/{id}` returns the caller's own messages and `DELETE` removes that conversation. The page has two chats: General and Course (answers from one enrolled course's indexed content with lesson citations); `POST /api/ai/chat` takes `kind` (`general` | `course`) and, for `course`, `courseSlug`. `/{locale}/admin/ai` (current admins) shows per-course video transcripts and rebuilds the Course chat index. Requires migrations `20261018121201_ai_assistant_conversations.sql` and `20261018122716_ai_assistant_rpc_defaults.sql` (applied to Hosted DEV) and `20261018200000_ai_course_rag.sql` (all applied to Hosted DEV). See [Phase 25](phases/PHASE-25-AI-ASSISTANT.md).
+
+## Admin console — 2026-10-18
+
+`/{locale}/admin` is now a read-only overview (course, AI-index, coupon and administrator figures, items needing attention, quick actions and recent audit activity) built from the existing admin RPCs; no new database objects. Role management moved from `/{locale}/admin` to `/{locale}/admin/roles`. `/{locale}/admin/courses` accepts `?status=published|draft|archived` alongside `?page=`. All admin pages share a sidebar shell (drawer at 1024px and below). Authority is unchanged: the layout and every page re-check the current admin role, and each RPC re-checks it in the database.
+
+Course videos moved into the admin console at `/{locale}/admin/videos`; `/{locale}/video-management` redirects administrators there and keeps serving assigned instructors in the learner shell. The learner sidebar shows an "Admin dashboard" link to `/{locale}/admin` for current administrators only (display only; the admin layout re-checks the role).

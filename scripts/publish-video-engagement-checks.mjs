@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import nextEnv from '@next/env'
 import { createClient } from '@supabase/supabase-js'
+import { signInAdmin } from './lib/admin-mfa.mjs'
 
 nextEnv.loadEnvConfig(process.cwd(), true)
 
@@ -17,7 +18,7 @@ for (const video of manifest.videos) {
   }
 }
 
-const requiredEnv = ['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'UPLOAD_ADMIN_EMAIL', 'UPLOAD_ADMIN_PASSWORD']
+const requiredEnv = ['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'UPLOAD_ADMIN_EMAIL', 'UPLOAD_ADMIN_PASSWORD', 'UPLOAD_ADMIN_TOTP_SECRET']
 const missing = requiredEnv.filter((name) => !process.env[name]?.trim())
 if (missing.length) throw new Error(`Missing local operator settings: ${missing.join(', ')}`)
 if (process.env.MUX_ENVIRONMENT !== 'development') throw new Error('Content publishing is restricted to the development environment.')
@@ -29,8 +30,7 @@ if (!state.entries || typeof state.entries !== 'object') throw new Error('Practi
 const client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
   auth: { autoRefreshToken: true, persistSession: false },
 })
-const { error: signInError } = await client.auth.signInWithPassword({ email: process.env.UPLOAD_ADMIN_EMAIL, password: process.env.UPLOAD_ADMIN_PASSWORD })
-if (signInError) throw new Error('Administrator sign-in failed; credentials were not printed.')
+await signInAdmin(client, { email: process.env.UPLOAD_ADMIN_EMAIL, password: process.env.UPLOAD_ADMIN_PASSWORD, totpSecret: process.env.UPLOAD_ADMIN_TOTP_SECRET })
 
 async function rpc(name, params) {
   const { data, error } = await client.rpc(name, params)

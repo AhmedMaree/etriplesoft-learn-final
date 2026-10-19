@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import Mux from '@mux/ts'
 import { createClient } from '@supabase/supabase-js'
+import { signInAdmin } from './lib/admin-mfa.mjs'
 
 // One-off operator command that creates a DRAFT course from a plan file and uploads its lesson videos
 // to Mux through the same authorized RPCs as /api/mux/uploads. It signs in as an active admin, so
@@ -15,7 +16,7 @@ import { createClient } from '@supabase/supabase-js'
 // Progress is saved to <videos>/.import-state.json (or --state=<file>) so a rerun resumes instead of
 // duplicating rows. A plan whose course has "existing": true adds modules/lessons to that published
 // course instead of creating one; a lesson with "preview": true is watchable without enrollment.
-// Needs UPLOAD_ADMIN_EMAIL / UPLOAD_ADMIN_PASSWORD plus the Supabase publishable key and Mux keys.
+// Needs UPLOAD_ADMIN_EMAIL / UPLOAD_ADMIN_PASSWORD / UPLOAD_ADMIN_TOTP_SECRET plus the Supabase publishable key and Mux keys.
 
 const args = process.argv.slice(2)
 const arg = (name) => args.find((value) => value.startsWith(`--${name}=`))?.slice(name.length + 3)
@@ -54,11 +55,11 @@ if (!origin) throw new Error('Set MUX_ALLOWED_ORIGINS.')
 const supabase = createClient(env('NEXT_PUBLIC_SUPABASE_URL'), env('NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'), {
   auth: { autoRefreshToken: true, persistSession: false },
 })
-const { error: signInError } = await supabase.auth.signInWithPassword({
+await signInAdmin(supabase, {
   email: env('UPLOAD_ADMIN_EMAIL') ?? '',
   password: env('UPLOAD_ADMIN_PASSWORD') ?? '',
+  totpSecret: env('UPLOAD_ADMIN_TOTP_SECRET'),
 })
-if (signInError) throw new Error(`Admin sign-in failed: ${signInError.message}`)
 const mux = new Mux({ logLevel: 'off', maxRetries: 1 })
 
 async function rpc(name, params) {

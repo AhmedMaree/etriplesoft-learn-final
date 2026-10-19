@@ -34,6 +34,18 @@
     { "lessonId": "9af9270d-c4b4-7b55-f91c-2a1036d84fca", "title": "Batch & Wave Transfer", "bunnyTitle": "Batch & Wave Transfer" },
     { "lessonId": "e6be3867-0877-e2cf-cd60-46c06090e982", "title": "Inventory Adjustments", "bunnyTitle": "Inventory Adjustments" },
     { "lessonId": "d4b0bee8-1efe-a322-5326-2792a764f0a3", "title": "Inventory Reports", "bunnyTitle": "Inventory Reports" },
-    { "lessonId": "c3337b9a-2e85-aa3d-4fac-97051ca87acc", "title": "Department", "bunnyTitle": "Department" }
+    { "lessonId": "c3337b9a-2e85-aa3d-4fac-97051ca87acc", "title": "Department", "bunnyTitle": "Department" },
+    { "lessonId": "8d876e53-ceb0-64a2-a628-522cca302b11", "title": "Employee", "bunnyTitle": "Employee" },
+    { "lessonId": "59cc3bb9-650c-95a5-fdde-4279d9e3daf0", "title": "Contracts", "bunnyTitle": "Contracts" },
+    { "lessonId": "efabc6b3-7cfb-9821-0e54-59d6eeffe0c6", "title": "Time Off", "bunnyTitle": "Time Off" },
+    { "lessonId": "d92d0065-552f-8101-4443-bd8f410bbe24", "title": "Attendance", "bunnyTitle": "Attendance" },
+    { "lessonId": "bcf0f112-71f9-cc1d-24d2-50df92383137", "title": "Payroll", "bunnyTitle": "Payroll" },
+    { "lessonId": "6c4e79c1-c417-a2c6-56b3-c4ae8419c5c5", "title": "Payslip", "bunnyTitle": "Payslip" },
+    { "lessonId": "0c0ee08e-1f78-fa34-a395-fed867e0896d", "title": "Recruitment", "bunnyTitle": "Recruitment" },
+    { "lessonId": "c10b197a-3135-22ef-f4d5-01abb30d575b", "title": "Manufacture Order", "bunnyTitle": "Manufacture Order" },
+    { "lessonId": "5264b338-6390-3535-dac0-1af7391d29f8", "title": "Bill Of Material", "bunnyTitle": "Bill Of Material" },
+    { "lessonId": "0ea7a132-b637-07c4-0464-cccd9f33dce4", "title": "Operations", "bunnyTitle": "Operations" },
+    { "lessonId": "51855832-72ed-f236-8191-699b4bb6589f", "title": "Work Center", "bunnyTitle": "Work Center" },
+    { "lessonId": "1342d643-d478-ea5b-971b-01be14e11128", "title": "Mrp Planning", "bunnyTitle": "Mrp Planning" }
   ]
 }

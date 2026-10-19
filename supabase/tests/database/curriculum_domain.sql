@@ -1,6 +1,8 @@
 -- Phase 08: curriculum ordering, exact-locale publication, safe outlines and private resources.
 -- Runs in a rolled-back transaction; fixtures are local/CI only.
 BEGIN;
+-- Test sessions are MFA-verified (aal2) unless a test clears this; admin authority requires it.
+SELECT pg_catalog.set_config('request.jwt.claim', '{"aal":"aal2"}', true);
 
 SELECT plan(40);
 

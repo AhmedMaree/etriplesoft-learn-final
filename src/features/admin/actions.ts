@@ -39,6 +39,7 @@ export async function grantRoleAction(_state: AdminActionState, formData: FormDa
   if (error) return { error: errorKey(error) }
 
   revalidatePath('/[locale]/admin', 'page')
+  revalidatePath('/[locale]/admin/roles', 'page')
   revalidatePath('/[locale]/admin/audit', 'page')
   return { success: 'granted' }
 }
@@ -52,6 +53,7 @@ export async function revokeRoleAction(_state: AdminActionState, formData: FormD
   if (error) return { error: errorKey(error) }
 
   revalidatePath('/[locale]/admin', 'page')
+  revalidatePath('/[locale]/admin/roles', 'page')
   revalidatePath('/[locale]/admin/audit', 'page')
   return { success: 'revoked' }
 }

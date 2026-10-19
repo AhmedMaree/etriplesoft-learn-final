@@ -24,3 +24,14 @@ export async function getCourseProgress(courseId: string, lessonIds: string[]) {
   // The caller supplies only exact-locale published lesson IDs from the course outline.
   return data ?? [];
 }
+
+/**
+ * Lessons the caller may open now under the sequential-learning rule. Display only: every
+ * lesson, video, quiz and resource RPC re-checks the same rule in the database.
+ */
+export async function getUnlockedLessons(courseId: string) {
+  const client = await createClient();
+  const { data, error } = await client.rpc("learner_unlocked_lessons", { p_course_id: courseId });
+  if (error) throw new Error("Lesson access is unavailable.");
+  return new Set((data ?? []).map((row) => row.lesson_id));
+}

@@ -176,10 +176,7 @@ export function CourseEditor({
       {message && <p role="status">{t(message)}</p>}
       {course && (
         <>
-          <p className="admin-hint">{t("workflow")}</p>
-          <Link className="btn outline" href={`/courses?course=${course.slug}`}>
-            {t("previewCourse")}
-          </Link>
+          <p className="admin-hint admin-callout">{t("workflow")}</p>
           {modules.map((module) => (
             <ModuleEditor key={`${module.id}-${locale}`} module={module} />
           ))}
@@ -462,7 +459,7 @@ function LessonEditor({ lesson }: { lesson: AdminLesson }) {
       </form>
       {message && <p role="status">{t(message)}</p>}
       {lesson.type === "video" && (
-        <Link className="btn outline" href="/video-management">
+        <Link className="btn outline" href={`/admin/videos?lesson=${lesson.id}`}>
           {t("manageVideo")}
         </Link>
       )}

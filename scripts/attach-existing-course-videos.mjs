@@ -4,6 +4,7 @@ import path from 'node:path'
 import nextEnv from '@next/env'
 import Mux from '@mux/ts'
 import { createClient } from '@supabase/supabase-js'
+import { signInAdmin } from './lib/admin-mfa.mjs'
 
 nextEnv.loadEnvConfig(process.cwd(), true)
 
@@ -39,7 +40,7 @@ if (new Set(files.map((item) => item.file)).size !== files.length || new Set(fil
   throw new Error('Manifest filenames and lesson titles must be unique.')
 }
 
-const requiredEnv = ['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'UPLOAD_ADMIN_EMAIL', 'UPLOAD_ADMIN_PASSWORD']
+const requiredEnv = ['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'UPLOAD_ADMIN_EMAIL', 'UPLOAD_ADMIN_PASSWORD', 'UPLOAD_ADMIN_TOTP_SECRET']
 const missing = requiredEnv.filter((name) => !process.env[name]?.trim())
 if (missing.length) throw new Error(`Missing local operator settings: ${missing.join(', ')}`)
 if (process.env.MUX_ENVIRONMENT !== 'development') throw new Error('Uploads are restricted to the Mux Development environment.')
@@ -55,11 +56,11 @@ if (state.courseSlug !== plan.courseSlug || !state.entries || typeof state.entri
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
   auth: { autoRefreshToken: true, persistSession: false },
 })
-const { error: signInError } = await supabase.auth.signInWithPassword({
+await signInAdmin(supabase, {
   email: process.env.UPLOAD_ADMIN_EMAIL,
   password: process.env.UPLOAD_ADMIN_PASSWORD,
+  totpSecret: process.env.UPLOAD_ADMIN_TOTP_SECRET,
 })
-if (signInError) throw new Error('Administrator sign-in failed; credentials were not printed.')
 
 async function rpc(name, params) {
   const { data, error } = await supabase.rpc(name, params)

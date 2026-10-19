@@ -1,0 +1,200 @@
+/* Calendar additions on top of the approved calendar layout in styles.css. */
+.calendar-zone {
+  margin: 4px 1px 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.calendar-zone a {
+  color: var(--blue);
+  font-weight: 600;
+}
+.calendar-status {
+  font-size: 13px;
+  margin: 8px 1px 0;
+}
+.calendar-status.error {
+  color: #c62839;
+}
+.calendar-empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 10px 0 0;
+  padding: 12px 14px;
+  border: 1px dashed #c9d5ea;
+  border-radius: 10px;
+  background: #f7faff;
+  font-size: 13px;
+  color: #324a76;
+}
+.calendar-empty p {
+  margin: 0;
+  flex: 1 1 260px;
+}
+.calendar-body {
+  margin-top: 12px;
+  transition: opacity 0.15s ease;
+}
+.calendar-body.loading {
+  opacity: 0.55;
+}
+/* Cells grow with their events instead of letting them spill into the next week. */
+.calendar-grid:not(.week) .calendar-days > div {
+  height: auto;
+  min-height: 113px;
+}
+.calendar-days > div.is-today > span:first-child {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 4px;
+  border-radius: 12px;
+  background: var(--blue);
+  color: white;
+  font-weight: 700;
+}
+.calendar-event.teal {
+  background: #dff4ef;
+  color: #065747;
+}
+.calendar-event.gray {
+  background: #eef1f7;
+  color: #3f4f70;
+}
+.calendar-event.cancelled,
+.agenda > button.cancelled strong {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+.calendar-event strong {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.calendar-more {
+  display: block;
+  margin-top: 4px;
+  border: 0;
+  background: none;
+  padding: 2px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--blue);
+}
+.icon-box.gray {
+  background: #eef1f7;
+  color: #55648a;
+}
+.icon-box.teal {
+  background: #dff4ef;
+  color: #065747;
+}
+.calendar-rail-empty {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 8px 0 4px;
+}
+.sync-panel a.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.calendar-modal .event-kind {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.calendar-modal h2 {
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+}
+.event-cancelled {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #fff0f1;
+  color: #c62839;
+  font-size: 12px;
+}
+.event-course {
+  font-weight: 600;
+  color: #324a76;
+}
+.event-description {
+  white-space: pre-line;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.event-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.event-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.calendar-danger {
+  color: #c62839;
+  border-color: #f2c4ca;
+}
+.study-planner {
+  display: grid;
+  gap: 12px;
+}
+.study-planner h2 {
+  margin: 8px 0 0;
+}
+.study-planner > p {
+  margin: 0;
+  font-size: 14px;
+}
+.study-planner label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #324a76;
+  min-width: 0;
+}
+.study-planner input,
+.study-planner select {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  font: inherit;
+  font-weight: 400;
+}
+.study-planner-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.study-planner .btn {
+  margin-top: 4px;
+  justify-self: start;
+}
+@media (max-width: 560px) {
+  .study-planner-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .study-planner-row label:last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .calendar-body {
+    transition: none;
+  }
+}

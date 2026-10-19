@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { createClient } from "@supabase/supabase-js";
 import { expect, test, type Page } from "@playwright/test";
 import type { Database } from "../src/types/database";
+import { completeAdminMfa, enrollAdminTotp } from "./support/admin-mfa";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -18,6 +19,7 @@ const password = `Aa1-${randomUUID()}!`;
 const slug = `learning-${run}`;
 const paidEmail = `paid-${email}`;
 let adminId: string;
+let adminSecret: string;
 let courseId: string;
 let lessonId: string;
 let nextLessonId: string;
@@ -76,6 +78,7 @@ test.beforeAll(async () => {
     auth: { persistSession: false, autoRefreshToken: false },
   });
   await client.auth.signInWithPassword({ email: `admin-${email}`, password });
+  adminSecret = await enrollAdminTotp(client);
   async function rpc<N extends keyof Database["public"]["Functions"]>(
     name: N,
     args: Database["public"]["Functions"][N]["Args"],
@@ -229,6 +232,7 @@ async function login(page: Page, admin = false) {
   await page.locator("input[name=password]").fill(password);
   await page.locator("form.auth-fields button[type=submit]").click();
   await page.waitForURL((current) => !current.pathname.endsWith("/login"));
+  if (admin) await completeAdminMfa(page, "en", adminSecret);
 }
 
 test("enrollment, real signed playback, persisted progress and resume", async ({

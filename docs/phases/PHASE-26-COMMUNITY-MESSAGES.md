@@ -2,9 +2,13 @@
 
 ## 1. Status
 
-PLANNED
+IN PROGRESS (messages); community DEFERRED
 
-Evidence: community/page.tsx and messages/page.tsx are placeholder panels. There is no community/message persistence or supported V1 moderation model.
+Evidence (2026-10-19): the user asked for a complete messages page, which activates D22 for messages only. Migration `20261019150000_learner_messages.sql` adds learner-owned conversations (`message_threads`, append-only `thread_messages`, per-participant `message_thread_reads`) with no table grants; every read and write is a `messages_*` function that checks the caller. Topics: `course` (entitled learners; answered by that course's instructors with an active role and course link, plus MFA-verified admins) and `support` (answered by MFA-verified admins). There is no learner-to-learner messaging and staff cannot start conversations, so no roster or contact details are exposed. New messages create one refreshed notification per conversation and recipient. Limits: 5 new conversations per hour, 30 open conversations, 30 messages per 10 minutes. Conversations are included in the account data export, with staff labelled and not identified. `/community` stays a gated placeholder.
+
+Verification so far: local pgTAP `supabase/tests/database/messages.sql` passed 61/61 (before the data-export assertions were added; rerun required), covering cross-learner read/post/close/mark denial, unassigned-instructor and password-only-admin denial, forged direct writes, anonymous denial, notification dedupe and rate limits. Typecheck and lint pass. `tests/messages-flow.spec.ts` (learner ↔ instructor flow, Arabic RTL, cross-learner denial) is written but has not run yet: the local stack stopped under memory pressure. Hosted DEV migration (needs approval), eight-width EN/AR evidence and manual sign-off remain.
+
+Original evidence: community/page.tsx and messages/page.tsx were placeholder panels with no persistence or V1 moderation model.
 
 ## 2. Goal
 

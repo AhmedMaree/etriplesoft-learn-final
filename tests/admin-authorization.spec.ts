@@ -2,9 +2,10 @@ import { randomBytes } from "node:crypto";
 import { test, expect, type Page } from "@playwright/test";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../src/types/database";
+import { enrollAdminTotp, passAdminMfa, totpCode, verifyAdminTotp } from "./support/admin-mfa";
 
 const locales = ["en", "ar"] as const;
-const routes = ["admin", "admin/audit"] as const;
+const routes = ["admin", "admin/roles", "admin/audit"] as const;
 
 test.describe("anonymous visitors", () => {
   for (const locale of locales) {
@@ -34,6 +35,8 @@ test.describe("admin lifecycle (hosted DEV)", () => {
   const password = `Aa1-${randomBytes(12).toString("base64url")}`;
   const emailOf = (label: string) => `codex-admin-${runId}-${label}@example.test`;
   const ids: Record<string, string> = {};
+  // TOTP secrets of the test admins; admin authority needs an MFA-verified (aal2) session.
+  const secrets: Record<string, string> = {};
   let service: SupabaseClient<Database>;
 
   async function makeUser(label: string) {
@@ -53,21 +56,35 @@ test.describe("admin lifecycle (hosted DEV)", () => {
     await page.locator('input[name="password"]').fill(password);
     await page.locator("form.auth-fields button[type=submit]").click();
     await page.waitForURL((u) => !u.pathname.endsWith("/login"));
+    if (secrets[label]) {
+      await page.goto(`/${locale}/admin`);
+      await passAdminMfa(page, secrets[label]);
+    }
   }
 
-  async function rpcClient(label: string) {
+  async function passwordClient(label: string) {
     const client = createClient<Database>(url!, publishableKey!, { auth: { autoRefreshToken: false, persistSession: false } });
     const { error } = await client.auth.signInWithPassword({ email: emailOf(label), password });
     if (error) throw new Error(`sign-in ${label} failed: ${error.message}`);
     return client;
   }
 
+  async function rpcClient(label: string) {
+    const client = await passwordClient(label);
+    if (secrets[label]) await verifyAdminTotp(client, secrets[label]);
+    return client;
+  }
+
   test.beforeAll(async () => {
     service = createClient<Database>(url!, serviceKey!, { auth: { autoRefreshToken: false, persistSession: false } });
-    for (const label of ["boss", "second", "learner", "target"]) await makeUser(label);
+    for (const label of ["boss", "second", "learner", "target", "fresh"]) await makeUser(label);
     // Bootstrap exactly as the operator script does: service-role insert, audited by trigger.
     const { error } = await service.from("user_roles").insert({ user_id: ids.boss, role: "admin", granted_by: ids.boss });
     if (error) throw new Error(`bootstrap failed: ${error.message}`);
+    // "fresh" is an admin who has not set up MFA yet.
+    const fresh = await service.from("user_roles").insert({ user_id: ids.fresh, role: "admin", granted_by: ids.boss });
+    if (fresh.error) throw new Error(`fresh admin grant failed: ${fresh.error.message}`);
+    for (const label of ["boss", "second"]) secrets[label] = await enrollAdminTotp(await passwordClient(label));
   });
 
   for (const locale of locales) {
@@ -97,9 +114,11 @@ test.describe("admin lifecycle (hosted DEV)", () => {
   });
 
   for (const locale of locales) {
-    test(`an admin sees both pages in ${locale}`, async ({ page }) => {
+    test(`an admin sees the admin pages in ${locale}`, async ({ page }) => {
       await login(page, locale, "boss");
       await page.goto(`/${locale}/admin`);
+      await expect(page.locator(".admin-stats")).toBeVisible();
+      await page.goto(`/${locale}/admin/roles`);
       await expect(page.getByRole("table").first()).toBeVisible();
       await expect(page.locator("html")).toHaveAttribute("dir", locale === "ar" ? "rtl" : "ltr");
       await page.goto(`/${locale}/admin/audit`);
@@ -108,9 +127,35 @@ test.describe("admin lifecycle (hosted DEV)", () => {
     });
   }
 
+  test("an admin without MFA must set it up first, and a password-only session cannot call admin RPCs", async ({ page }) => {
+    await login(page, "en", "fresh");
+    const api = await page.request.post("/api/admin/resources", { headers: { Origin: new URL(page.url()).origin }, data: {} });
+    expect(api.status()).toBe(403);
+    expect(await api.json()).toEqual({ error: "access" });
+    await page.goto("/en/admin");
+    await expect(page.locator("#admin-mfa-title")).toHaveText("Set up two-factor authentication");
+    await expect(page.locator(".admin-stats")).toHaveCount(0);
+    await page.locator(".admin-mfa .btn").click();
+    await expect(page.locator(".admin-mfa-setup img")).toBeVisible();
+    const secret = (await page.locator(".admin-mfa-setup code").textContent())!.trim();
+    await page.locator('.admin-mfa input[name="code"]').fill("000000");
+    await page.locator(".admin-mfa-form button[type=submit]").click();
+    await expect(page.locator("#admin-mfa-error")).toBeVisible();
+    await page.locator('.admin-mfa input[name="code"]').fill(totpCode(secret));
+    await page.locator(".admin-mfa-form button[type=submit]").click();
+    await expect(page.locator(".admin-stats")).toBeVisible();
+    secrets.fresh = secret;
+    expect((await (await rpcClient("fresh")).rpc("admin_list_audit")).error).toBeNull();
+
+    // Database enforcement (migration 20261019120000): enrolled or not, password-only is refused.
+    for (const label of ["fresh", "boss"]) {
+      expect((await (await passwordClient(label)).rpc("admin_list_audit")).error?.code).toBe("42501");
+    }
+  });
+
   test("grant and revoke through the UI are audited, and the last admin is protected", async ({ page }) => {
     await login(page, "en", "boss");
-    await page.goto("/en/admin");
+    await page.goto("/en/admin/roles");
     await page.locator('input[name="email"]').fill(emailOf("second"));
     await page.locator('select[name="role"]').selectOption("admin");
     await page.getByRole("button", { name: "Grant role" }).click();
@@ -135,13 +180,13 @@ test.describe("admin lifecycle (hosted DEV)", () => {
 
     const page = await (await browser.newContext()).newPage();
     await login(page, "en", "boss");
-    await page.goto("/en/admin");
+    await page.goto("/en/admin/roles");
     await expect(page.getByRole("table").first()).toBeVisible();
 
     // A second admin revokes boss; boss's still-open session must not keep working.
     const revoked = await second.rpc("admin_revoke_role", { p_role_id: bossGrant!.id });
     expect(revoked.error).toBeNull();
-    await page.goto("/en/admin");
+    await page.goto("/en/admin/roles");
     await expect(page.locator(".admin-denied")).toBeVisible();
     await expect(page.getByRole("table")).toHaveCount(0);
     expect((await bossClient.rpc("admin_list_audit")).error?.code).toBe("42501");

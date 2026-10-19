@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
     metadataBase: new URL("https://learn.etriplesoft.com"),
     title: { default: t("title"), template: "%s | ETripleSoft Learn" },
     description: t("description"),
-    icons: { icon: "/assets/etriplesoft-icon.png" },
+    icons: { icon: "/assets/etriplesoft-favicon.png" },
     alternates: {
       canonical: new URL(getPathname({ locale, href: "/" }), "https://learn.etriplesoft.com"),
     },

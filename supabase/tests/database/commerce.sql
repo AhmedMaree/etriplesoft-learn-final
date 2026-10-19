@@ -1,4 +1,6 @@
 BEGIN;
+-- Test sessions are MFA-verified (aal2) unless a test clears this; admin authority requires it.
+SELECT pg_catalog.set_config('request.jwt.claim', '{"aal":"aal2"}', true);
 SELECT plan(25);
 INSERT INTO auth.users(id,aud,role,email,raw_user_meta_data,created_at,updated_at) VALUES
 ('e1900000-0000-4000-8000-000000000001','authenticated','authenticated','commerce-admin@example.test','{}',now(),now()),

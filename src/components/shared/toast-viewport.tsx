@@ -10,12 +10,15 @@ export function ToastViewport() {
   if (!message) return null;
 
   return (
-    <div role="status" className="toast">
-      <Check size={20} />
-      {message}
-      <button aria-label={t("dismiss")} onClick={dismiss}>
+    <div role="status" className="toast" key={message}>
+      <span className="toast-icon" aria-hidden="true">
+        <Check size={16} strokeWidth={3} />
+      </span>
+      <span className="toast-message">{message}</span>
+      <button type="button" className="toast-close" aria-label={t("dismiss")} onClick={dismiss}>
         <X size={16} />
       </button>
+      <span className="toast-progress" aria-hidden="true" />
     </div>
   );
 }

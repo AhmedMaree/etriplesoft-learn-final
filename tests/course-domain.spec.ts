@@ -2,6 +2,7 @@ import { randomBytes } from "node:crypto";
 import { test, expect } from "@playwright/test";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../src/types/database";
+import { enrollAdminTotp } from "./support/admin-mfa";
 import {
   CourseRepositoryError,
   createCourse,
@@ -55,6 +56,8 @@ test.describe("course domain repository", () => {
     const client = createClient<Database>(url!, publishableKey!, { auth: { autoRefreshToken: false, persistSession: false } });
     const { error: signInError } = await client.auth.signInWithPassword({ email, password });
     if (signInError) throw new Error(`sign-in ${label} failed: ${signInError.message}`);
+    // Admin authority needs an MFA-verified (aal2) session.
+    if (role) await enrollAdminTotp(client);
     return { client, id: data.user.id };
   }
 

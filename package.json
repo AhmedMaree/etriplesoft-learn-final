@@ -28,7 +28,10 @@
     "test:mux-dev-upload": "node scripts/test-mux-dev-upload.mjs",
     "test:mux-signatures": "node --test scripts/test-mux-webhook-signatures.mjs",
     "test:kashier": "node --test scripts/test-kashier-checkout.mjs scripts/test-kashier-contract.mjs",
-    "test": "playwright test"
+    "test": "playwright test",
+    "ai:transcribe": "node scripts/transcribe-course-videos.mjs",
+    "ai:documents": "node scripts/extract-course-documents.mjs",
+    "ai:eval": "node scripts/evaluate-course-chat.mjs"
   },
   "keywords": [],
   "author": "",

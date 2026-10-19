@@ -4,7 +4,7 @@
 
 PLANNED
 
-Evidence: learner-header.tsx shows a static progress popover/dot. learner_preferences stores toggles but there is no delivery service or notification table.
+Evidence (2026-10-18): D05 approved by user request (in-app only); status IN PROGRESS. Migration `20261018230000_calendar_notifications_streaks.sql` adds an owner-only `notifications` inbox (one row per source via a dedupe key) written by trusted triggers and `learner_sync_notifications` reminders that respect stored preferences, plus `learning_activity_days` for the learning streak. The header bell shows the unread count, inbox and mark-read. The local pgTAP suite passes 50/50, including cross-learner read/mark and forged-insert denial. Hosted DEV migration, eight-width EN/AR evidence and manual sign-off remain.
 
 ## 2. Goal
 

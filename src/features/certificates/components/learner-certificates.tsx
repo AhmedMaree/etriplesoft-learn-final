@@ -2,16 +2,19 @@ import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { Link } from "@/i18n/navigation";
 import { IssueCertificate } from "./issue-certificate";
+import { LearningStreakCard } from "@/features/learning/components/learning-streak";
+import { getLearningStreak } from "@/features/calendar/server/calendar";
 export async function LearnerCertificates() {
   const t = await getTranslations("realCertificates");
   const client = await createClient();
-  const [issued, completed] = await Promise.all([
+  const [issued, completed, streak] = await Promise.all([
     client.rpc("learner_list_certificates"),
     client
       .from("course_completions")
       .select("id,course_title,completed_at")
       .order("completed_at", { ascending: false })
       .limit(100),
+    getLearningStreak(),
   ]);
   if (issued.error || completed.error)
     throw new Error("Certificates unavailable.");
@@ -52,6 +55,11 @@ export async function LearnerCertificates() {
           })}
         </div>
       </section>
+      {streak && (
+        <aside className="right-rail">
+          <LearningStreakCard streak={streak} />
+        </aside>
+      )}
     </div>
   );
 }

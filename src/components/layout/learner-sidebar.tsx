@@ -5,14 +5,18 @@ import Image from "next/image";
 import {
   Award,
   BookOpen,
+  CalendarClock,
   CalendarDays,
   Compass,
   Home,
+  Lock,
   MessageSquare,
   Settings,
+  ShieldCheck,
   Sparkles,
   Users,
   X,
+  ArrowRight,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { DemoRoute } from "@/lib/routes";
@@ -20,6 +24,7 @@ import { DEMO_ONLY_ROUTES, demoFeaturesEnabled } from "@/lib/features";
 import type { LearningSummary } from "@/features/learning/server/summary";
 import { courseImage } from "@/features/courses/components/course-image";
 import { courseHref, lessonHref } from "@/features/courses/components/course-links";
+import { useQuizLock } from "@/features/assessments/quiz-lock";
 
 type NavId = DemoRoute | "catalog";
 
@@ -51,15 +56,21 @@ export function LearnerSidebar({
   mobileOpen,
   onClose,
   continueLearning,
+  isAdmin = false,
+  canSchedule = false,
+  unreadMessages = 0,
 }: {
   activePage: string;
   mobileOpen: boolean;
   onClose: () => void;
   continueLearning: LearningSummary["courses"][number] | null;
+  isAdmin?: boolean;
+  canSchedule?: boolean;
+  unreadMessages?: number;
 }) {
   const t = useTranslations("navigation");
   const common = useTranslations("common");
-  const dashboard = useTranslations("dashboard");
+  const quizLocked = useQuizLock();
 
   return (
     <>
@@ -70,8 +81,8 @@ export function LearnerSidebar({
           onClick={onClose}
         />
       )}
-      <aside className={`sidebar ${mobileOpen ? "open" : ""}`}>
-        <Link className="brand" href="/">
+      <aside className={`sidebar ${mobileOpen ? "open" : ""} ${quizLocked ? "is-locked" : ""}`}>
+        <Link className="brand" href="/" inert={quizLocked}>
           <Image
             src="/assets/logo-display.svg"
             loading="eager"
@@ -87,7 +98,13 @@ export function LearnerSidebar({
         >
           <X />
         </button>
-        <nav>
+        {quizLocked && (
+          <p className="sidebar-lock-note" role="status">
+            <Lock size={16} aria-hidden="true" />
+            {t("quizLocked")}
+          </p>
+        )}
+        <nav inert={quizLocked}>
           {nav
             .filter(([id]) => demoFeaturesEnabled || !(DEMO_ONLY_ROUTES as readonly string[]).includes(id))
             .map(([id, Icon]) => (
@@ -100,38 +117,87 @@ export function LearnerSidebar({
               <Icon />
             <span>{t(navMessage[id as keyof typeof navMessage])}</span>
               {id === "ai-page" && <b className="badge">{t("new")}</b>}
-              {id === "messages" && <i className="dot" />}
+              {id === "messages" && unreadMessages > 0 && (
+                <>
+                  <i className="dot" aria-hidden="true" />
+                  <span className="visually-hidden">
+                    {t("unreadMessages", { count: unreadMessages })}
+                  </span>
+                </>
+              )}
             </Link>
           ))}
         </nav>
         {activePage !== "overview" && continueLearning ? (
-          <section className="continue-learning" aria-label={dashboard("continueTitle")}>
-            <h2>{dashboard("continueTitle")}</h2>
-            <Link
-              className="continue-course"
-              href={continueLearning.resumeLessonId
-                ? lessonHref(continueLearning.slug, continueLearning.resumeLessonId)
-                : courseHref(continueLearning.slug)}
-              onClick={onClose}
-            >
-              <Image src={courseImage(continueLearning.slug)} alt="" width={48} height={48} />
-              <span>{continueLearning.title}</span>
-            </Link>
-            <div className="continue-progress" aria-label={`${Math.floor((continueLearning.finished / Math.max(continueLearning.required, 1)) * 100)}%`}>
-              <span style={{ width: `${Math.min(100, Math.floor((continueLearning.finished / Math.max(continueLearning.required, 1)) * 100))}%` }} />
-            </div>
-            <Link
-              className="continue-action"
-              href={continueLearning.resumeLessonId
-                ? lessonHref(continueLearning.slug, continueLearning.resumeLessonId)
-                : courseHref(continueLearning.slug)}
-              onClick={onClose}
-            >
-              {common("continue")}
-            </Link>
-          </section>
+          <ContinueLearningCard course={continueLearning} onNavigate={onClose} locked={quizLocked} />
         ) : null}
+        {canSchedule && (
+          <Link className="sidebar-admin-link" href="/schedule" onClick={onClose} inert={quizLocked}>
+            <CalendarClock aria-hidden="true" />
+            <span>{t("teachingSchedule")}</span>
+          </Link>
+        )}
+        {isAdmin && (
+          <Link className="sidebar-admin-link" href="/admin" onClick={onClose} inert={quizLocked}>
+            <ShieldCheck aria-hidden="true" />
+            <span>{t("adminDashboard")}</span>
+          </Link>
+        )}
       </aside>
     </>
+  );
+}
+
+/** Resume card: course, real lesson progress and one clear next action. */
+function ContinueLearningCard({
+  course,
+  onNavigate,
+  locked,
+}: {
+  course: LearningSummary["courses"][number];
+  onNavigate: () => void;
+  locked: boolean;
+}) {
+  const t = useTranslations("navigation");
+  const dashboard = useTranslations("dashboard");
+  const learning = useTranslations("realLearning");
+  const percent = course.required ? Math.min(100, Math.floor((course.finished / course.required) * 100)) : 0;
+  const started = course.finished > 0 || percent > 0;
+  const href = course.resumeLessonId ? lessonHref(course.slug, course.resumeLessonId) : courseHref(course.slug);
+  return (
+    <section className="continue-learning" aria-labelledby="continue-learning-title" inert={locked}>
+      <div className="continue-head">
+        <h2 id="continue-learning-title">{dashboard("continueTitle")}</h2>
+        <span className="continue-status">{started ? dashboard("inProgress") : t("notStarted")}</span>
+      </div>
+      <div className="continue-course">
+        <Image src={courseImage(course.slug)} alt="" width={52} height={52} />
+        <div>
+          <strong dir="auto" title={course.title}>{course.title}</strong>
+          {course.required > 0 && (
+            <small>
+              <bdi>{t("lessonsProgress", { finished: course.finished, required: course.required })}</bdi>
+            </small>
+          )}
+        </div>
+      </div>
+      <div className="continue-progress-row">
+        <div
+          className="continue-progress"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={percent}
+          aria-label={learning("percentComplete", { percent })}
+        >
+          <span style={{ width: `${percent}%` }} />
+        </div>
+        <span className="continue-percent" dir="ltr" aria-hidden="true">{percent}%</span>
+      </div>
+      <Link className="continue-action" href={href} onClick={onNavigate} aria-label={`${started ? t("resumeLesson") : t("startCourse")}: ${course.title}`}>
+        {started ? t("resumeLesson") : t("startCourse")}
+        <ArrowRight size={16} className="flip-rtl" aria-hidden="true" />
+      </Link>
+    </section>
   );
 }

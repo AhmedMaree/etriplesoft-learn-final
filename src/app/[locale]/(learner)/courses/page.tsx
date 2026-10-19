@@ -7,6 +7,7 @@ import { isLocale, type Locale } from "@/i18n/config";
 import {
   CATALOG_PAGE_SIZE,
   COURSE_SLUG_PATTERN,
+  countCatalogCourses,
   getCatalogCourse,
   getCatalogCourseDurations,
   getCatalogCourseOutline,
@@ -46,9 +47,10 @@ export default async function CoursesRoute({
   const locale: Locale = requestedLocale;
   const copy = getMarketingMessages(locale).catalog;
   const client = await createClient();
-  const { data: auth } = await client.auth.getUser();
-  const signedIn = Boolean(auth.user);
-  const adminPreview = signedIn && (await getAdminAccess()).status === "admin";
+  // getAdminAccess already resolves the user, so it answers "signed in" too without a second auth call.
+  const access = await getAdminAccess();
+  const signedIn = access.status !== "anonymous";
+  const adminPreview = access.status === "admin";
 
   // The detail opens on this same route (?course=<slug>); nothing redirects to another page.
   const courseSlug = first(query.course);
@@ -137,50 +139,18 @@ async function loadList(
   client: Client,
   options: { locale: Locale; search: string; view: CourseFilter["view"]; requestedCategory: string; level: CourseLevel | null; instructor: string | null; requestedPage: number; signedIn: boolean },
 ) {
-  const { locale, search, view, requestedCategory, level, instructor, signedIn } = options;
+  const { locale, view, requestedCategory, signedIn } = options;
   try {
-    const categoryNames = await listCatalogCategories(client, locale);
-    const category = view === "all" && categoryNames.includes(requestedCategory) ? requestedCategory : null;
-    const [categories, enrollments, catalogTotal] = await Promise.all([
-      Promise.all(categoryNames.map(async (name) => ({ name, count: (await listCatalogCourses(client, { locale, category: name, limit: 1 })).total }))),
+    const [categoryNames, enrollments, catalogTotal] = await Promise.all([
+      listCatalogCategories(client, locale),
       signedIn ? listMyEnrollments(client) : Promise.resolve<Record<string, CourseEnrollment>>({}),
-      listCatalogCourses(client, { locale, limit: 1 }).then((result) => result.total),
+      countCatalogCourses(client, { locale }),
     ]);
-
-    let page = options.requestedPage;
-    let courses: CatalogCourse[] = [];
-    let total = 0;
-    if (view === "all") {
-      if (instructor) {
-        const result = await listCatalogCourses(client, { locale, search, category: category ?? undefined, level: level ?? undefined, limit: 50 });
-        const matches = result.courses.filter((course) => course.instructors.some((name) => name === instructor));
-        total = matches.length;
-        const lastPage = Math.max(1, Math.ceil(total / CATALOG_PAGE_SIZE));
-        page = Math.min(page, lastPage);
-        courses = matches.slice((page - 1) * CATALOG_PAGE_SIZE, page * CATALOG_PAGE_SIZE);
-      } else {
-        const load = (offset: number) => listCatalogCourses(client, { locale, search, category: category ?? undefined, level: level ?? undefined, limit: CATALOG_PAGE_SIZE, offset });
-        let result = await load((page - 1) * CATALOG_PAGE_SIZE);
-        const lastPage = Math.max(1, Math.ceil(result.total / CATALOG_PAGE_SIZE));
-        if (page > lastPage) {
-          page = lastPage;
-          result = await load((page - 1) * CATALOG_PAGE_SIZE);
-        }
-        courses = result.courses;
-        total = result.total;
-      }
-    } else {
-      // "Mine" and "Newest" work on a bounded set so the ordering/filter is exact for this page size.
-      const { courses: pool } = await listCatalogCourses(client, { locale, search, category: category ?? undefined, level: level ?? undefined, limit: MINE_LIMIT });
-      let list = view === "mine" ? pool.filter((course) => enrollments[course.id]) : [...pool];
-      if (instructor) list = list.filter((course) => course.instructors.some((name) => name === instructor));
-      if (view === "newest") list.sort((a, b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""));
-      total = list.length;
-      const lastPage = Math.max(1, Math.ceil(total / CATALOG_PAGE_SIZE));
-      page = Math.min(page, lastPage);
-      list = list.slice((page - 1) * CATALOG_PAGE_SIZE, page * CATALOG_PAGE_SIZE);
-      courses = list;
-    }
+    const category = view === "all" && categoryNames.includes(requestedCategory) ? requestedCategory : null;
+    const [categories, { courses, total, page }] = await Promise.all([
+      Promise.all(categoryNames.map(async (name) => ({ name, count: await countCatalogCourses(client, { locale, category: name }) }))),
+      loadPage(client, { ...options, category, enrollments }),
+    ]);
 
     const entitled = Object.values(enrollments).filter((item) => item.status === "active" || item.status === "completed");
     const durations = await getCatalogCourseDurations(
@@ -204,4 +174,45 @@ async function loadList(
   } catch {
     return null;
   }
+}
+
+async function loadPage(
+  client: Client,
+  options: { locale: Locale; search: string; view: CourseFilter["view"]; category: string | null; level: CourseLevel | null; instructor: string | null; requestedPage: number; enrollments: Record<string, CourseEnrollment> },
+) {
+  const { locale, search, view, category, level, instructor, enrollments } = options;
+  let page = options.requestedPage;
+  let courses: CatalogCourse[] = [];
+  let total = 0;
+  if (view === "all") {
+    if (instructor) {
+      const result = await listCatalogCourses(client, { locale, search, category: category ?? undefined, level: level ?? undefined, limit: 50 });
+      const matches = result.courses.filter((course) => course.instructors.some((name) => name === instructor));
+      total = matches.length;
+      const lastPage = Math.max(1, Math.ceil(total / CATALOG_PAGE_SIZE));
+      page = Math.min(page, lastPage);
+      courses = matches.slice((page - 1) * CATALOG_PAGE_SIZE, page * CATALOG_PAGE_SIZE);
+    } else {
+      const load = (offset: number) => listCatalogCourses(client, { locale, search, category: category ?? undefined, level: level ?? undefined, limit: CATALOG_PAGE_SIZE, offset });
+      let result = await load((page - 1) * CATALOG_PAGE_SIZE);
+      const lastPage = Math.max(1, Math.ceil(result.total / CATALOG_PAGE_SIZE));
+      if (page > lastPage) {
+        page = lastPage;
+        result = await load((page - 1) * CATALOG_PAGE_SIZE);
+      }
+      courses = result.courses;
+      total = result.total;
+    }
+  } else {
+    // "Mine" and "Newest" work on a bounded set so the ordering/filter is exact for this page size.
+    const { courses: pool } = await listCatalogCourses(client, { locale, search, category: category ?? undefined, level: level ?? undefined, limit: MINE_LIMIT });
+    let list = view === "mine" ? pool.filter((course) => enrollments[course.id]) : [...pool];
+    if (instructor) list = list.filter((course) => course.instructors.some((name) => name === instructor));
+    if (view === "newest") list.sort((a, b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""));
+    total = list.length;
+    const lastPage = Math.max(1, Math.ceil(total / CATALOG_PAGE_SIZE));
+    page = Math.min(page, lastPage);
+    courses = list.slice((page - 1) * CATALOG_PAGE_SIZE, page * CATALOG_PAGE_SIZE);
+  }
+  return { courses, total, page };
 }
