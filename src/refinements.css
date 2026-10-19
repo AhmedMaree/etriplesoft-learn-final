@@ -5468,3 +5468,27 @@ html[lang="ar"] .courses-eyebrow {
 @media (prefers-reduced-motion: reduce) {
   .sidebar-admin-link { transition: none; }
 }
+
+/* Two-question practice check shown inside the video panel after the video ends. */
+.lesson-player.has-check { aspect-ratio: auto; overflow: visible; background: #fff; border: 1px solid var(--line); box-shadow: none; }
+.video-check { display: grid; gap: 16px; padding: 24px; }
+.video-check > p { margin: 0; }
+.video-check-head { display: grid; gap: 4px; }
+.video-check-head small { color: var(--blue); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.video-check-head h2 { margin: 0; font-size: clamp(1.15rem, 2vw, 1.4rem); line-height: 1.3; outline: none; }
+.video-check-head p { margin: 0; color: var(--muted); }
+.video-check-questions { display: grid; gap: 18px; margin: 0; padding: 0; list-style: none; }
+.video-check-questions fieldset.answers { min-inline-size: 0; margin: 0; padding: 0; border: 0; }
+.video-check-questions legend { margin-block-end: 10px; padding: 0; font-weight: 700; line-height: 1.5; overflow-wrap: anywhere; }
+.video-check-questions .answers > label { gap: 14px; padding: 12px 14px; }
+.video-check-questions .answers > label > div { margin-inline-start: 0; min-width: 0; overflow-wrap: anywhere; }
+.video-check-questions .answers strong { font-size: 15px; font-weight: 500; }
+.video-check-explanation { margin: 8px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--lightblue); line-height: 1.6; }
+.video-check-result { display: flex; align-items: center; gap: 8px; margin: 0; padding: 12px 14px; border-radius: 10px; font-weight: 700; }
+.video-check-result.is-passed { background: var(--mint); color: var(--green); }
+.video-check-result.is-failed { background: #fff4f4; color: #b42318; }
+.video-check-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+@media (max-width: 700px) {
+  .video-check { padding: 16px; }
+  .video-check-actions .btn { flex: 1 1 140px; justify-content: center; }
+}

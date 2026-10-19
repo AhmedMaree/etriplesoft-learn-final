@@ -484,7 +484,7 @@
     "stop": "Stop generating",
     "stopped": "Response stopped before it finished.",
     "deepMode": "Deep thinking",
-    "deepModeHint": "Uses a more capable model for quizzes, exam prep and complex questions. Replies take a little longer.",
+    "deepModeHint": "Uses a more capable model for quizzes, exam prep and complex questions. Replies take a little longer. Up to 10 questions a day.",
     "assistantName": "AI Assistant",
     "typing": "The assistant is writing a reply",
     "loadingConversation": "Loading conversation…",
@@ -547,7 +547,10 @@
     "promptCourseQuizText": "Give me 3 multiple-choice questions based on this course’s lessons. Wait for my answers before explaining.",
     "promptKeySteps": "Key steps in this course",
     "promptKeyStepsText": "List the key procedures this course teaches, step by step, with the lesson for each.",
-    "sourceDocument": "From a lesson document"
+    "sourceDocument": "From a lesson document",
+    "openFullAssistant": "Open full assistant",
+    "closeAssistant": "Close AI assistant",
+    "errorRateDeep": "You’ve used today’s Deep thinking questions. Turn off Deep thinking to keep asking; it resets within 24 hours."
   },
   "assessment": {
     "title": "Assessment",
@@ -1361,7 +1364,9 @@
     "answerSaved": "Answer saved.",
     "sidebarLabel": "Assessment details",
     "open": "Open assessment",
-    "leaveConfirm": "Your assessment is still in progress and the timer keeps running. Leave this page?"
+    "leaveConfirm": "Your assessment is still in progress and the timer keeps running. Leave this page?",
+    "noTimeLimit": "No time limit",
+    "noTimeLimitValue": "None"
   },
   "completion": {
     "markComplete": "Mark complete",
@@ -1906,5 +1911,21 @@
       "notFound": "This conversation isn’t available any more.",
       "failed": "Something went wrong. Please try again."
     }
+  },
+  "videoCheck": {
+    "eyebrow": "Video check",
+    "title": "Answer {n} quick questions",
+    "intro": "Check what you learned in this video. There is no time limit.",
+    "adminPreview": "Administrator preview. Learner attempts and answer keys are not available here.",
+    "loading": "Loading questions…",
+    "failed": "The questions could not be loaded or saved. Please try again.",
+    "rule": "No attempts remain, or this attempt can no longer be changed.",
+    "submit": "Check answers",
+    "checking": "Checking…",
+    "passed": "Well done! {earned} of {total} correct.",
+    "notPassed": "{earned} of {total} correct. Review the explanations below.",
+    "retry": "Try again ({n} left)",
+    "watchAgain": "Watch again",
+    "next": "Next lesson"
   }
 }

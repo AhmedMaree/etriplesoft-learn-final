@@ -39,13 +39,13 @@ import { ASSET_BASE } from "@/lib/assets";
 import type {
   AssistantInsights,
   AssistantMessage,
-  ChatErrorCode,
   ChatKind,
   ChatSource,
   ChatStreamEvent,
   ContextCourse,
   ConversationSummary,
 } from "@/features/ai-assistant/types";
+import { ERROR_KEYS, readErrorCode } from "@/features/ai-assistant/chat-errors";
 import { AiMarkdown } from "./ai-markdown";
 
 type UiMessage = AssistantMessage & { pending?: boolean; fallback?: boolean };
@@ -64,26 +64,6 @@ const PROMPTS: Record<ChatKind, { primary: [PromptKey, LucideIcon][]; more: [Pro
   },
 };
 const RECENT_LIMIT = 5;
-
-const ERROR_KEYS: Record<ChatErrorCode, string> = {
-  authentication: "errorAuthentication",
-  configuration: "unavailableTitle",
-  input: "errorGeneric",
-  context: "errorContext",
-  notFound: "errorNotFound",
-  rateMinute: "errorRateMinute",
-  rateDaily: "errorRateDaily",
-  conversationFull: "errorConversationFull",
-  provider: "errorGeneric",
-  busy: "errorBusy",
-  blocked: "errorBlocked",
-  unavailable: "errorGeneric",
-};
-
-function readErrorCode(value: unknown): ChatErrorCode {
-  const code = value && typeof value === "object" ? Reflect.get(value, "error") : null;
-  return typeof code === "string" && code in ERROR_KEYS ? (code as ChatErrorCode) : "unavailable";
-}
 
 export function AIPage({
   configured,

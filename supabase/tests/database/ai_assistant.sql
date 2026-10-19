@@ -1,7 +1,7 @@
 BEGIN;
 -- Test sessions are MFA-verified (aal2) unless a test clears this; admin authority requires it.
 SELECT pg_catalog.set_config('request.jwt.claim', '{"aal":"aal2"}', true);
-SELECT plan(27);
+SELECT plan(30);
 INSERT INTO auth.users(id,aud,role,email,raw_user_meta_data,created_at,updated_at) VALUES
 ('e3000000-0000-4000-8000-000000000001','authenticated','authenticated','ai-admin@example.test','{}',now(),now()),
 ('e3000000-0000-4000-8000-000000000002','authenticated','authenticated','ai-owner@example.test','{}',now(),now()),
@@ -60,6 +60,15 @@ SELECT is((SELECT count(*)::int FROM public.ai_conversations),0,'owner deletes t
 RESET ROLE;
 SELECT is((SELECT count(*)::int FROM public.ai_messages WHERE conversation_id=current_setting('t.c1')::uuid),0,'messages cascade with the conversation');
 SELECT is((SELECT count(*)::int FROM public.ai_usage_events WHERE user_id='e3000000-0000-4000-8000-000000000002'),2,'usage ledger survives deletion');
+
+-- Deep thinking: at most 10 deep questions per rolling day (seeded outside the per-minute window); fast questions continue.
+INSERT INTO public.ai_usage_events(user_id,mode,created_at) SELECT 'e3000000-0000-4000-8000-000000000002','deep',now()-interval '2 minutes' FROM generate_series(1,10);
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','e3000000-0000-4000-8000-000000000002',true);
+SELECT throws_like($$SELECT * FROM public.learner_ai_begin_turn(p_locale=>'en',p_content=>'Deep again',p_mode=>'deep')$$,'%ai_rate_deep%','eleventh deep question within a day is limited');
+SELECT throws_ok($$SELECT * FROM public.learner_ai_begin_turn(p_locale=>'en',p_content=>'Hi',p_mode=>'turbo')$$,'22023',NULL,'unknown mode rejected');
+SELECT lives_ok($$SELECT * FROM public.learner_ai_begin_turn(p_locale=>'en',p_content=>'Fast still works')$$,'fast questions are not affected by the deep limit');
+RESET ROLE;
 
 SET LOCAL ROLE anon;
 SELECT throws_ok($$SELECT * FROM public.learner_ai_begin_turn(NULL,NULL,'en','Hi')$$,'42501',NULL,'anonymous cannot start a turn');

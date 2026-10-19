@@ -31,7 +31,7 @@ import { enrollFreeCourseAction } from "@/features/courses/server/enrollment-act
 import { EnrollmentSubmitButton } from "@/features/marketing/components/course/enrollment-submit-button";
 import { getMarketingMessages } from "@/features/marketing/lib/messages";
 import { courseImage } from "./course-image";
-import { courseHref, lessonHref } from "./course-links";
+import { courseHref, lessonHref, pairedVideoChecks } from "./course-links";
 import { CourseDetailActions } from "./course-detail-actions";
 import {
   CourseContentList,
@@ -64,13 +64,17 @@ type Fact = { icon: typeof Clock; text: string };
 
 export async function LearnerCourseDetail({
   course,
-  outline,
+  outline: fullOutline,
   locale,
   enrollment,
   enrollmentError,
   signedIn,
   adminPreview,
 }: Props) {
+  // Practice checks are answered inside their video's player, so they are not listed as lessons.
+  const checks = pairedVideoChecks(fullOutline);
+  const videoOfCheck = new Map([...checks].map(([video, check]) => [check, video]));
+  const outline = fullOutline.filter((item) => !videoOfCheck.has(item.lessonId));
   const t = await getTranslations("courses");
   const navigationT = await getTranslations("navigation");
   const feedbackT = await getTranslations("courseFeedback");
@@ -173,11 +177,12 @@ export async function LearnerCourseDetail({
   const progress = enrolled
     ? await getCourseProgress(
         course.id,
-        outline.map((item) => item.lessonId),
+        fullOutline.map((item) => item.lessonId),
       )
     : [];
+  const lastLessonId = progress[0]?.lesson_id;
   const resumeLesson =
-    outline.find((item) => item.lessonId === progress[0]?.lesson_id) ??
+    outline.find((item) => item.lessonId === (videoOfCheck.get(lastLessonId ?? "") ?? lastLessonId)) ??
     outline[0];
   const required = outline.filter((item) => item.isRequired);
   const completedRequired = required.filter((item) =>

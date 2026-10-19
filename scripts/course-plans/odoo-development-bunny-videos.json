@@ -1,0 +1,9 @@
+{
+  "courseSlug": "odoo-development",
+  "bunnyCollection": "Odoo Development",
+  "lessons": [
+    { "lessonId": "1c850ff6-9886-2550-61ef-455c7753554b", "title": "Introduction To Odoo Development", "bunnyTitle": "Introduction To Odoo Development" },
+    { "lessonId": "02f78b01-1880-b721-6471-e230f73e4ac3", "title": "Configure & Install Odoo", "bunnyTitle": "Configure & Install Odoo" },
+    { "lessonId": "3973cb12-4776-65b8-5f24-2bdf725df158", "title": "Scaffolding your first module & Create Custom Addon", "bunnyTitle": "Scaffolding your first module & Create Custom Addon" }
+  ]
+}

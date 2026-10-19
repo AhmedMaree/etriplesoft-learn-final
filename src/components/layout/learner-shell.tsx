@@ -7,8 +7,9 @@ import { LearnerSidebar } from "@/components/layout/learner-sidebar";
 import { usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
 import type { LearningSummary } from "@/features/learning/server/summary";
+import { AssistantLauncher } from "@/features/ai-assistant/components/assistant-launcher";
 
-export function LearnerShell({ children, footer, locale, displayName, avatarUrl, authenticated, continueLearning, isAdmin = false, canSchedule = false, unreadNotifications = 0, unreadMessages = 0, timeZone = "UTC" }: {
+export function LearnerShell({ children, footer, locale, displayName, avatarUrl, authenticated, continueLearning, isAdmin = false, canSchedule = false, unreadNotifications = 0, unreadMessages = 0, timeZone = "UTC", assistantAvailable = false }: {
   children: ReactNode
   footer: ReactNode
   locale: Locale
@@ -21,6 +22,7 @@ export function LearnerShell({ children, footer, locale, displayName, avatarUrl,
   unreadNotifications?: number
   unreadMessages?: number
   timeZone?: string
+  assistantAvailable?: boolean
 }) {
   const pathname = usePathname();
   const common = useTranslations("common");
@@ -49,6 +51,8 @@ export function LearnerShell({ children, footer, locale, displayName, avatarUrl,
         {children}
         {footer}
       </main>
+      {/* The full assistant page already has the chat, so the floating button stays off it. */}
+      {authenticated && assistantAvailable && activePage !== "ai-page" && <AssistantLauncher />}
     </div>
   );
 }

@@ -1,0 +1,86 @@
+{
+  "courseSlug": "crash-course-odoo-erp",
+  "source": "Lesson video transcripts (ai_private.video_transcripts); long session recordings were sampled from the start and middle.",
+  "videos": [
+    {
+      "lessonId": "477c5960-7b23-317c-11b7-a4cd2d5a8056",
+      "title": "Course Agenda",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "How does the session define a module in an ERP system?", "explanation": "A module is the part of the software that manages a specific task, function or department.", "options": ["A printed user manual", "Software that manages a specific task, function or department", "The company's database password"] },
+          "ar": { "prompt": "كيف عرّفت الجلسة الموديول (Module) في نظام الـ ERP؟", "explanation": "الموديول هو جزء من البرنامج يدير مهمة أو وظيفة أو إدارة محددة.", "options": ["دليل مستخدم مطبوع", "برنامج يدير مهمة أو وظيفة أو إدارة محددة", "كلمة مرور قاعدة بيانات الشركة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Which problem between departments does an ERP system solve, according to the session?", "explanation": "One integrated system connects all modules, with finance and accounting at the core, so time is not lost on communication between departments.", "options": ["Slow communication and missing integration between departments", "Employees' need for more email accounts", "The lack of printed reports"] },
+          "ar": { "prompt": "وفقًا للجلسة، ما المشكلة بين الإدارات التي يحلها نظام الـ ERP؟", "explanation": "نظام واحد متكامل يربط كل الموديولات، والمالية والمحاسبة في قلبه، فلا يضيع الوقت في التواصل بين الإدارات.", "options": ["بطء التواصل وغياب التكامل بين الإدارات", "حاجة الموظفين إلى حسابات بريد أكثر", "عدم وجود تقارير مطبوعة"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "46ccb981-5517-c89f-0bfe-696e8ea937b1",
+      "title": "Business Workflows, ERP Systems & Odoo",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "How does the session define a workflow?", "explanation": "A workflow is a structured sequence of steps that leads to a specific result.", "options": ["A list of employees", "A single report", "A structured sequence of steps that leads to a specific result"] },
+          "ar": { "prompt": "كيف عرّفت الجلسة سير العمل (Workflow)؟", "explanation": "سير العمل هو تسلسل منظم من الخطوات يوصل إلى نتيجة محددة.", "options": ["قائمة بأسماء الموظفين", "تقرير واحد", "تسلسل منظم من الخطوات يوصل إلى نتيجة محددة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "A customer orders 50 units of a product. What is the first document the salesperson creates?", "explanation": "The sales order workflow starts with a sales quotation.", "options": ["A sales quotation", "A vendor bill", "A payslip"] },
+          "ar": { "prompt": "عميل يطلب 50 وحدة من منتج. ما أول مستند ينشئه موظف المبيعات؟", "explanation": "يبدأ سير عمل أمر البيع بعرض سعر (Quotation).", "options": ["عرض سعر (Quotation)", "فاتورة مورد", "قسيمة راتب"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "90d286ba-5b44-e049-6c2e-adba432970d3",
+      "title": "Session 2 / Accounting Module",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "Which statement is another name for the P&L?", "explanation": "The Profit and Loss statement is also called the income statement.", "options": ["The balance sheet", "The income statement", "The chart of accounts"] },
+          "ar": { "prompt": "ما الاسم الآخر لقائمة الأرباح والخسائر (P&L)؟", "explanation": "قائمة الأرباح والخسائر تُسمى أيضًا قائمة الدخل (Income Statement).", "options": ["الميزانية العمومية", "قائمة الدخل", "شجرة الحسابات"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "When uploading a chart of accounts to Odoo, what should you remove from the file?", "explanation": "Account groups (the main accounts) are not uploaded as accounts; only the detailed accounts are uploaded, and unused default accounts are cleaned up.", "options": ["All bank and cash accounts", "The account codes", "The account groups (main accounts)"] },
+          "ar": { "prompt": "عند رفع شجرة الحسابات إلى Odoo، ما الذي يجب حذفه من الملف؟", "explanation": "مجموعات الحسابات (الحسابات الرئيسية) لا تُرفع كحسابات؛ تُرفع الحسابات الفرعية فقط، وتُنظَّف الحسابات الافتراضية غير المستخدمة.", "options": ["كل حسابات البنك والنقدية", "أكواد الحسابات", "مجموعات الحسابات (الحسابات الرئيسية)"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "751daba4-fac7-ce37-aa91-e72a7ebad4fd",
+      "title": "Crm / Sales / Purchase / Inventory Session",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "You created a \"VIP\" pricelist with a 10% discount. How does Odoo apply it to a customer?", "explanation": "The pricelist must be set on the customer, in the Sales & Purchase tab, so the system uses it on their orders.", "options": ["Set the pricelist on the customer in the Sales & Purchase tab", "Odoo detects VIP customers automatically", "Rename the customer to VIP"] },
+          "ar": { "prompt": "أنشأت قائمة أسعار \"VIP\" بخصم 10%. كيف يطبقها Odoo على العميل؟", "explanation": "يجب اختيار قائمة الأسعار في بطاقة العميل من تبويب المبيعات والمشتريات، فيستخدمها النظام في طلباته.", "options": ["باختيار قائمة الأسعار في بطاقة العميل من تبويب المبيعات والمشتريات", "يكتشف Odoo عملاء VIP تلقائيًا", "بتغيير اسم العميل إلى VIP"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "What does a pricelist rule's minimum quantity do?", "explanation": "The discount applies only when the customer buys at least that quantity, like a wholesale price.", "options": ["Limits how many customers can use the pricelist", "Applies the discount only when the customer buys at least that quantity", "Sets the stock reorder level"] },
+          "ar": { "prompt": "ما وظيفة الحد الأدنى للكمية في قاعدة قائمة الأسعار؟", "explanation": "يُطبَّق الخصم فقط عندما يشتري العميل هذه الكمية على الأقل، مثل سعر الجملة.", "options": ["تحدد عدد العملاء الذين يمكنهم استخدام القائمة", "تطبق الخصم فقط عند شراء العميل لهذه الكمية على الأقل", "تحدد مستوى إعادة الطلب للمخزون"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "fe7c3faf-2ffa-9ff6-c069-a55ea11f5970",
+      "title": "Business Case",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "When receiving the car into stock, what extra detail is recorded for it?", "explanation": "Each car has a chassis number, recorded like a serial number before validating the receipt.", "options": ["The customer's phone number", "The salesperson's name", "Its chassis number, as a serial number"] },
+          "ar": { "prompt": "عند استلام السيارة في المخزن، ما البيان الإضافي الذي يُسجَّل لها؟", "explanation": "لكل سيارة رقم شاسيه، ويُسجَّل كرقم تسلسلي (Serial Number) قبل تأكيد الاستلام.", "options": ["رقم هاتف العميل", "اسم موظف المبيعات", "رقم الشاسيه كرقم تسلسلي"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Where does a confirmed customer down payment appear before the main invoice?", "explanation": "On the balance sheet it appears under current liabilities; revenue is recognised later with the regular invoice.", "options": ["Under current liabilities on the balance sheet", "As revenue in the P&L", "Only in the inventory report"] },
+          "ar": { "prompt": "أين تظهر الدفعة المقدمة المؤكدة من العميل قبل الفاتورة الأساسية؟", "explanation": "تظهر في الميزانية العمومية ضمن الالتزامات المتداولة، ويُعترف بالإيراد لاحقًا مع الفاتورة العادية.", "options": ["ضمن الالتزامات المتداولة في الميزانية العمومية", "كإيراد في قائمة الأرباح والخسائر", "في تقرير المخزون فقط"] }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "courseSlug": "odoo-development",
+  "source": "Lesson video transcripts (ai_private.video_transcripts). The six chapter 3–4 videos keep the questions of their earlier practice checks.",
+  "videos": [
+    {
+      "lessonId": "1c850ff6-9886-2550-61ef-455c7753554b",
+      "title": "Introduction To Odoo Development",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "Who is this course mainly aimed at?", "explanation": "The course expects learners who already understand Python and want to learn the Odoo framework from the basics.", "options": ["People who have never seen any code", "Learners who already know Python and want to learn the Odoo framework", "Only accountants who use Odoo daily"] },
+          "ar": { "prompt": "لمن يتوجه هذا الكورس بشكل أساسي؟", "explanation": "يفترض الكورس أن المتعلم يفهم Python ويريد تعلم إطار عمل Odoo من الأساسيات.", "options": ["لمن لم يرَ أي كود من قبل", "لمن يعرف Python ويريد تعلم إطار عمل Odoo", "للمحاسبين الذين يستخدمون Odoo يوميًا فقط"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What does the video say about developing for Odoo Community and Enterprise?", "explanation": "Community is free and Enterprise is a per-user subscription, but module development works the same way on both.", "options": ["Development works the same way on both editions", "Custom modules can only be built on Enterprise", "Community cannot be installed by anyone"] },
+          "ar": { "prompt": "ماذا يقول الفيديو عن التطوير على نسختي Odoo Community وEnterprise؟", "explanation": "نسخة Community مجانية وEnterprise باشتراك لكل مستخدم، لكن تطوير الوحدات يتم بالطريقة نفسها على النسختين.", "options": ["التطوير يتم بالطريقة نفسها على النسختين", "لا يمكن بناء وحدات مخصصة إلا على Enterprise", "لا يستطيع أحد تثبيت نسخة Community"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "02f78b01-1880-b721-6471-e230f73e4ac3",
+      "title": "Configure & Install Odoo",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "Where does the video get the Odoo source code from?", "explanation": "It clones Odoo's official GitHub repository, using the 18.0 branch.", "options": ["From a USB drive", "From the Odoo App Store", "By cloning Odoo's official repository (branch 18)"] },
+          "ar": { "prompt": "من أين يحصل الفيديو على الكود المصدري لـ Odoo؟", "explanation": "يتم عمل clone للمستودع الرسمي لـ Odoo على GitHub باستخدام فرع الإصدار 18.", "options": ["من ذاكرة USB", "من متجر تطبيقات Odoo", "بعمل clone للمستودع الرسمي لـ Odoo (فرع 18)"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Which command installs the Python packages Odoo needs?", "explanation": "From inside the Odoo directory, `pip install -r requirements.txt` installs every package listed in the requirements file.", "options": ["`pip install -r requirements.txt`", "`git push`", "`sudo apt-get install python-odoo-ui`"] },
+          "ar": { "prompt": "ما الأمر الذي يثبّت حزم Python التي يحتاجها Odoo؟", "explanation": "من داخل مجلد Odoo يثبّت الأمر `pip install -r requirements.txt` كل الحزم المذكورة في ملف المتطلبات.", "options": ["`pip install -r requirements.txt`", "`git push`", "`sudo apt-get install python-odoo-ui`"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "3973cb12-4776-65b8-5f24-2bdf725df158",
+      "title": "Scaffolding your first module & Create Custom Addon",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What does Odoo's `scaffold` command do for you?", "explanation": "It creates a new add-on with its standard folders and files (models, views, security, controllers, demo…) so you do not create them one by one.", "options": ["Deletes unused add-ons", "Creates a new add-on with its standard folders and files", "Upgrades Odoo to the latest version"] },
+          "ar": { "prompt": "ماذا يفعل أمر `scaffold` في Odoo؟", "explanation": "ينشئ إضافة جديدة بمجلداتها وملفاتها المعتادة (models وviews وsecurity وcontrollers وdemo…) فلا تحتاج إلى إنشائها واحدًا تلو الآخر.", "options": ["يحذف الإضافات غير المستخدمة", "ينشئ إضافة جديدة بمجلداتها وملفاتها المعتادة", "يحدّث Odoo إلى أحدث إصدار"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "Why is the custom add-ons directory added to the Odoo configuration?", "explanation": "Adding its path to the configuration lets Odoo find the custom add-ons so they appear in Apps.", "options": ["To make Odoo start faster", "To hide the add-ons from other developers", "So Odoo can find the custom add-ons and show them in Apps"] },
+          "ar": { "prompt": "لماذا نضيف مجلد الإضافات المخصصة إلى ملف إعدادات Odoo؟", "explanation": "إضافة مساره إلى الإعدادات تجعل Odoo يعثر على الإضافات المخصصة فتظهر في قائمة التطبيقات (Apps).", "options": ["لكي يعمل Odoo بسرعة أكبر", "لإخفاء الإضافات عن المطورين الآخرين", "لكي يعثر Odoo على الإضافات المخصصة ويعرضها في Apps"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "22ed63d7-e37c-4b19-91ca-ae04a876648a",
+      "title": "Create an Addon",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What does an Odoo add-on's `__init__.py` commonly do?", "explanation": "It makes Python components such as models available when Odoo loads the add-on.", "options": ["Imports the add-on's Python packages, such as models", "Stores the PostgreSQL database password", "Defines the browser's URL routes only"] },
+          "ar": { "prompt": "ما الدور المعتاد لملف `__init__.py` في إضافة Odoo؟", "explanation": "يجعل مكونات Python مثل النماذج (models) متاحة عندما يحمّل Odoo الإضافة.", "options": ["يستورد حزم Python الخاصة بالإضافة مثل models", "يخزن كلمة مرور قاعدة بيانات PostgreSQL", "يحدد مسارات روابط المتصفح فقط"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Where must Odoo be configured to find a custom add-on?", "explanation": "The add-on must be inside a directory listed in Odoo's configured add-ons paths.", "options": ["A directory included in Odoo's add-ons paths", "Any folder on the learner's computer", "The browser cache directory"] },
+          "ar": { "prompt": "أين يجب أن توجد الإضافة المخصصة لكي يعثر عليها Odoo؟", "explanation": "يجب أن تكون الإضافة داخل مجلد مُدرج في مسارات الإضافات (addons path) في إعدادات Odoo.", "options": ["في مجلد مُدرج ضمن مسارات الإضافات في Odoo", "في أي مجلد على جهاز المتعلم", "في مجلد ذاكرة التخزين المؤقت للمتصفح"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "17152419-7f2a-4d2f-b64d-47baa1a99692",
+      "title": "The Module Manifest",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "Which file declares an Odoo add-on's metadata and dependencies?", "explanation": "The Python manifest file describes the module and its dependencies and data files.", "options": ["`__manifest__.py`", "`README.html`", "`requirements.lock`"] },
+          "ar": { "prompt": "ما الملف الذي يصف بيانات إضافة Odoo واعتمادياتها؟", "explanation": "ملف الـ manifest يصف الوحدة واعتمادياتها وملفات البيانات الخاصة بها.", "options": ["`__manifest__.py`", "`README.html`", "`requirements.lock`"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Why should a required Odoo module appear in the manifest's `depends` list?", "explanation": "Odoo uses dependencies to ensure required modules are installed before this module.", "options": ["So Odoo installs the required module first", "To hide the dependency from the Apps list", "To rename the PostgreSQL database"] },
+          "ar": { "prompt": "لماذا يجب أن تظهر الوحدة المطلوبة في قائمة `depends` داخل الـ manifest؟", "explanation": "يستخدم Odoo الاعتماديات ليضمن تثبيت الوحدات المطلوبة قبل هذه الوحدة.", "options": ["لكي يثبّت Odoo الوحدة المطلوبة أولًا", "لإخفاء الاعتمادية من قائمة التطبيقات", "لإعادة تسمية قاعدة بيانات PostgreSQL"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "d055cd65-1f0a-4767-8cf5-aba7b8efa356",
+      "title": "Adding a Model",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "Which base class is commonly used for a regular Odoo model?", "explanation": "Regular persistent Odoo models inherit from `models.Model`.", "options": ["`models.Model`", "`http.Controller`", "`QWidget`"] },
+          "ar": { "prompt": "ما الصنف الأساسي (base class) المعتاد لنموذج Odoo عادي؟", "explanation": "النماذج العادية المخزنة في Odoo ترث من `models.Model`.", "options": ["`models.Model`", "`http.Controller`", "`QWidget`"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What does an Odoo model's `_name` attribute define?", "explanation": "`_name` is the model's technical identity used by Odoo's ORM.", "options": ["The model's technical name", "The database user's password", "The color of its form view"] },
+          "ar": { "prompt": "ماذا تحدد الخاصية `_name` في نموذج Odoo؟", "explanation": "`_name` هو الاسم التقني للنموذج الذي يستخدمه الـ ORM في Odoo.", "options": ["الاسم التقني للنموذج", "كلمة مرور مستخدم قاعدة البيانات", "لون شاشة النموذج (form view)"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "0eb96a88-900d-4828-a32d-e8eb334e69cf",
+      "title": "Menu Items and Views",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "In Odoo, what is the main purpose of a view?", "explanation": "Views describe how users see and interact with records, for example in a form or list.", "options": ["Define how records are presented to users", "Store video files in the database", "Install Python itself"] },
+          "ar": { "prompt": "ما الغرض الأساسي من الـ view في Odoo؟", "explanation": "تحدد الـ views كيف يرى المستخدمون السجلات ويتعاملون معها، مثل شاشة النموذج أو القائمة.", "options": ["تحديد طريقة عرض السجلات للمستخدمين", "تخزين ملفات الفيديو في قاعدة البيانات", "تثبيت Python نفسها"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What does a menu action typically connect?", "explanation": "An action lets a menu open a model's records using the configured views.", "options": ["A menu entry to the records or screen it should open", "A menu entry to an unrelated operating-system process", "A menu entry to a Mux access token"] },
+          "ar": { "prompt": "ما الذي يربطه الـ action الخاص بالقائمة عادةً؟", "explanation": "يسمح الـ action لعنصر القائمة بفتح سجلات النموذج باستخدام الـ views المحددة.", "options": ["يربط عنصر القائمة بالسجلات أو الشاشة التي يجب أن يفتحها", "يربط عنصر القائمة بعملية لا علاقة لها في نظام التشغيل", "يربط عنصر القائمة برمز وصول Mux"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "a8be1234-305a-4a99-b89d-04c8935aebc6",
+      "title": "Recap and Field Types",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "Which Odoo field type represents a relation from many records to one related record?", "explanation": "`Many2one` stores a reference to one related record for each current record.", "options": ["`fields.Many2one`", "`fields.Boolean`", "`fields.Text`"] },
+          "ar": { "prompt": "أي نوع حقل في Odoo يمثل علاقة من سجلات كثيرة إلى سجل واحد مرتبط؟", "explanation": "يخزن `Many2one` مرجعًا لسجل واحد مرتبط لكل سجل حالي.", "options": ["`fields.Many2one`", "`fields.Boolean`", "`fields.Text`"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Which field is generally intended for longer, multi-line text?", "explanation": "`fields.Text` is intended for longer text; `fields.Char` is for shorter character values.", "options": ["`fields.Text`", "`fields.Integer`", "`fields.Date`"] },
+          "ar": { "prompt": "أي حقل مخصص عادةً للنصوص الطويلة متعددة الأسطر؟", "explanation": "`fields.Text` للنصوص الطويلة، و`fields.Char` للقيم النصية القصيرة.", "options": ["`fields.Text`", "`fields.Integer`", "`fields.Date`"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "6d01b312-a3ec-4546-a2ba-f08e867afd8b",
+      "title": "Model Representation and Ordering",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What does an Odoo model's `_rec_name` configure?", "explanation": "`_rec_name` selects the field used as the record's display name in common relational widgets.", "options": ["The field used to display a record's name", "The number of records in the database", "The module's installation directory"] },
+          "ar": { "prompt": "ماذا تحدد الخاصية `_rec_name` في نموذج Odoo؟", "explanation": "تحدد `_rec_name` الحقل المستخدم كاسم ظاهر للسجل في حقول العلاقات.", "options": ["الحقل المستخدم لعرض اسم السجل", "عدد السجلات في قاعدة البيانات", "مجلد تثبيت الوحدة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What does the `_order` model attribute control?", "explanation": "`_order` sets the default ordering used when the model's records are retrieved.", "options": ["The model's default record ordering", "The order in which users create accounts", "The order of menu icons in the browser toolbar"] },
+          "ar": { "prompt": "ما الذي تتحكم فيه الخاصية `_order` في النموذج؟", "explanation": "تحدد `_order` الترتيب الافتراضي للسجلات عند استرجاعها.", "options": ["الترتيب الافتراضي لسجلات النموذج", "ترتيب إنشاء المستخدمين لحساباتهم", "ترتيب أيقونات القوائم في شريط المتصفح"] }
+        }
+      ]
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import { ArrowRight, Hourglass, Lock, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/config";
+import { VideoCheck } from "@/features/assessments/components/video-check";
 import { BunnyPlayer } from "./bunny-player";
 
 type Playback =
@@ -19,6 +20,8 @@ type Props = {
   locale: Locale;
   title: string;
   next: { href: string; title: string; isPracticeCheck: boolean } | null;
+  /** The video's optional practice check, answered inside this panel after the video ends. */
+  checkLessonId: string | null;
   trackProgress: boolean;
   autoplayNext: boolean;
 };
@@ -50,12 +53,13 @@ async function requestPlayback(lessonId: string, locale: Locale): Promise<State>
 }
 
 /** Requests short-lived signed playback access from the server, then plays the lesson with Mux Player or the Bunny embed. */
-export function LessonPlayer({ lessonId, locale, title, next, trackProgress, autoplayNext }: Props) {
+export function LessonPlayer({ lessonId, locale, title, next, checkLessonId, trackProgress, autoplayNext }: Props) {
   const t = useTranslations("courses");
   const p = useTranslations("learningProgress");
   const router = useRouter();
   const [state, setState] = useState<State>({ kind: "loading" });
   const [ended, setEnded] = useState(false);
+  const [checking, setChecking] = useState(false);
   const retried = useRef(false);
   const player = useRef<ComponentRef<typeof MuxPlayer>>(null);
   const session = useRef<SavedProgress | null>(null);
@@ -145,6 +149,8 @@ export function LessonPlayer({ lessonId, locale, title, next, trackProgress, aut
     checkpoint(false);
     void queue.current.then(() => {
       const completed = session.current?.completed === true;
+      // A finished video with a practice check asks its questions here before moving on.
+      if (checkLessonId && trackProgress && completed) { setChecking(true); return; }
       const canOpenNext = next && (!next.isPracticeCheck || (trackProgress && completed));
       setEnded(Boolean(canOpenNext));
       if (autoplayNext && canOpenNext) router.push(next.href);
@@ -186,7 +192,11 @@ export function LessonPlayer({ lessonId, locale, title, next, trackProgress, aut
   }
 
   return (
-    <div className="lesson-player">
+    <div className={checking ? "lesson-player has-check" : "lesson-player"}>
+      {checking && checkLessonId && (
+        <VideoCheck lessonId={checkLessonId} locale={locale} next={next} onWatchAgain={() => setChecking(false)} />
+      )}
+      <div className="lesson-player-media" hidden={checking}>
       {state.playback.provider === "bunny" ? (
         <BunnyPlayer embedUrl={state.playback.embedUrl} title={title} startAt={initialPosition} onEvent={onBunnyEvent} />
       ) : (
@@ -217,10 +227,11 @@ export function LessonPlayer({ lessonId, locale, title, next, trackProgress, aut
         }}
       />
       )}
-      {trackProgress && <p className="lesson-saved-progress" role="status">
+      </div>
+      {!checking && trackProgress && <p className="lesson-saved-progress" role="status">
         {saveError ? p('saveError') : progress ? progress.completed ? p('completed') : p('watched', { percent: progress.percent }) : p('loading')}
       </p>}
-      {ended && next && (
+      {ended && !checking && next && (
         <div className="lesson-up-next" role="status">
           <small>{next.isPracticeCheck ? t("videoPracticeCheck") : t("upNext")}</small>
           <strong dir="auto">{next.title}</strong>
@@ -229,7 +240,7 @@ export function LessonPlayer({ lessonId, locale, title, next, trackProgress, aut
           </Link>
         </div>
       )}
-      {trackProgress && next?.isPracticeCheck && progress && !progress.completed && (
+      {!checking && trackProgress && (checkLessonId || next?.isPracticeCheck) && progress && !progress.completed && (
         <p className="lesson-saved-progress" role="status">{t("watchMoreForPractice")}</p>
       )}
     </div>

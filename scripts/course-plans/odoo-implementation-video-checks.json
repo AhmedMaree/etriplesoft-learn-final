@@ -1,0 +1,726 @@
+{
+  "courseSlug": "odoo-implementation",
+  "source": "Lesson video transcripts (ai_private.video_transcripts).",
+  "videos": [
+    {
+      "lessonId": "795f4351-fdf9-f4d7-6552-f72510fcf519",
+      "title": "Intro & Dashboard",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What does the Accounting dashboard show when you open the module?", "explanation": "It shows the journals (bank, cash, sales, purchase, miscellaneous) and gives a real-time overview of the accounting.", "options": ["Only the list of employees", "The journals, as a real-time overview of the accounting", "Only the product catalogue"] },
+          "ar": { "prompt": "ماذا تعرض لوحة معلومات المحاسبة عند فتح الموديول؟", "explanation": "تعرض دفاتر اليومية (البنك والنقدية والمبيعات والمشتريات والمتنوعة) وتعطي نظرة لحظية على المحاسبة.", "options": ["قائمة الموظفين فقط", "دفاتر اليومية كنظرة لحظية على المحاسبة", "كتالوج المنتجات فقط"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Which filter is applied on the Accounting dashboard by default?", "explanation": "The Favorites filter is applied by default; removing it shows all journals.", "options": ["Favorites", "Archived", "Late invoices only"] },
+          "ar": { "prompt": "ما الفلتر المطبّق افتراضيًا على لوحة معلومات المحاسبة؟", "explanation": "يُطبَّق فلتر المفضلة (Favorites) افتراضيًا، وعند إزالته تظهر كل الدفاتر.", "options": ["المفضلة (Favorites)", "المؤرشفة", "الفواتير المتأخرة فقط"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "cbc0701d-d0a3-74ec-6e02-81b9cb1171f7",
+      "title": "Customers",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "Where does a customer invoice usually come from in Odoo?", "explanation": "Odoo is integrated, so invoices usually come from the sales order; manual invoices are for special cases.", "options": ["It is always typed in by hand", "From the HR module", "From the sales order"] },
+          "ar": { "prompt": "من أين تأتي فاتورة العميل عادةً في Odoo؟", "explanation": "لأن Odoo نظام متكامل، تأتي الفاتورة عادةً من أمر البيع، والفواتير اليدوية للحالات الخاصة.", "options": ["تُكتب يدويًا دائمًا", "من موديول الموارد البشرية", "من أمر البيع"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "In a customer invoice's journal items, which account is debited?", "explanation": "Account Receivable is debited, while the sales account (and VAT, if any) is credited.", "options": ["Account Receivable", "Account Payable", "Bank fees"] },
+          "ar": { "prompt": "في قيود فاتورة العميل، ما الحساب المدين؟", "explanation": "يكون حساب العملاء (Account Receivable) مدينًا، بينما يكون حساب المبيعات (والضريبة إن وجدت) دائنًا.", "options": ["حساب العملاء (Receivable)", "حساب الموردين (Payable)", "مصروفات بنكية"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "a09a5175-f6e1-795b-6b1d-b8943fa7e579",
+      "title": "Vendors",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What are Incoterms on a vendor bill?", "explanation": "Incoterms are internationally recognised commercial terms that make the trade conditions clear between buyer and seller.", "options": ["Internal employee codes", "International commercial terms that clarify trade conditions", "The vendor's bank account numbers"] },
+          "ar": { "prompt": "ما المقصود بالـ Incoterms في فاتورة المورد؟", "explanation": "هي شروط تجارية دولية معترف بها توضّح شروط التعامل بين البائع والمشتري.", "options": ["أكواد داخلية للموظفين", "شروط تجارية دولية توضّح شروط التعامل", "أرقام الحسابات البنكية للمورد"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "How do vendor bills differ from customer invoices?", "explanation": "They work almost the same way, but in reverse: with customers you sell, with vendors you buy.", "options": ["Vendor bills cannot be posted", "Vendor bills never have journal items", "They are the reverse: you buy instead of sell"] },
+          "ar": { "prompt": "ما الفرق بين فواتير الموردين وفواتير العملاء؟", "explanation": "تعمل بالطريقة نفسها تقريبًا لكن بالعكس: مع العملاء أنت تبيع، ومع الموردين أنت تشتري.", "options": ["فواتير الموردين لا يمكن ترحيلها", "فواتير الموردين ليس لها قيود", "هي العكس: أنت تشتري بدلًا من أن تبيع"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "3dc56a58-1ab7-65db-8f12-df9afe617fbe",
+      "title": "Accounting Cycle",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "Why is choosing the right fiscal localization package important?", "explanation": "The country package affects taxes, fiscal positions, the chart of accounts and legal statements.", "options": ["It sets taxes, fiscal positions, chart of accounts and legal statements for the country", "It changes the website theme", "It only changes the user's language"] },
+          "ar": { "prompt": "لماذا يُعد اختيار حزمة التوطين المالي (Fiscal Localization) الصحيحة مهمًا؟", "explanation": "تؤثر حزمة الدولة على الضرائب والأوضاع المالية وشجرة الحسابات والقوائم القانونية.", "options": ["لأنها تضبط الضرائب والأوضاع المالية وشجرة الحسابات والقوائم القانونية للدولة", "لأنها تغيّر تصميم الموقع", "لأنها تغيّر لغة المستخدم فقط"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "What is the Chart of Accounts?", "explanation": "It is the company's tree of accounts that the accounting works on; it can be imported from Excel or CSV.", "options": ["A list of the company's customers", "The company's tree of accounts", "A sales report"] },
+          "ar": { "prompt": "ما هي شجرة الحسابات (Chart of Accounts)؟", "explanation": "هي الشجرة المحاسبية التي تعمل عليها حسابات الشركة، ويمكن استيرادها من ملف Excel أو CSV.", "options": ["قائمة بعملاء الشركة", "الشجرة المحاسبية للشركة", "تقرير مبيعات"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "f9211eb4-0a1f-da63-0847-a44e4acf8419",
+      "title": "Crm Cycle",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What is the order of the sales cycle described in the video?", "explanation": "Lead → Opportunity → Quotation → Sales order → Delivery and invoice → Payment. The first two stages live in CRM.", "options": ["Invoice → Lead → Payment → Quotation", "Quotation → Payment → Lead → Opportunity", "Lead → Opportunity → Quotation → Sales order → Invoice → Payment"] },
+          "ar": { "prompt": "ما ترتيب دورة المبيعات كما شرحها الفيديو؟", "explanation": "عميل محتمل ← فرصة ← عرض سعر ← أمر بيع ← تسليم وفاتورة ← دفع. والمرحلتان الأوليان داخل الـ CRM.", "options": ["فاتورة ← عميل محتمل ← دفع ← عرض سعر", "عرض سعر ← دفع ← عميل محتمل ← فرصة", "عميل محتمل ← فرصة ← عرض سعر ← أمر بيع ← فاتورة ← دفع"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What are Internal Notes on a lead used for?", "explanation": "They are internal communication between salespeople and anyone else who can see the lead.", "options": ["Internal communication between salespeople", "Messages sent automatically to the customer", "The customer's invoice lines"] },
+          "ar": { "prompt": "فيمَ تُستخدم الملاحظات الداخلية (Internal Notes) في العميل المحتمل؟", "explanation": "هي تواصل داخلي بين مندوبي المبيعات وأي شخص يمكنه رؤية العميل المحتمل.", "options": ["للتواصل الداخلي بين مندوبي المبيعات", "لرسائل تُرسل تلقائيًا إلى العميل", "لبنود فاتورة العميل"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "08baf57b-06cd-b55a-6050-90ff1538ba7d",
+      "title": "Sales Cycle",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What is a pricelist used for in Sales?", "explanation": "A pricelist gives special prices, for example to a particular customer or for particular products.", "options": ["To list the company's employees", "To give special prices to certain customers or products", "To schedule deliveries"] },
+          "ar": { "prompt": "فيمَ تُستخدم قائمة الأسعار (Pricelist) في المبيعات؟", "explanation": "تعطي قائمة الأسعار أسعارًا خاصة، مثلًا لعميل معيّن أو لمنتجات معيّنة.", "options": ["لعرض موظفي الشركة", "لإعطاء أسعار خاصة لعملاء أو منتجات معيّنة", "لجدولة عمليات التسليم"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What is a quotation template?", "explanation": "A prepared template that can be reused to send quotations to customers quickly.", "options": ["A reusable template for sending quotations", "A customer's payment receipt", "A delivery route"] },
+          "ar": { "prompt": "ما هو قالب عرض السعر (Quotation Template)؟", "explanation": "قالب جاهز يُعاد استخدامه لإرسال عروض الأسعار إلى العملاء بسرعة.", "options": ["قالب قابل لإعادة الاستخدام لإرسال عروض الأسعار", "إيصال دفع العميل", "مسار تسليم"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "87e03547-e3a2-cc5c-1312-4c8b32d2ec38",
+      "title": "RFQ & Purchase Order",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "After you email an RFQ to the vendor, what is its status?", "explanation": "Sending by email changes the status from RFQ to RFQ Sent.", "options": ["Done", "Cancelled", "RFQ Sent"] },
+          "ar": { "prompt": "بعد إرسال طلب عرض السعر (RFQ) إلى المورد بالبريد، ما حالته؟", "explanation": "الإرسال بالبريد يغيّر الحالة من RFQ إلى RFQ Sent.", "options": ["منتهي (Done)", "ملغى", "تم الإرسال (RFQ Sent)"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What do you do to turn an RFQ into a purchase order?", "explanation": "Clicking Confirm Order converts the RFQ into a purchase order, and receiving the products becomes available.", "options": ["Click Confirm Order", "Click Print", "Archive the vendor"] },
+          "ar": { "prompt": "ماذا تفعل لتحويل طلب عرض السعر إلى أمر شراء؟", "explanation": "الضغط على Confirm Order يحوّل الطلب إلى أمر شراء، ويصبح استلام المنتجات متاحًا.", "options": ["الضغط على Confirm Order", "الضغط على Print", "أرشفة المورد"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "6981aee2-9dd6-6e09-ba3c-df20aa2d0a48",
+      "title": "Purchase Agreement",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What is a blanket order (purchase agreement)?", "explanation": "An agreement with a vendor to supply a quantity of products at an agreed price within a period; RFQs are then created from it.", "options": ["A one-time cash purchase", "An agreement with a vendor on quantity and price over a period", "A customer's return request"] },
+          "ar": { "prompt": "ما هو أمر الشراء الإطاري (Blanket Order / Purchase Agreement)؟", "explanation": "اتفاق مع مورد على توريد كمية من المنتجات بسعر متفق عليه خلال فترة معيّنة، وتُنشأ منه طلبات عروض الأسعار لاحقًا.", "options": ["عملية شراء نقدي لمرة واحدة", "اتفاق مع مورد على الكمية والسعر خلال فترة", "طلب إرجاع من عميل"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "What happens if you order more than the quantity agreed in the blanket order?", "explanation": "The system does not block it; the agreement is between you and the vendor, and the ordered quantity simply adds up.", "options": ["The order is blocked", "The agreement is cancelled", "The system allows it and records the ordered quantity"] },
+          "ar": { "prompt": "ماذا يحدث إذا طلبت كمية أكبر من المتفق عليها في الأمر الإطاري؟", "explanation": "لا يمنع النظام ذلك؛ فالاتفاق بينك وبين المورد، ويُضاف الكم المطلوب إلى الإجمالي.", "options": ["يُمنع الطلب", "يُلغى الاتفاق", "يسمح النظام بذلك ويسجّل الكمية المطلوبة"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "c4890732-1857-ca92-551b-a551dd3ac292",
+      "title": "Vendor Bill",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "Where do you create the vendor bill in this video?", "explanation": "After receiving the products, the purchase order shows a Create Bill button.", "options": ["From the Create Bill button on the purchase order", "From the CRM pipeline", "From the employee's profile"] },
+          "ar": { "prompt": "من أين تم إنشاء فاتورة المورد في هذا الفيديو؟", "explanation": "بعد استلام المنتجات يظهر في أمر الشراء زر Create Bill.", "options": ["من زر Create Bill في أمر الشراء", "من خط مبيعات الـ CRM", "من ملف الموظف"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "A confirmed bill shows Posted but Not Paid. How is it paid?", "explanation": "Register Payment, choose the journal (cash or bank), amount and date, then create the payment; the bill shows Paid.", "options": ["Cancel the purchase order", "Register Payment with a cash or bank journal", "Create a new vendor"] },
+          "ar": { "prompt": "فاتورة مؤكدة تظهر مُرحّلة لكن غير مدفوعة. كيف تُدفع؟", "explanation": "من Register Payment نختار الدفتر (نقدية أو بنك) والمبلغ والتاريخ ثم ننشئ الدفعة، فتظهر الفاتورة مدفوعة.", "options": ["بإلغاء أمر الشراء", "بتسجيل دفعة (Register Payment) من دفتر نقدية أو بنك", "بإنشاء مورد جديد"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "24751831-9c62-1818-e3bf-b6a316c13c30",
+      "title": "Purchase Order Approvals",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "With approvals enabled above 5,000, what happens when a regular user confirms a 5,500 purchase order?", "explanation": "The order goes to a To Approve step and waits for an administrator to approve it.", "options": ["It is confirmed immediately", "It is deleted", "It goes to To Approve and waits for an administrator"] },
+          "ar": { "prompt": "مع تفعيل الاعتماد للأوامر فوق 5,000، ماذا يحدث عندما يؤكد مستخدم عادي أمر شراء بقيمة 5,500؟", "explanation": "ينتقل الأمر إلى مرحلة To Approve وينتظر اعتماد المسؤول.", "options": ["يُؤكَّد فورًا", "يُحذف", "ينتقل إلى To Approve وينتظر اعتماد المسؤول"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Who sees the Approve Order button?", "explanation": "Only a user with Purchase administrator rights can approve; regular users do not see the button.", "options": ["A user with Purchase administrator rights", "Any vendor", "Every regular user"] },
+          "ar": { "prompt": "من يرى زر اعتماد الأمر (Approve Order)؟", "explanation": "فقط المستخدم الذي لديه صلاحية مسؤول المشتريات يمكنه الاعتماد، ولا يظهر الزر للمستخدم العادي.", "options": ["المستخدم الذي لديه صلاحية مسؤول المشتريات", "أي مورد", "كل المستخدمين العاديين"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "eed1b6e6-043d-b880-0a0d-bc7d21996e44",
+      "title": "Purchase Alternatives",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "Why create alternative RFQs?", "explanation": "To ask several vendors for the same products and compare their prices and delivery times.", "options": ["To duplicate invoices", "To compare vendors' prices and delivery times for the same products", "To cancel all purchases"] },
+          "ar": { "prompt": "لماذا ننشئ طلبات عروض أسعار بديلة (Alternatives)؟", "explanation": "لطلب المنتجات نفسها من عدة موردين ومقارنة أسعارهم ومواعيد التسليم.", "options": ["لتكرار الفواتير", "لمقارنة أسعار الموردين ومواعيد التسليم للمنتجات نفسها", "لإلغاء كل المشتريات"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "After choosing one vendor in Compare Product Lines, what happens to the other RFQs?", "explanation": "Their quantities are set to zero, and when you confirm you can cancel them.", "options": ["Their quantities become zero and they can be cancelled", "They are all confirmed too", "They become customer invoices"] },
+          "ar": { "prompt": "بعد اختيار مورد واحد من شاشة المقارنة (Compare Product Lines)، ماذا يحدث لباقي الطلبات؟", "explanation": "تصبح كمياتها صفرًا، وعند التأكيد يمكنك إلغاؤها.", "options": ["تصبح كمياتها صفرًا ويمكن إلغاؤها", "تُؤكَّد كلها أيضًا", "تتحول إلى فواتير عملاء"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "c3a75a8f-254a-00c3-4130-0e7d0fd8dffe",
+      "title": "Product & Vendor Warnings",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What is the difference between a Warning and a Blocking message?", "explanation": "A warning only informs the user, who can continue; a blocking message stops the user from continuing.", "options": ["There is no difference", "A warning stops the user; a blocking message only informs", "A warning lets the user continue; a blocking message stops them"] },
+          "ar": { "prompt": "ما الفرق بين رسالة التحذير (Warning) ورسالة المنع (Blocking)؟", "explanation": "التحذير يُعلم المستخدم فقط ويمكنه المتابعة، أما رسالة المنع فتوقفه عن المتابعة.", "options": ["لا يوجد فرق", "التحذير يوقف المستخدم، والمنع يُعلمه فقط", "التحذير يسمح بالمتابعة، والمنع يوقف المستخدم"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "Where are these purchase warnings set?", "explanation": "After enabling warnings in Purchase settings, they are set on the vendor or on the product.", "options": ["On the employee's contract", "On the vendor or the product", "On the website menu"] },
+          "ar": { "prompt": "أين يتم ضبط تحذيرات الشراء هذه؟", "explanation": "بعد تفعيل التحذيرات من إعدادات المشتريات، تُضبط على المورد أو على المنتج.", "options": ["على عقد الموظف", "على المورد أو المنتج", "على قائمة الموقع"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "1a5517ba-846f-eb2c-8165-5a078bb31082",
+      "title": "Warehouses",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What must be true of a warehouse's short name?", "explanation": "It is up to five characters and must be unique, so each warehouse is identified by it.", "options": ["Up to five characters and unique for each warehouse", "It must be the company's full name", "It can be the same for all warehouses"] },
+          "ar": { "prompt": "ما الشرط في الاسم المختصر (Short Name) للمستودع؟", "explanation": "يصل إلى خمسة أحرف ويجب أن يكون فريدًا، ليُميَّز به كل مستودع.", "options": ["حتى خمسة أحرف وفريد لكل مستودع", "يجب أن يكون اسم الشركة الكامل", "يمكن أن يتكرر في كل المستودعات"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "Which resupply options does a warehouse offer?", "explanation": "A warehouse can be resupplied by buying, by manufacturing, or from another warehouse of the company.", "options": ["Only by customer returns", "Only by manufacturing", "Buy, manufacture, or resupply from another warehouse"] },
+          "ar": { "prompt": "ما خيارات إعادة التزويد (Resupply) للمستودع؟", "explanation": "يمكن تزويد المستودع بالشراء أو بالتصنيع أو من مستودع آخر في الشركة.", "options": ["من مرتجعات العملاء فقط", "بالتصنيع فقط", "الشراء أو التصنيع أو من مستودع آخر"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "7a48bd74-475a-d760-ac30-c82bb000df39",
+      "title": "Locations",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What must you do before you can create locations such as \"Shelf 1\"?", "explanation": "Enable Storage Locations in Inventory settings; the Locations menu then appears.", "options": ["Create a new company", "Enable Storage Locations in Inventory settings", "Install the Payroll module"] },
+          "ar": { "prompt": "ماذا يجب أن تفعل قبل إنشاء مواقع مثل \"Shelf 1\"؟", "explanation": "تفعيل مواقع التخزين (Storage Locations) من إعدادات المخزون، فتظهر قائمة المواقع.", "options": ["إنشاء شركة جديدة", "تفعيل مواقع التخزين من إعدادات المخزون", "تثبيت موديول الرواتب"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What does setting an inventory frequency of 30 days on a location do?", "explanation": "It schedules a stock count for that location every 30 days and tracks when the last count happened.", "options": ["Schedules a stock count for that location every 30 days", "Deletes stock older than 30 days", "Delays all deliveries by 30 days"] },
+          "ar": { "prompt": "ماذا يفعل ضبط تكرار الجرد على 30 يومًا في موقع ما؟", "explanation": "يجدول جردًا لهذا الموقع كل 30 يومًا ويتتبع موعد آخر جرد.", "options": ["يجدول جردًا لهذا الموقع كل 30 يومًا", "يحذف المخزون الأقدم من 30 يومًا", "يؤخر كل عمليات التسليم 30 يومًا"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "8952863a-b914-b5f1-e44a-68e6f2f97096",
+      "title": "Operation Types",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "When are a warehouse's operation types created?", "explanation": "Odoo creates them automatically as soon as you create the warehouse; you can also add new ones.", "options": ["Only when the first invoice is posted", "Only by a developer", "Automatically when the warehouse is created"] },
+          "ar": { "prompt": "متى تُنشأ أنواع العمليات (Operation Types) الخاصة بالمستودع؟", "explanation": "ينشئها Odoo تلقائيًا بمجرد إنشاء المستودع، ويمكنك أيضًا إضافة أنواع جديدة.", "options": ["عند ترحيل أول فاتورة فقط", "بواسطة مطور فقط", "تلقائيًا عند إنشاء المستودع"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Which of these is a type of operation?", "explanation": "An operation type can be a receipt, a delivery, an internal transfer or manufacturing.", "options": ["Receipt, delivery, internal transfer or manufacturing", "Lead, opportunity or quotation", "Payslip or contract"] },
+          "ar": { "prompt": "أيٌّ مما يلي من أنواع العمليات؟", "explanation": "يمكن أن تكون العملية استلامًا أو تسليمًا أو تحويلًا داخليًا أو تصنيعًا.", "options": ["استلام أو تسليم أو تحويل داخلي أو تصنيع", "عميل محتمل أو فرصة أو عرض سعر", "قسيمة راتب أو عقد"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "2062257f-0dfc-d675-3a90-bc765fff5af6",
+      "title": "Routes",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "Which setting must be enabled to work with routes?", "explanation": "Enable Multi-Step Routes in Inventory settings; Routes and Rules then appear.", "options": ["Landed Costs", "Multi-Step Routes", "Expiration Dates"] },
+          "ar": { "prompt": "ما الإعداد الذي يجب تفعيله للعمل بالمسارات (Routes)؟", "explanation": "تفعيل المسارات متعددة الخطوات (Multi-Step Routes) من إعدادات المخزون، فتظهر المسارات والقواعد.", "options": ["تكاليف الشحن (Landed Costs)", "المسارات متعددة الخطوات", "تواريخ انتهاء الصلاحية"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "Why make a route applicable on Sales Order Lines?", "explanation": "So the route can be selected on quotation lines when selling to a customer.", "options": ["So it appears on payslips", "So it is hidden from salespeople", "So it can be chosen on quotation lines"] },
+          "ar": { "prompt": "لماذا نجعل المسار قابلًا للتطبيق على بنود أوامر البيع؟", "explanation": "لكي يمكن اختيار المسار في بنود عرض السعر عند البيع للعميل.", "options": ["لكي يظهر في قسائم الرواتب", "لإخفائه عن مندوبي المبيعات", "لكي يمكن اختياره في بنود عرض السعر"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "ad74b7d0-7c5f-4ee2-4fdc-0f0fb5142333",
+      "title": "Drop-Shipping",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What does drop-shipping mean?", "explanation": "Goods go from the vendor directly to the customer without entering your warehouse.", "options": ["Goods go from the vendor directly to the customer", "Goods are stored in two warehouses", "Goods are returned to the vendor"] },
+          "ar": { "prompt": "ما معنى الشحن المباشر (Drop-shipping)؟", "explanation": "تنتقل البضاعة من المورد إلى العميل مباشرة دون دخول مستودعك.", "options": ["تنتقل البضاعة من المورد إلى العميل مباشرة", "تُخزَّن البضاعة في مستودعين", "تُرجَع البضاعة إلى المورد"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "What happens when a quotation with the Dropship route is confirmed?", "explanation": "Odoo automatically creates a purchase order to the product's vendor, so the product must have a vendor defined.", "options": ["A manufacturing order is created", "A purchase order to the product's vendor is created automatically", "Nothing until the customer pays"] },
+          "ar": { "prompt": "ماذا يحدث عند تأكيد عرض سعر عليه مسار الشحن المباشر؟", "explanation": "ينشئ Odoo تلقائيًا أمر شراء لمورد المنتج، لذا يجب أن يكون للمنتج مورد معرّف.", "options": ["يُنشأ أمر تصنيع", "يُنشأ تلقائيًا أمر شراء لمورد المنتج", "لا يحدث شيء حتى يدفع العميل"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "37e628f7-fabf-e23d-c513-ec38ed3a7100",
+      "title": "Putaway Rules",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What do putaway rules control?", "explanation": "They decide where received products are stored, for example moving a product from WH/Stock to WH/Stock/Shelf 1.", "options": ["The selling price of products", "Who can approve purchases", "Which location received products are stored in"] },
+          "ar": { "prompt": "ما الذي تتحكم فيه قواعد التخزين (Putaway Rules)؟", "explanation": "تحدد أين تُخزَّن المنتجات المستلمة، مثل نقل منتج من WH/Stock إلى WH/Stock/Shelf 1.", "options": ["سعر بيع المنتجات", "من يمكنه اعتماد المشتريات", "الموقع الذي تُخزَّن فيه المنتجات المستلمة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What is the main benefit of putaway rules?", "explanation": "They keep the warehouse organised, because every product goes to its intended place automatically.", "options": ["The warehouse stays organised because each product goes to its place", "Products are delivered faster to customers", "They remove the need to receive products"] },
+          "ar": { "prompt": "ما الفائدة الأساسية لقواعد التخزين؟", "explanation": "تُبقي المستودع منظمًا لأن كل منتج يذهب إلى مكانه المحدد تلقائيًا.", "options": ["يبقى المستودع منظمًا لأن كل منتج يذهب إلى مكانه", "تُسلَّم المنتجات للعملاء أسرع", "تلغي الحاجة إلى استلام المنتجات"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "548d6f67-b21e-b3b6-1a42-1efadb877e9a",
+      "title": "Packages",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "Which details does a package type store?", "explanation": "A package type stores its size, weight, maximum weight and barcode.", "options": ["The customer's address", "Size, weight, maximum weight and barcode", "The salesperson's commission"] },
+          "ar": { "prompt": "ما البيانات التي يخزنها نوع الطرد (Package Type)؟", "explanation": "يخزن نوع الطرد المقاسات والوزن والحد الأقصى للوزن والباركود.", "options": ["عنوان العميل", "المقاسات والوزن والحد الأقصى للوزن والباركود", "عمولة مندوب المبيعات"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "What are storage categories linked to?", "explanation": "They are linked to locations to define what and how much each location can hold.", "options": ["Customers", "Payment terms", "Locations, to define what and how much each can hold"] },
+          "ar": { "prompt": "بماذا تُربط فئات التخزين (Storage Categories)؟", "explanation": "تُربط بالمواقع لتحديد ما يمكن أن يحمله كل موقع وبأي كمية.", "options": ["بالعملاء", "بشروط الدفع", "بالمواقع لتحديد ما يحمله كل موقع وكميته"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "0aba73c6-4c90-d088-9c68-131e77314550",
+      "title": "Product Category",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What does the FIFO removal strategy mean?", "explanation": "First In, First Out: the stock that entered first leaves first.", "options": ["The stock that entered first leaves first", "The stock that entered last leaves first", "The closest location is always used"] },
+          "ar": { "prompt": "ما معنى استراتيجية الإخراج FIFO؟", "explanation": "الوارد أولًا يُصرف أولًا: البضاعة التي دخلت أولًا تخرج أولًا.", "options": ["البضاعة التي دخلت أولًا تخرج أولًا", "البضاعة التي دخلت آخرًا تخرج أولًا", "يُستخدم أقرب موقع دائمًا"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "Why is the product category important?", "explanation": "It sets important things such as the accounting accounts, the costing method, inventory valuation, routes and the removal strategy.", "options": ["It only sets the product's colour", "It sets accounts, costing method, valuation, routes and removal strategy", "It decides the employee's salary"] },
+          "ar": { "prompt": "لماذا تُعد فئة المنتج (Product Category) مهمة؟", "explanation": "تحدد أمورًا مهمة مثل الحسابات المحاسبية وطريقة حساب التكلفة وتقييم المخزون والمسارات واستراتيجية الإخراج.", "options": ["تحدد لون المنتج فقط", "تحدد الحسابات وطريقة التكلفة والتقييم والمسارات واستراتيجية الإخراج", "تحدد راتب الموظف"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "386952b3-541e-1beb-7076-d5b907ce3955",
+      "title": "Product Template & Variants",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What does a product's invoice policy decide?", "explanation": "Whether the customer is invoiced on ordered quantities or on delivered quantities.", "options": ["Which warehouse stores the product", "The product's barcode", "Whether to invoice ordered or delivered quantities"] },
+          "ar": { "prompt": "ماذا تحدد سياسة الفوترة (Invoice Policy) للمنتج؟", "explanation": "تحدد هل يُفوتر العميل على الكميات المطلوبة أم على الكميات المسلَّمة.", "options": ["المستودع الذي يُخزَّن فيه المنتج", "باركود المنتج", "هل تُفوتر الكميات المطلوبة أم المسلَّمة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What happens if \"Can be Purchased\" is unchecked on a product?", "explanation": "The product will not appear when creating purchases; it can still be sold if \"Can be Sold\" is checked.", "options": ["It will not appear in purchases", "It can no longer be sold", "It is deleted"] },
+          "ar": { "prompt": "ماذا يحدث إذا أُلغي تحديد \"Can be Purchased\" في المنتج؟", "explanation": "لن يظهر المنتج عند إنشاء المشتريات، ويمكن بيعه إذا كان \"Can be Sold\" محددًا.", "options": ["لن يظهر في المشتريات", "لن يمكن بيعه بعد ذلك", "يُحذف"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "2c2becb6-089b-0de7-a319-c6b44f79e7e5",
+      "title": "Unit Of Measure",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "In a Weight category with kilogram as the reference unit, how is the gram defined?", "explanation": "The gram is \"Smaller than\" the reference with a ratio of 1000; the ton is \"Bigger than\" with a ratio of 1000.", "options": ["Bigger than the reference, ratio 1000", "Smaller than the reference, ratio 1000", "As a second reference unit"] },
+          "ar": { "prompt": "في فئة الوزن التي وحدتها المرجعية الكيلوجرام، كيف يُعرَّف الجرام؟", "explanation": "الجرام \"أصغر من\" المرجع بنسبة 1000، والطن \"أكبر من\" المرجع بنسبة 1000.", "options": ["أكبر من المرجع بنسبة 1000", "أصغر من المرجع بنسبة 1000", "كوحدة مرجعية ثانية"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What is the reference unit in a unit-of-measure category?", "explanation": "It is the base unit that the other units in the category are converted from and to.", "options": ["The base unit the other units are calculated from", "The largest unit in the category", "A unit used only for services"] },
+          "ar": { "prompt": "ما الوحدة المرجعية (Reference Unit) في فئة وحدات القياس؟", "explanation": "هي الوحدة الأساسية التي تُحوَّل منها وإليها باقي وحدات الفئة.", "options": ["الوحدة الأساسية التي تُحسب منها باقي الوحدات", "أكبر وحدة في الفئة", "وحدة تُستخدم للخدمات فقط"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "2f3c5e30-f92d-c390-7531-cfa64db92a60",
+      "title": "Lots & Serial Number",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What is the difference between a serial number and a lot?", "explanation": "A serial number identifies one single item; a lot groups many items (like a day's milk production) with shared dates.", "options": ["There is no difference", "A lot is for one item; a serial number groups many items", "A serial number is unique per item; a lot groups many items"] },
+          "ar": { "prompt": "ما الفرق بين الرقم التسلسلي والدفعة (Lot)؟", "explanation": "الرقم التسلسلي يميّز قطعة واحدة، أما الدفعة فتجمع قطعًا كثيرة (مثل إنتاج يوم من الحليب) بتواريخ مشتركة.", "options": ["لا يوجد فرق", "الدفعة لقطعة واحدة والرقم التسلسلي يجمع قطعًا كثيرة", "الرقم التسلسلي فريد لكل قطعة والدفعة تجمع قطعًا كثيرة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What happens when you validate a receipt of tracked products without entering lots or serial numbers?", "explanation": "Odoo stops and asks you to supply a lot or serial number for those products.", "options": ["Odoo asks you to supply the lot or serial numbers", "Odoo creates random numbers silently", "The products are scrapped"] },
+          "ar": { "prompt": "ماذا يحدث عند تأكيد استلام منتجات متتبَّعة دون إدخال الدفعات أو الأرقام التسلسلية؟", "explanation": "يتوقف Odoo ويطلب منك إدخال الدفعة أو الرقم التسلسلي لهذه المنتجات.", "options": ["يطلب Odoo إدخال الدفعات أو الأرقام التسلسلية", "ينشئ Odoo أرقامًا عشوائية دون تنبيه", "تُتلف المنتجات"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "52173d93-3749-a2f1-9b60-336ca0b65b12",
+      "title": "Lot Expiry Date",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "How is a product's expiration date set in this video?", "explanation": "As a number of days after receipt, for example 30 days.", "options": ["As a fixed calendar date for all products", "As a number of days after receipt", "It cannot be set in Odoo"] },
+          "ar": { "prompt": "كيف ضُبط تاريخ انتهاء صلاحية المنتج في هذا الفيديو؟", "explanation": "كعدد من الأيام بعد الاستلام، مثل 30 يومًا.", "options": ["كتاريخ ثابت لكل المنتجات", "كعدد من الأيام بعد الاستلام", "لا يمكن ضبطه في Odoo"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "What is the Alert Date used for?", "explanation": "It warns the manager a set number of days before expiration so they can act in time.", "options": ["It is the day the product was made", "It deletes the lot", "It warns the manager some days before expiration"] },
+          "ar": { "prompt": "فيمَ يُستخدم تاريخ التنبيه (Alert Date)؟", "explanation": "ينبّه المدير قبل انتهاء الصلاحية بعدد محدد من الأيام ليتصرف في الوقت المناسب.", "options": ["هو يوم تصنيع المنتج", "يحذف الدفعة", "ينبّه المدير قبل انتهاء الصلاحية ببضعة أيام"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "bbbdc5ae-70e1-b9c0-9cb4-c0ad707a77ca",
+      "title": "Reordering Rules",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "On hand is 5, 5 more are incoming, and a sales order needs 3. What is the forecast?", "explanation": "Forecast = on hand + incoming − outgoing = 5 + 5 − 3 = 7.", "options": ["7", "13", "5"] },
+          "ar": { "prompt": "الكمية المتاحة 5، وهناك 5 قادمة، وأمر بيع يحتاج 3. كم الكمية المتوقعة (Forecast)؟", "explanation": "المتوقع = المتاح + الوارد − الصادر = 5 + 5 − 3 = 7.", "options": ["7", "13", "5"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "A reordering rule has min 5, max 20 and the Buy route. What happens when stock drops below 5?", "explanation": "With the Buy route, Odoo creates a purchase order to bring the stock back up; without a route it only shows the shortage.", "options": ["Nothing happens", "Odoo creates a purchase order to refill the stock", "The product is archived"] },
+          "ar": { "prompt": "قاعدة إعادة طلب حدها الأدنى 5 والأقصى 20 ومسارها الشراء (Buy). ماذا يحدث عندما ينخفض المخزون عن 5؟", "explanation": "مع مسار الشراء ينشئ Odoo أمر شراء لإعادة المخزون، وبدون مسار يكتفي بإظهار العجز.", "options": ["لا يحدث شيء", "ينشئ Odoo أمر شراء لإعادة تعبئة المخزون", "يُؤرشف المنتج"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "72c0edec-798c-6b5a-cfa2-4492c3bcd542",
+      "title": "Landed Cost",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What are landed costs used for?", "explanation": "To spread extra costs such as shipping or transport onto the products of a stock transfer, so their cost is correct.", "options": ["To give customers a discount", "To pay employees", "To add extra costs like shipping to the products' cost"] },
+          "ar": { "prompt": "فيمَ تُستخدم تكاليف الشحن والاستيراد (Landed Costs)؟", "explanation": "لتوزيع التكاليف الإضافية مثل الشحن والنقل على منتجات حركة المخزون لتصبح تكلفتها صحيحة.", "options": ["لمنح العملاء خصمًا", "لدفع رواتب الموظفين", "لإضافة تكاليف إضافية مثل الشحن إلى تكلفة المنتجات"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "With the split method \"By Current Cost\", which product gets the larger share?", "explanation": "The cost is split by the products' value, so the more expensive product takes the larger share.", "options": ["The more expensive product", "Each product gets exactly the same amount", "The product with the shortest name"] },
+          "ar": { "prompt": "مع طريقة التوزيع \"حسب التكلفة الحالية\" (By Current Cost)، أي منتج يحصل على الحصة الأكبر؟", "explanation": "توزَّع التكلفة حسب قيمة المنتجات، فيحصل المنتج الأغلى على الحصة الأكبر.", "options": ["المنتج الأغلى", "كل منتج يحصل على المبلغ نفسه تمامًا", "المنتج ذو الاسم الأقصر"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "561bc20d-7159-bd37-6cb5-260f2cbb66ee",
+      "title": "Scrap",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "Where do scrapped products go?", "explanation": "To a virtual scrap location, so they no longer appear in your stock or reports.", "options": ["Back to the vendor", "To a virtual scrap location", "To the main shelf"] },
+          "ar": { "prompt": "أين تذهب المنتجات التالفة (Scrap)؟", "explanation": "إلى موقع افتراضي للتالف، فلا تظهر بعد ذلك في المخزون أو التقارير.", "options": ["تعود إلى المورد", "إلى موقع افتراضي للتالف", "إلى الرف الرئيسي"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "What does the \"Replenish quantities\" option do on a scrap?", "explanation": "It replaces the scrapped units by creating a new RFQ.", "options": ["Restores the scrapped units to stock", "Sends an invoice to the customer", "Creates a new RFQ to replace the scrapped units"] },
+          "ar": { "prompt": "ماذا يفعل خيار \"Replenish quantities\" عند تسجيل التالف؟", "explanation": "يعوّض الوحدات التالفة بإنشاء طلب عرض سعر جديد.", "options": ["يعيد الوحدات التالفة إلى المخزون", "يرسل فاتورة إلى العميل", "ينشئ طلب عرض سعر جديدًا لتعويض الوحدات التالفة"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "6e7b0222-8fd0-ef70-f6da-2039ed98599b",
+      "title": "Consignment",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What is consignment stock?", "explanation": "Goods owned by someone else and kept in your warehouse until sold; they do not appear in your balance sheet or P&L.", "options": ["Goods owned by someone else and kept in your warehouse", "Goods you bought on credit", "Goods returned by customers"] },
+          "ar": { "prompt": "ما هي بضاعة الأمانة (Consignment)؟", "explanation": "بضاعة يملكها شخص آخر وتُحفظ في مستودعك حتى تُباع، ولا تظهر في ميزانيتك ولا في قائمة الأرباح والخسائر.", "options": ["بضاعة يملكها شخص آخر وتُحفظ في مستودعك", "بضاعة اشتريتها بالآجل", "بضاعة أرجعها العملاء"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "How do you mark received goods as consignment?", "explanation": "On the receipt, set the Owner (Assign Owner) to the person who owns the goods.", "options": ["Give the product a zero price", "Set the Owner on the receipt", "Receive them into the scrap location"] },
+          "ar": { "prompt": "كيف تحدد أن البضاعة المستلمة بضاعة أمانة؟", "explanation": "في حركة الاستلام نحدد المالك (Assign Owner) وهو الشخص صاحب البضاعة.", "options": ["بجعل سعر المنتج صفرًا", "بتحديد المالك (Owner) في حركة الاستلام", "باستلامها في موقع التالف"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "e23630a3-c8eb-2aa5-75f1-f7acb7acbd8f",
+      "title": "Dashboard & Operations",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What does the Inventory overview (dashboard) show the warehouse manager?", "explanation": "Each operation type with its counts, such as transfers to process, waiting and late.", "options": ["Only the company's profit", "Only employee attendance", "Each operation type with counts to process, waiting and late"] },
+          "ar": { "prompt": "ماذا تعرض لوحة نظرة عامة المخزون لمسؤول المستودع؟", "explanation": "تعرض كل نوع عملية مع أعداده، مثل الحركات المطلوب تنفيذها والمنتظرة والمتأخرة.", "options": ["أرباح الشركة فقط", "حضور الموظفين فقط", "كل نوع عملية مع أعداد الحركات المطلوبة والمنتظرة والمتأخرة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "After creating a receipt and entering the quantities, how is it completed?", "explanation": "Click Validate to confirm the goods were received.", "options": ["Click Validate", "Click Archive", "Send it by email"] },
+          "ar": { "prompt": "بعد إنشاء حركة استلام وإدخال الكميات، كيف تُستكمل؟", "explanation": "بالضغط على Validate لتأكيد استلام البضاعة.", "options": ["بالضغط على Validate", "بالضغط على Archive", "بإرسالها بالبريد"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "9af9270d-c4b4-7b55-f91c-2a1036d84fca",
+      "title": "Batch & Wave Transfer",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What is a batch transfer for?", "explanation": "It groups many transfers (receipts, deliveries or internal transfers) so they can be processed and validated together.", "options": ["To split one transfer into many", "To group many transfers and validate them together", "To cancel late transfers"] },
+          "ar": { "prompt": "فيمَ يُستخدم التحويل المجمّع (Batch Transfer)؟", "explanation": "يجمع حركات كثيرة (استلام أو تسليم أو تحويل داخلي) ليتم تنفيذها وتأكيدها معًا.", "options": ["لتقسيم حركة واحدة إلى حركات كثيرة", "لتجميع حركات كثيرة وتأكيدها معًا", "لإلغاء الحركات المتأخرة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "How can you add several ready receipts to a batch from the list?", "explanation": "Select them in the list, then use Actions → Add to batch and choose the responsible person.", "options": ["Select them, then Actions → Add to batch", "Open each one and print it", "Archive them first"] },
+          "ar": { "prompt": "كيف تضيف عدة حركات استلام جاهزة إلى دفعة من شاشة القائمة؟", "explanation": "نحددها في القائمة ثم Actions ← Add to batch ونختار المسؤول.", "options": ["نحددها ثم Actions ← Add to batch", "نفتح كل واحدة ونطبعها", "نؤرشفها أولًا"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "e6be3867-0877-e2cf-cd60-46c06090e982",
+      "title": "Inventory Adjustments",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What is an inventory adjustment?", "explanation": "You count the products physically and correct the on-hand quantities in the system to match.", "options": ["A discount for customers", "A new purchase order", "Counting stock and correcting the on-hand quantities"] },
+          "ar": { "prompt": "ما هي تسوية المخزون (Inventory Adjustment)؟", "explanation": "نجرد المنتجات فعليًا ونصحح الكميات المتاحة في النظام لتطابق الجرد.", "options": ["خصم للعملاء", "أمر شراء جديد", "جرد المخزون وتصحيح الكميات المتاحة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "The system shows 145 on hand but you count 150. What happens after you click Apply?", "explanation": "The difference of +5 is applied and the on-hand quantity becomes 150.", "options": ["The on-hand quantity becomes 150", "It stays 145", "The product is archived"] },
+          "ar": { "prompt": "يعرض النظام 145 متاحة لكنك جردت 150. ماذا يحدث بعد الضغط على Apply؟", "explanation": "يُطبَّق الفرق (+5) وتصبح الكمية المتاحة 150.", "options": ["تصبح الكمية المتاحة 150", "تبقى 145", "يُؤرشف المنتج"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "d4b0bee8-1efe-a322-5326-2792a764f0a3",
+      "title": "Inventory Reports",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What does the Stock report show for each product?", "explanation": "On-hand quantity, total value, unit cost, free-to-use, incoming and outgoing quantities.", "options": ["Only the product's name", "On hand, value, unit cost, incoming and outgoing", "The salesperson who sold it"] },
+          "ar": { "prompt": "ماذا يعرض تقرير المخزون (Stock) لكل منتج؟", "explanation": "الكمية المتاحة والقيمة الإجمالية وتكلفة الوحدة والكمية الحرة والوارد والصادر.", "options": ["اسم المنتج فقط", "المتاح والقيمة وتكلفة الوحدة والوارد والصادر", "مندوب المبيعات الذي باعه"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "What extra information does the Locations report show?", "explanation": "What each location holds, including the quantity on hand and the quantity reserved.", "options": ["Employees in each location", "Taxes per location", "What each location holds, including reserved quantities"] },
+          "ar": { "prompt": "ما المعلومة الإضافية التي يعرضها تقرير المواقع (Locations)؟", "explanation": "ما يحتويه كل موقع، بما في ذلك الكمية المتاحة والكمية المحجوزة.", "options": ["الموظفون في كل موقع", "الضرائب لكل موقع", "ما يحتويه كل موقع بما في ذلك الكميات المحجوزة"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "c3337b9a-2e85-aa3d-4fac-97051ca87acc",
+      "title": "Department",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What does the Parent Department field set?", "explanation": "Which department this one belongs under, building the company's organisation chart.", "options": ["Which department this one belongs under", "The department's budget", "The department's working hours"] },
+          "ar": { "prompt": "ماذا يحدد حقل القسم الأب (Parent Department)؟", "explanation": "يحدد القسم الذي يتبعه هذا القسم، فيُبنى الهيكل التنظيمي للشركة.", "options": ["القسم الذي يتبعه هذا القسم", "ميزانية القسم", "ساعات عمل القسم"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "Who can be set as a department's manager?", "explanation": "The manager must be an employee already created in the system.", "options": ["Any customer", "An employee already in the system", "Only the company administrator"] },
+          "ar": { "prompt": "من يمكن تعيينه مديرًا للقسم؟", "explanation": "يجب أن يكون المدير موظفًا مُنشأ بالفعل في النظام.", "options": ["أي عميل", "موظف موجود بالفعل في النظام", "مسؤول الشركة فقط"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "8d876e53-ceb0-64a2-a628-522cca302b11",
+      "title": "Employee",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What is the difference between an employee's Manager and Coach?", "explanation": "The manager is usually the department manager, the coach is the direct senior; they can also be the same person.", "options": ["They must always be different people", "The coach approves payslips, the manager does not", "Manager is the department manager; coach is the direct senior (can be the same person)"] },
+          "ar": { "prompt": "ما الفرق بين المدير (Manager) والموجّه (Coach) في ملف الموظف؟", "explanation": "المدير عادةً مدير القسم، والموجّه هو الرئيس المباشر، ويمكن أن يكونا الشخص نفسه.", "options": ["يجب أن يكونا شخصين مختلفين دائمًا", "الموجّه يعتمد قسائم الراتب والمدير لا", "المدير هو مدير القسم والموجّه هو الرئيس المباشر (وقد يكونان الشخص نفسه)"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What is recorded in the employee's Resume tab?", "explanation": "The employee's previous experience (CV) and their skills.", "options": ["Experience (CV) and skills", "Bank transactions", "Sales orders"] },
+          "ar": { "prompt": "ماذا يُسجَّل في تبويب السيرة الذاتية (Resume) للموظف؟", "explanation": "الخبرات السابقة للموظف (السيرة الذاتية) ومهاراته.", "options": ["الخبرات (السيرة الذاتية) والمهارات", "الحركات البنكية", "أوامر البيع"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "59cc3bb9-650c-95a5-fdde-4279d9e3daf0",
+      "title": "Contracts",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What happens when a contract reaches its end date?", "explanation": "Odoo automatically sets the contract to Expired, so a new contract can be created.", "options": ["It renews itself forever", "It becomes Expired automatically", "The employee is deleted"] },
+          "ar": { "prompt": "ماذا يحدث عندما يصل العقد إلى تاريخ انتهائه؟", "explanation": "يحوّل Odoo العقد تلقائيًا إلى منتهٍ (Expired) لكي يُنشأ عقد جديد.", "options": ["يتجدد تلقائيًا إلى الأبد", "يصبح منتهيًا (Expired) تلقائيًا", "يُحذف الموظف"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "What can the contract's work entry source be based on?", "explanation": "On the working schedule, on attendances, or on planning for flexible shifts.", "options": ["Only on sales targets", "Only on the vendor's bills", "The working schedule, attendances, or planning"] },
+          "ar": { "prompt": "على أي أساس يمكن أن يكون مصدر قيود العمل (Work Entry Source) في العقد؟", "explanation": "على جدول العمل، أو على الحضور والانصراف، أو على التخطيط للورديات المرنة.", "options": ["على أهداف المبيعات فقط", "على فواتير المورد فقط", "جدول العمل أو الحضور أو التخطيط"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "efabc6b3-7cfb-9821-0e54-59d6eeffe0c6",
+      "title": "Time Off",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What does an employee see in My Allocations?", "explanation": "How many days of each time-off type are allocated to them, such as annual leave.", "options": ["How many days of each leave type are allocated to them", "Their salary history", "Their manager's tasks"] },
+          "ar": { "prompt": "ماذا يرى الموظف في My Allocations؟", "explanation": "عدد الأيام المخصصة له من كل نوع إجازة، مثل الإجازة السنوية.", "options": ["عدد الأيام المخصصة له من كل نوع إجازة", "سجل راتبه", "مهام مديره"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "Who is the Time Off Overview mainly for?", "explanation": "Managers, to follow the time off taken by their employees.", "options": ["Customers", "Managers, to follow their employees' time off", "Vendors"] },
+          "ar": { "prompt": "لمن تُعد شاشة النظرة العامة للإجازات (Overview) بشكل أساسي؟", "explanation": "للمديرين، لمتابعة الإجازات التي أخذها موظفوهم.", "options": ["للعملاء", "للمديرين لمتابعة إجازات موظفيهم", "للموردين"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "d92d0065-552f-8101-4443-bd8f410bbe24",
+      "title": "Attendance",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "How do employees use Kiosk mode?", "explanation": "They scan their badge at the kiosk to check in and check out.", "options": ["To approve purchase orders", "To request a salary advance", "To check in and out by scanning their badge"] },
+          "ar": { "prompt": "كيف يستخدم الموظفون وضع الكشك (Kiosk Mode)؟", "explanation": "يمسحون بطاقتهم (Badge) في الكشك لتسجيل الحضور والانصراف.", "options": ["لاعتماد أوامر الشراء", "لطلب سلفة على الراتب", "لتسجيل الحضور والانصراف بمسح البطاقة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What does the attendance policy linked to a contract define?", "explanation": "The rules for overtime, lateness and similar attendance details.", "options": ["Overtime and lateness rules", "The employee's job title", "The company logo"] },
+          "ar": { "prompt": "ماذا تحدد سياسة الحضور المرتبطة بالعقد؟", "explanation": "قواعد العمل الإضافي والتأخير وما يشبهها من تفاصيل الحضور.", "options": ["قواعد العمل الإضافي والتأخير", "المسمى الوظيفي للموظف", "شعار الشركة"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "bcf0f112-71f9-cc1d-24d2-50df92383137",
+      "title": "Payroll",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What are work entries in Payroll?", "explanation": "Day-by-day records of the work done by employees (from attendance and similar sources), used to follow and calculate pay.", "options": ["Customer invoices", "Daily records of employees' work", "Product barcodes"] },
+          "ar": { "prompt": "ما هي قيود العمل (Work Entries) في الرواتب؟", "explanation": "سجلات يومية للعمل الذي أنجزه الموظفون (من الحضور وغيره) تُستخدم لمتابعة الرواتب وحسابها.", "options": ["فواتير العملاء", "سجلات يومية لعمل الموظفين", "باركود المنتجات"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "What can the HR officer follow from the Time Off report inside Payroll?", "explanation": "Who requested time off and which requests are still waiting for approval.", "options": ["Stock levels", "Open sales quotations", "Who requested time off and which requests await approval"] },
+          "ar": { "prompt": "ماذا يتابع مسؤول الموارد البشرية من تقرير الإجازات داخل الرواتب؟", "explanation": "من طلب إجازة وأي الطلبات ما زالت تنتظر الاعتماد.", "options": ["مستويات المخزون", "عروض الأسعار المفتوحة", "من طلب إجازة وأي الطلبات تنتظر الاعتماد"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "6c4e79c1-c417-a2c6-56b3-c4ae8419c5c5",
+      "title": "Payslip",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "When is a payslip batch more useful than a single payslip?", "explanation": "A batch generates the payslips of all the company's employees at once instead of one employee at a time.", "options": ["When paying all employees at once", "When paying one freelancer", "When sending a quotation"] },
+          "ar": { "prompt": "متى تكون دفعة قسائم الرواتب (Batch) أنفع من قسيمة واحدة؟", "explanation": "تنشئ الدفعة قسائم رواتب كل موظفي الشركة مرة واحدة بدلًا من موظف تلو الآخر.", "options": ["عند صرف رواتب كل الموظفين مرة واحدة", "عند الدفع لعامل مستقل واحد", "عند إرسال عرض سعر"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "After generating the batch payslips, what is created for the accountant?", "explanation": "Draft accounting entries, which the accountant completes before payment.", "options": ["A new employee", "Draft accounting entries", "A purchase order"] },
+          "ar": { "prompt": "بعد إنشاء قسائم الدفعة، ماذا يُنشأ للمحاسب؟", "explanation": "قيود محاسبية مسودة يستكملها المحاسب قبل الدفع.", "options": ["موظف جديد", "قيود محاسبية مسودة", "أمر شراء"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "0c0ee08e-1f78-fa34-a395-fed867e0896d",
+      "title": "Recruitment",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "Which details are needed to create a job position?", "explanation": "Its name and the email address where applications (CVs) are received.", "options": ["Only the salary", "The product and price", "The job name and the email that receives applications"] },
+          "ar": { "prompt": "ما البيانات المطلوبة لإنشاء وظيفة جديدة (Job Position)؟", "explanation": "اسم الوظيفة والبريد الإلكتروني الذي تصل عليه الطلبات (السير الذاتية).", "options": ["الراتب فقط", "المنتج والسعر", "اسم الوظيفة والبريد الذي تصل عليه الطلبات"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What does publishing a job position do?", "explanation": "It shows the job on the company website so candidates can apply.", "options": ["Shows the job on the website", "Hires the first applicant automatically", "Deletes old applications"] },
+          "ar": { "prompt": "ماذا يفعل نشر الوظيفة (Publish)؟", "explanation": "يعرض الوظيفة على موقع الشركة ليتقدم إليها المرشحون.", "options": ["يعرض الوظيفة على الموقع", "يعيّن أول متقدم تلقائيًا", "يحذف الطلبات القديمة"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "c10b197a-3135-22ef-f4d5-01abb30d575b",
+      "title": "Manufacture Order",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "Which screen opens first in the Manufacturing module?", "explanation": "The Manufacturing Orders (MO) screen, where a new manufacturing process is started.", "options": ["Payroll", "Manufacturing Orders (MO)", "Customer invoices"] },
+          "ar": { "prompt": "ما الشاشة التي تُفتح أولًا في موديول التصنيع؟", "explanation": "شاشة أوامر التصنيع (MO)، ومنها نبدأ عملية تصنيع جديدة.", "options": ["الرواتب", "أوامر التصنيع (MO)", "فواتير العملاء"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Compared with Inventory, what does the Manufacturing Products menu add?", "explanation": "The products are the same as in Inventory, with Bills of Materials added.", "options": ["Bills of Materials", "Payslips", "Pricelists"] },
+          "ar": { "prompt": "مقارنةً بالمخزون، ماذا تضيف قائمة المنتجات في التصنيع؟", "explanation": "المنتجات هي نفسها الموجودة في المخزون، ويُضاف إليها قوائم المواد (BoM).", "options": ["قوائم المواد (Bills of Materials)", "قسائم الرواتب", "قوائم الأسعار"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "5264b338-6390-3535-dac0-1af7391d29f8",
+      "title": "Bill Of Material",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What does a Bill of Materials (BoM) define?", "explanation": "The components, and their quantities, that make up a finished product.", "options": ["The customer's payment terms", "The warehouse's address", "The components and quantities of a finished product"] },
+          "ar": { "prompt": "ماذا تحدد قائمة المواد (BoM)؟", "explanation": "المكونات وكمياتها التي يتكوّن منها المنتج النهائي.", "options": ["شروط دفع العميل", "عنوان المستودع", "مكونات المنتج النهائي وكمياتها"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "What is the difference between a \"Manufacture this product\" BoM and a \"Kit\"?", "explanation": "Manufacture means the components are processed into a new product; a kit only groups components together (like sugar, water and tea for a cup of tea).", "options": ["There is no difference", "Manufacture processes components into a product; a kit only groups them", "A kit always needs a work center"] },
+          "ar": { "prompt": "ما الفرق بين قائمة مواد \"تصنيع المنتج\" وقائمة \"الطقم\" (Kit)؟", "explanation": "التصنيع يعني تحويل المكونات إلى منتج جديد، أما الطقم فيجمع المكونات فقط (مثل السكر والماء والشاي لكوب الشاي).", "options": ["لا يوجد فرق", "التصنيع يحوّل المكونات إلى منتج والطقم يجمعها فقط", "الطقم يحتاج دائمًا إلى مركز عمل"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "0ea7a132-b637-07c4-0464-cccd9f33dce4",
+      "title": "Operations",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What happens when you select a Bill of Materials on a new manufacturing order?", "explanation": "Its components and their quantities are filled in automatically, with their availability.", "options": ["The components and quantities are filled in automatically", "The MO is confirmed and finished", "A customer invoice is created"] },
+          "ar": { "prompt": "ماذا يحدث عند اختيار قائمة المواد في أمر تصنيع جديد؟", "explanation": "تُعبّأ مكوناتها وكمياتها تلقائيًا مع توافرها.", "options": ["تُعبّأ المكونات والكميات تلقائيًا", "يُؤكَّد أمر التصنيع ويُنتهى منه", "تُنشأ فاتورة عميل"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "You confirm an MO whose components are not available, and each component has a vendor. What does Odoo do?", "explanation": "It creates purchase orders to the components' vendors so the missing materials can be bought.", "options": ["It cancels the MO", "It sells the finished product", "It creates purchase orders for the missing components"] },
+          "ar": { "prompt": "أكدت أمر تصنيع مكوناته غير متوفرة، ولكل مكوّن مورد معرّف. ماذا يفعل Odoo؟", "explanation": "ينشئ أوامر شراء لموردي المكونات لشراء المواد الناقصة.", "options": ["يلغي أمر التصنيع", "يبيع المنتج النهائي", "ينشئ أوامر شراء للمكونات الناقصة"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "51855832-72ed-f236-8191-699b4bb6589f",
+      "title": "Work Center",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What does a work center represent?", "explanation": "A place or machine where a manufacturing step happens, for example casting, polishing or painting.", "options": ["A sales team", "A place or machine where a manufacturing step happens", "A product category"] },
+          "ar": { "prompt": "ماذا يمثل مركز العمل (Work Center)؟", "explanation": "مكانًا أو آلة تتم فيها خطوة من خطوات التصنيع، مثل الصب أو التلميع أو الدهان.", "options": ["فريق مبيعات", "مكانًا أو آلة تتم فيها خطوة تصنيع", "فئة منتجات"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Why is a cost per hour set on a work center?", "explanation": "The hourly cost of the machine and the employee feeds the production cost, linked to an expense account and cost centre.", "options": ["To calculate the production cost", "To set the selling price", "To pay vendors"] },
+          "ar": { "prompt": "لماذا تُضبط تكلفة الساعة على مركز العمل؟", "explanation": "تدخل تكلفة الساعة للآلة والموظف في تكلفة الإنتاج، وتُربط بحساب مصروفات ومركز تكلفة.", "options": ["لحساب تكلفة الإنتاج", "لتحديد سعر البيع", "للدفع للموردين"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "1342d643-d478-ea5b-971b-01be14e11128",
+      "title": "Mrp Planning",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "Which two planning views are shown in the video?", "explanation": "Planning by production and planning by work center.", "options": ["By customer and by vendor", "By salary and by contract", "By production and by work center"] },
+          "ar": { "prompt": "ما شاشتا التخطيط اللتان عرضهما الفيديو؟", "explanation": "التخطيط حسب الإنتاج والتخطيط حسب مركز العمل.", "options": ["حسب العميل وحسب المورد", "حسب الراتب وحسب العقد", "حسب الإنتاج وحسب مركز العمل"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What is the planning screen used for?", "explanation": "To follow manufacturing and work orders on a calendar and check that they run on time.", "options": ["To follow manufacturing orders and check they are on schedule", "To create customer invoices", "To approve time off"] },
+          "ar": { "prompt": "فيمَ تُستخدم شاشة التخطيط؟", "explanation": "لمتابعة أوامر التصنيع وأوامر العمل على التقويم والتأكد من سيرها في مواعيدها.", "options": ["لمتابعة أوامر التصنيع والتأكد من التزامها بالمواعيد", "لإنشاء فواتير العملاء", "لاعتماد الإجازات"] }
+        }
+      ]
+    }
+  ]
+}

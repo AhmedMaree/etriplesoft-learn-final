@@ -59,6 +59,7 @@ export type ChatErrorCode =
   | "notFound"
   | "rateMinute"
   | "rateDaily"
+  | "rateDeep"
   | "conversationFull"
   | "provider"
   | "busy"

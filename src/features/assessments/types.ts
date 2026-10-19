@@ -10,7 +10,8 @@ export type QuizState = {
   instructions: string;
   passPercent: number;
   maxAttempts: number;
-  durationSeconds: number;
+  /** Null for an untimed quiz (the in-video practice checks). */
+  durationSeconds: number | null;
   serverNow: string;
   attemptsUsed: number;
   adminPreview?: boolean;
@@ -19,7 +20,8 @@ export type QuizState = {
     id: string;
     number: number;
     status: "active" | "submitted" | "timed_out";
-    deadline: string;
+    /** Null when the attempt has no time limit. */
+    deadline: string | null;
     score: number | null;
     possibleScore: number | null;
     passed: boolean | null;
@@ -44,9 +46,10 @@ export function isQuizState(value: unknown): value is QuizState {
     typeof value.instructions !== "string" ||
     typeof value.serverNow !== "string" ||
     !Number.isFinite(Date.parse(value.serverNow)) ||
-    !["passPercent", "maxAttempts", "durationSeconds", "attemptsUsed"].every(
+    !["passPercent", "maxAttempts", "attemptsUsed"].every(
       (key) => typeof value[key] === "number",
     ) ||
+    !(value.durationSeconds === null || typeof value.durationSeconds === "number") ||
     !Array.isArray(value.questions) ||
     (value.adminPreview !== undefined && typeof value.adminPreview !== "boolean") ||
     !value.questions.every(
@@ -72,8 +75,7 @@ export function isQuizState(value: unknown): value is QuizState {
       typeof a.id !== "string" ||
       typeof a.number !== "number" ||
       !["active", "submitted", "timed_out"].includes(String(a.status)) ||
-      typeof a.deadline !== "string" ||
-      !Number.isFinite(Date.parse(a.deadline)) ||
+      !(a.deadline === null || (typeof a.deadline === "string" && Number.isFinite(Date.parse(a.deadline)))) ||
       typeof a.sequence !== "number" ||
       !record(a.answers) ||
       !Object.values(a.answers).every(strings) ||

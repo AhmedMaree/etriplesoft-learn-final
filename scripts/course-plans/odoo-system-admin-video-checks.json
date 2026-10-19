@@ -1,0 +1,134 @@
+{
+  "courseSlug": "odoo-system-admin",
+  "source": "Lesson video transcripts (ai_private.video_transcripts).",
+  "videos": [
+    {
+      "lessonId": "b43e5d8a-7a73-4a65-a425-2d5d46600254",
+      "title": "Administration",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What is the difference between archiving and deleting a user?", "explanation": "An archived user can be found under Inactive Users and unarchived later; a deleted user, and their access rights, cannot be recovered.", "options": ["There is no difference", "An archived user can be restored later; a deleted user cannot", "A deleted user can be restored; an archived user cannot"] },
+          "ar": { "prompt": "ما الفرق بين أرشفة المستخدم وحذفه؟", "explanation": "المستخدم المؤرشف يظهر ضمن المستخدمين غير النشطين ويمكن إلغاء أرشفته لاحقًا، أما المحذوف فلا يمكن استرجاعه هو وصلاحياته.", "options": ["لا يوجد فرق", "المؤرشف يمكن استرجاعه لاحقًا، والمحذوف لا يمكن", "المحذوف يمكن استرجاعه، والمؤرشف لا يمكن"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "How do you remove an installed module such as CRM from the system?", "explanation": "In Apps, filter the installed modules, open the module and click Uninstall; it then disappears from the home screen.", "options": ["Archive the users who use it", "Change the company currency", "From Apps, open the module and click Uninstall"] },
+          "ar": { "prompt": "كيف تزيل موديولًا مثبتًا مثل CRM من النظام؟", "explanation": "من شاشة Apps نعرض الموديولات المثبتة، ونفتح الموديول ونضغط Uninstall، فيختفي من الشاشة الرئيسية.", "options": ["بأرشفة المستخدمين الذين يستخدمونه", "بتغيير عملة الشركة", "من Apps نفتح الموديول ونضغط Uninstall"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "41f4f2a7-3fe5-b52b-8949-0fa72e09da0e",
+      "title": "Access Rights",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "A user has \"Read only\" access in Accounting. What can they do?", "explanation": "Read only lets the user view records in the module without creating, editing or deleting anything.", "options": ["View records but not create, edit or delete them", "Create and delete any record", "Change other users' passwords"] },
+          "ar": { "prompt": "مستخدم لديه صلاحية \"قراءة فقط\" (Read only) في المحاسبة. ماذا يستطيع أن يفعل؟", "explanation": "تتيح القراءة فقط للمستخدم رؤية السجلات في الموديول دون إنشاء أو تعديل أو حذف أي شيء.", "options": ["يرى السجلات دون إنشائها أو تعديلها أو حذفها", "ينشئ أي سجل ويحذفه", "يغيّر كلمات مرور المستخدمين الآخرين"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "What does it mean if a module's access line is left empty for a user?", "explanation": "An empty line means the user has no access rights in that area; choosing User, Manager or Administrator grants access.", "options": ["The user becomes an administrator", "The user has no access rights there", "The user can only delete records"] },
+          "ar": { "prompt": "ماذا يعني ترك سطر صلاحيات موديول ما فارغًا لمستخدم؟", "explanation": "السطر الفارغ يعني أن المستخدم ليست لديه أي صلاحية في هذا الجزء، واختيار User أو Manager أو Administrator يمنحه الصلاحية.", "options": ["يصبح المستخدم مسؤولًا (Administrator)", "ليست للمستخدم أي صلاحية هناك", "يستطيع المستخدم حذف السجلات فقط"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "acc5316a-dc21-d2fa-2005-a9f326bd86b4",
+      "title": "Handle Users",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "Why is the email address important when creating a user?", "explanation": "The user logs in to Odoo with that email address.", "options": ["It sets the company currency", "It decides the user's language", "The user logs in with it"] },
+          "ar": { "prompt": "لماذا يُعد البريد الإلكتروني مهمًا عند إنشاء مستخدم؟", "explanation": "يسجّل المستخدم دخوله إلى Odoo باستخدام هذا البريد الإلكتروني.", "options": ["لأنه يحدد عملة الشركة", "لأنه يحدد لغة المستخدم", "لأن المستخدم يسجّل الدخول به"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Which user type fits an employee who only needs limited actions, such as requesting time off?", "explanation": "Internal users work in the system; a Portal user has limited access, for example to request time off.", "options": ["Portal", "Internal user", "Administrator"] },
+          "ar": { "prompt": "أي نوع مستخدم يناسب موظفًا يحتاج إلى إجراءات محدودة فقط مثل طلب إجازة؟", "explanation": "المستخدم الداخلي (Internal) يعمل على النظام، أما مستخدم البوابة (Portal) فصلاحياته محدودة، مثل طلب إجازة.", "options": ["بوابة (Portal)", "مستخدم داخلي (Internal)", "مسؤول (Administrator)"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "58f9a014-82d0-ab9f-96f5-41c89f36ac2c",
+      "title": "Security Groups",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "Which four permissions make up an access right line in a group?", "explanation": "Each access right is made of Read, Write, Create and Delete, and each can be turned on or off.", "options": ["Login, Logout, Print, Email", "Read, Write, Create, Delete", "Draft, Posted, Paid, Cancelled"] },
+          "ar": { "prompt": "ما الصلاحيات الأربع التي يتكون منها سطر الصلاحية داخل المجموعة؟", "explanation": "تتكون كل صلاحية من القراءة والكتابة والإنشاء والحذف (Read وWrite وCreate وDelete)، ويمكن تفعيل كل منها أو إلغاؤه.", "options": ["الدخول والخروج والطباعة والبريد", "القراءة والكتابة والإنشاء والحذف", "مسودة ومُرحّلة ومدفوعة وملغاة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What is the benefit of putting several users in one security group?", "explanation": "All users in the group share the same access rights, so you set them once for everyone.", "options": ["They all get the same access rights", "They share one password", "They are archived together"] },
+          "ar": { "prompt": "ما فائدة وضع عدة مستخدمين في مجموعة أمان واحدة؟", "explanation": "يحصل جميع مستخدمي المجموعة على الصلاحيات نفسها، فتضبطها مرة واحدة للجميع.", "options": ["يحصلون جميعًا على الصلاحيات نفسها", "يتشاركون كلمة مرور واحدة", "تتم أرشفتهم معًا"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "28b11afe-c3cd-f92a-63b1-6cc7c334561d",
+      "title": "Companies",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "In a multi-company setup, how do you link a company to its main (mother) company?", "explanation": "The Parent Company field links a company to the main company above it.", "options": ["Give both companies the same name", "Use the same email address", "Set the Parent Company field"] },
+          "ar": { "prompt": "في بيئة الشركات المتعددة، كيف تربط شركة بالشركة الأم؟", "explanation": "يربط حقل الشركة الأم (Parent Company) الشركة بالشركة الرئيسية التي تتبعها.", "options": ["بإعطاء الشركتين الاسم نفسه", "باستخدام البريد الإلكتروني نفسه", "بتعبئة حقل الشركة الأم (Parent Company)"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "What details does a company branch have?", "explanation": "A branch is created with the same kind of details as the company itself, such as address, tax ID and contact information.", "options": ["Only a name", "The same kind of details as the company", "Only a currency"] },
+          "ar": { "prompt": "ما البيانات التي يحتوي عليها فرع الشركة؟", "explanation": "يُنشأ الفرع بنفس نوع بيانات الشركة نفسها، مثل العنوان والرقم الضريبي وبيانات التواصل.", "options": ["الاسم فقط", "نفس نوع بيانات الشركة", "العملة فقط"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "c6a44622-373f-5ee1-f997-5c2e9aeed8d6",
+      "title": "Languages",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "Where are new languages activated for the whole system?", "explanation": "In Settings → Translations → Languages, click Activate on the language you need.", "options": ["Settings → Translations → Languages, then Activate", "In the Sales module", "From the database backup screen"] },
+          "ar": { "prompt": "أين يتم تفعيل لغة جديدة على مستوى النظام كله؟", "explanation": "من الإعدادات ← الترجمات ← اللغات، ثم الضغط على Activate للغة المطلوبة.", "options": ["الإعدادات ← الترجمات ← اللغات ثم Activate", "من موديول المبيعات", "من شاشة النسخ الاحتياطي لقاعدة البيانات"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "How does a user switch their own interface to Arabic?", "explanation": "From their avatar → My Profile, the user picks one of the activated languages.", "options": ["They must ask for a new database", "They reinstall Odoo", "From My Profile, by choosing an activated language"] },
+          "ar": { "prompt": "كيف يغيّر المستخدم واجهته الخاصة إلى العربية؟", "explanation": "من صورته ← ملفي الشخصي (My Profile) يختار المستخدم إحدى اللغات المفعّلة.", "options": ["يجب أن يطلب قاعدة بيانات جديدة", "يعيد تثبيت Odoo", "من ملفه الشخصي باختيار لغة مفعّلة"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "68fc9b05-877f-b304-ec75-69e9e858b830",
+      "title": "Studio",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What is Odoo Studio used for in this video?", "explanation": "Studio customises a screen: rearranging, adding or removing fields, tabs and columns, and editing menus.", "options": ["Making database backups", "Customising a screen's fields, tabs and menus", "Creating new companies"] },
+          "ar": { "prompt": "فيمَ استُخدم Odoo Studio في هذا الفيديو؟", "explanation": "يُستخدم Studio لتخصيص الشاشة: إعادة ترتيب الحقول والتبويبات والأعمدة أو إضافتها أو حذفها وتعديل القوائم.", "options": ["عمل نسخ احتياطية لقاعدة البيانات", "تخصيص حقول الشاشة وتبويباتها وقوائمها", "إنشاء شركات جديدة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Can Studio add a field that already exists on another screen?", "explanation": "Yes. Studio lists existing fields from all modules, and you can search for one and add it to the current screen.", "options": ["Yes, existing fields can be searched for and added", "No, only brand-new fields can be added", "Only after reinstalling the module"] },
+          "ar": { "prompt": "هل يستطيع Studio إضافة حقل موجود بالفعل في شاشة أخرى؟", "explanation": "نعم. يعرض Studio الحقول الموجودة من كل الموديولات، ويمكنك البحث عن حقل وإضافته إلى الشاشة الحالية.", "options": ["نعم، يمكن البحث عن الحقول الموجودة وإضافتها", "لا، يمكن إضافة حقول جديدة فقط", "فقط بعد إعادة تثبيت الموديول"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "d880a2e9-6e34-10a0-80c5-ecba4fbac9cc",
+      "title": "Backups",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What is needed to download a backup from the Manage Databases screen?", "explanation": "On Manage Databases, choose Backup and enter the master password; the backup file then downloads.", "options": ["The customer's email", "A new user account", "The master password"] },
+          "ar": { "prompt": "ما المطلوب لتنزيل نسخة احتياطية من شاشة إدارة قواعد البيانات (Manage Databases)؟", "explanation": "من شاشة إدارة قواعد البيانات نختار Backup ونُدخل كلمة المرور الرئيسية (Master Password)، فيُنزَّل ملف النسخة الاحتياطية.", "options": ["البريد الإلكتروني للعميل", "حساب مستخدم جديد", "كلمة المرور الرئيسية (Master Password)"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Why does the video keep separate test databases besides the live one?", "explanation": "Work is done and tested on test (staging) databases before it is moved to the live database.", "options": ["To test work before moving it to the live database", "To store customer passwords", "Because Odoo allows only one user per database"] },
+          "ar": { "prompt": "لماذا يحتفظ الفيديو بقواعد بيانات اختبار منفصلة بجانب قاعدة البيانات الحية (Live)؟", "explanation": "يتم تنفيذ العمل واختباره على قواعد بيانات الاختبار (Staging) قبل نقله إلى قاعدة البيانات الحية.", "options": ["لاختبار العمل قبل نقله إلى قاعدة البيانات الحية", "لتخزين كلمات مرور العملاء", "لأن Odoo يسمح بمستخدم واحد فقط لكل قاعدة بيانات"] }
+        }
+      ]
+    }
+  ]
+}

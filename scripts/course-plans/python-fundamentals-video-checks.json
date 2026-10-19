@@ -1,0 +1,214 @@
+{
+  "courseSlug": "python-fundamentals",
+  "source": "Lesson video transcripts (ai_private.video_transcripts). Lists, Tuples, Dictionaries and Functions keep the questions of their earlier practice checks.",
+  "videos": [
+    {
+      "lessonId": "2580870a-2214-f59d-2abb-1daaa671a9c7",
+      "title": "What is Python?",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "Why does the video call Python a good first language?", "explanation": "Python reads almost like English, so even someone new to coding can understand and write it.", "options": ["It only runs on Windows", "Its code is easy to read and write, almost like English", "It needs no computer to run"] },
+          "ar": { "prompt": "لماذا يصف الفيديو لغة Python بأنها بداية مناسبة للمبتدئين؟", "explanation": "تُقرأ Python تقريبًا مثل الإنجليزية، لذلك يستطيع حتى من يبدأ البرمجة لأول مرة فهمها والكتابة بها.", "options": ["لأنها تعمل على Windows فقط", "لأن كودها سهل القراءة والكتابة وقريب من الإنجليزية", "لأنها لا تحتاج إلى جهاز كمبيوتر لتعمل"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "Which of these is a Python use mentioned in the video that matters for this course?", "explanation": "Besides web development, data science and automation, Python is the language used to build Odoo applications.", "options": ["Designing printed logos", "Editing photos only", "Developing applications for Odoo"] },
+          "ar": { "prompt": "أيٌّ من استخدامات Python التالية ذكرها الفيديو ويهمنا في هذا الكورس؟", "explanation": "إلى جانب تطوير الويب وعلم البيانات والأتمتة، تُستخدم Python لبناء تطبيقات Odoo.", "options": ["تصميم الشعارات المطبوعة", "تعديل الصور فقط", "تطوير التطبيقات على Odoo"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "c002cdbc-2fdc-27bd-c052-07072876d609",
+      "title": "Installing Python & IDEs",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "Which IDE is used in this course?", "explanation": "VS Code and Jupyter Lab are options, but the course uses PyCharm.", "options": ["PyCharm", "Microsoft Word", "Notepad only"] },
+          "ar": { "prompt": "ما بيئة التطوير (IDE) المستخدمة في هذا الكورس؟", "explanation": "هناك خيارات مثل VS Code وJupyter Lab، لكن الكورس يستخدم PyCharm.", "options": ["PyCharm", "Microsoft Word", "المفكرة (Notepad) فقط"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "After installing, how did the video confirm that Python works?", "explanation": "It checked the installed version (3.12) and ran a simple print command.", "options": ["By restarting the computer twice", "By checking the version and running a simple print command", "By opening a web browser"] },
+          "ar": { "prompt": "بعد التثبيت، كيف تأكد الفيديو من أن Python تعمل؟", "explanation": "تم التحقق من الإصدار المثبت (3.12) وتشغيل أمر print بسيط.", "options": ["بإعادة تشغيل الجهاز مرتين", "بالتحقق من الإصدار وتشغيل أمر print بسيط", "بفتح متصفح الإنترنت"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "82eced2a-18dd-cd14-6b70-20cc51202c40",
+      "title": "Variables and naming rules - 1",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "Python variable names are case-sensitive. What does that mean for `name`, `Name` and `NAME`?", "explanation": "Each spelling is a separate variable, so they can hold different values.", "options": ["They are the same variable", "Only `name` is allowed", "They are three different variables"] },
+          "ar": { "prompt": "أسماء المتغيرات في Python حساسة لحالة الأحرف. ماذا يعني ذلك بالنسبة إلى `name` و`Name` و`NAME`؟", "explanation": "كل كتابة منها متغير مستقل، ويمكن أن يحمل كل واحد قيمة مختلفة.", "options": ["كلها المتغير نفسه", "المسموح هو `name` فقط", "هي ثلاثة متغيرات مختلفة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Which variable name is valid in Python?", "explanation": "A name may start with a letter or an underscore. It cannot start with a digit, contain a dash, or be a keyword such as `if`.", "options": ["`_name`", "`1name`", "`if`"] },
+          "ar": { "prompt": "أي اسم متغير صالح في Python؟", "explanation": "يمكن أن يبدأ الاسم بحرف أو بشرطة سفلية، ولا يجوز أن يبدأ برقم أو يحتوي على شرطة (-) أو يكون كلمة محجوزة مثل `if`.", "options": ["`_name`", "`1name`", "`if`"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "3493e346-56a8-be09-871c-637533e85831",
+      "title": "Variables and naming rules - 2",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "Which data type holds a decimal number such as `10.5`?", "explanation": "`int` holds whole numbers; `float` holds numbers with a decimal part.", "options": ["`int`", "`float`", "`bool`"] },
+          "ar": { "prompt": "ما نوع البيانات الذي يخزن رقمًا عشريًا مثل `10.5`؟", "explanation": "`int` للأعداد الصحيحة، و`float` للأعداد التي بها جزء عشري.", "options": ["`int`", "`float`", "`bool`"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "What does `int(\"42\")` do?", "explanation": "This is casting: it converts the string \"42\" into the integer 42.", "options": ["Prints the text 42", "Shows the type of \"42\"", "Converts the string \"42\" into the integer 42"] },
+          "ar": { "prompt": "ماذا يفعل `int(\"42\")`؟", "explanation": "هذا هو التحويل (Casting): يحوّل النص \"42\" إلى العدد الصحيح 42.", "options": ["يطبع النص 42", "يعرض نوع \"42\"", "يحوّل النص \"42\" إلى العدد الصحيح 42"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "ec528c4e-2607-cdb7-1b6d-ebffd13c8f82",
+      "title": "Basic input/output (input(), print())",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What type of value does `input()` return?", "explanation": "`input()` always returns a string, even when the user types a number.", "options": ["A string", "An integer", "A boolean"] },
+          "ar": { "prompt": "ما نوع القيمة التي يعيدها `input()`؟", "explanation": "يعيد `input()` نصًا (string) دائمًا، حتى لو كتب المستخدم رقمًا.", "options": ["نص (string)", "عدد صحيح (int)", "قيمة منطقية (bool)"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "`x = input()` and the user types 12. How do you make `2 + x` give 14?", "explanation": "Adding an int to a string raises an error, so cast the input first: `2 + int(x)`.", "options": ["Write `2 + x` as it is", "Write `2 + int(x)`", "Write `print(2) + x`"] },
+          "ar": { "prompt": "`x = input()` وكتب المستخدم 12. كيف تجعل `2 + x` تعطي 14؟", "explanation": "جمع عدد صحيح مع نص يسبب خطأ، لذلك نحوّل المدخل أولًا: `2 + int(x)`.", "options": ["نكتب `2 + x` كما هي", "نكتب `2 + int(x)`", "نكتب `print(2) + x`"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "c454c937-a3e1-75bd-08fd-5f66ae3f0985",
+      "title": "operators",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "What is the difference between `=` and `==` in Python?", "explanation": "`=` assigns a value to a variable; `==` compares two values and gives True or False.", "options": ["There is no difference", "`=` compares and `==` assigns", "`=` assigns a value and `==` compares two values"] },
+          "ar": { "prompt": "ما الفرق بين `=` و`==` في Python؟", "explanation": "`=` تُسند قيمة إلى متغير، و`==` تقارن بين قيمتين وتعطي True أو False.", "options": ["لا يوجد فرق", "`=` للمقارنة و`==` للإسناد", "`=` لإسناد قيمة و`==` للمقارنة بين قيمتين"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "When is `a and b` True?", "explanation": "`and` needs both conditions to be True; `or` needs only one of them.", "options": ["Only when both are True", "When at least one is True", "When both are False"] },
+          "ar": { "prompt": "متى تكون `a and b` صحيحة (True)؟", "explanation": "`and` تحتاج أن يكون الشرطان صحيحين معًا، أما `or` فيكفيها شرط واحد.", "options": ["فقط عندما يكون الاثنان True", "عندما يكون أحدهما على الأقل True", "عندما يكون الاثنان False"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "7f6046af-5590-e84c-6718-20b90ef6b73b",
+      "title": "Conditional statements",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "`age = 20`. What does `if age >= 18: print(\"adult\")` print?", "explanation": "20 is greater than or equal to 18, so the condition is True and \"adult\" is printed.", "options": ["Nothing", "adult", "An error"] },
+          "ar": { "prompt": "`age = 20`. ماذا يطبع `if age >= 18: print(\"adult\")`؟", "explanation": "20 أكبر من أو تساوي 18، فالشرط صحيح وتُطبع كلمة \"adult\".", "options": ["لا شيء", "adult", "رسالة خطأ"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "What is a nested condition?", "explanation": "A nested condition is an `if` inside another `if`; the inner check runs only when the outer one is True.", "options": ["Two `print` lines in a row", "A loop that never stops", "An `if` statement inside another `if` statement"] },
+          "ar": { "prompt": "ما المقصود بالشرط المتداخل (Nested Condition)؟", "explanation": "الشرط المتداخل هو `if` داخل `if` آخر، ولا يُفحص الشرط الداخلي إلا إذا تحقق الشرط الخارجي.", "options": ["سطرا `print` متتاليان", "حلقة لا تتوقف أبدًا", "جملة `if` داخل جملة `if` أخرى"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "af8fb532-3143-7ced-f97f-54333b49f931",
+      "title": "Loops",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "Which numbers does `for i in range(5): print(i)` print?", "explanation": "`range(5)` starts at 0 and stops before 5, so it prints 0, 1, 2, 3, 4.", "options": ["0, 1, 2, 3, 4", "1, 2, 3, 4, 5", "0, 1, 2, 3, 4, 5"] },
+          "ar": { "prompt": "ما الأرقام التي يطبعها `for i in range(5): print(i)`؟", "explanation": "يبدأ `range(5)` من 0 ويتوقف قبل 5، فيطبع 0 و1 و2 و3 و4.", "options": ["0، 1، 2، 3، 4", "1، 2، 3، 4، 5", "0، 1، 2، 3، 4، 5"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "What is the difference between `break` and `continue`?", "explanation": "`break` exits the loop completely; `continue` skips only the current iteration and goes on with the next one.", "options": ["They do the same thing", "`break` stops the loop; `continue` skips only the current iteration", "`continue` stops the loop; `break` skips one iteration"] },
+          "ar": { "prompt": "ما الفرق بين `break` و`continue`؟", "explanation": "`break` تخرج من الحلقة تمامًا، أما `continue` فتتخطى التكرار الحالي فقط وتكمل بالتكرار التالي.", "options": ["تؤديان العمل نفسه", "`break` توقف الحلقة، و`continue` تتخطى التكرار الحالي فقط", "`continue` توقف الحلقة، و`break` تتخطى تكرارًا واحدًا"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "c75d5c23-dbbf-1440-f5e1-02ba07923ead",
+      "title": "Lists",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What does `items.append(value)` do to a Python list?", "explanation": "`append` adds one value to the end of the existing list.", "options": ["Adds `value` to the end of `items`", "Sorts the list alphabetically", "Removes the first item"] },
+          "ar": { "prompt": "ماذا يفعل `items.append(value)` بقائمة Python؟", "explanation": "تضيف `append` قيمة واحدة إلى نهاية القائمة الموجودة.", "options": ["يضيف `value` إلى نهاية `items`", "يرتب القائمة أبجديًا", "يحذف العنصر الأول"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What index refers to the first item in a Python list?", "explanation": "Python sequences use zero-based indexing, so the first item is at index 0.", "options": ["0", "1", "-1"] },
+          "ar": { "prompt": "ما الفهرس (index) الذي يشير إلى العنصر الأول في قائمة Python؟", "explanation": "تبدأ الفهارس في Python من الصفر، لذلك يكون العنصر الأول عند الفهرس 0.", "options": ["0", "1", "-1"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "1ebfc86f-a4d5-ba60-d21d-ace1c536a497",
+      "title": "Tuples",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What is a key difference between a tuple and a list?", "explanation": "A tuple is immutable: its items cannot be reassigned or removed after it is created.", "options": ["A tuple is immutable", "A tuple can contain only numbers", "A tuple always sorts itself"] },
+          "ar": { "prompt": "ما الفرق الأساسي بين الـ tuple والقائمة (list)؟", "explanation": "الـ tuple غير قابل للتعديل: لا يمكن تغيير عناصره أو حذفها بعد إنشائه.", "options": ["الـ tuple غير قابل للتعديل", "الـ tuple يحتوي على أرقام فقط", "الـ tuple يرتب نفسه دائمًا"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "Which expression creates a one-item tuple containing `7`?", "explanation": "The trailing comma makes `(7,)` a tuple; `(7)` is just the integer 7.", "options": ["`(7,)`", "`(7)`", "`[7]`"] },
+          "ar": { "prompt": "أي تعبير ينشئ tuple من عنصر واحد يحتوي على `7`؟", "explanation": "الفاصلة في النهاية تجعل `(7,)` من نوع tuple، أما `(7)` فهو العدد 7 فقط.", "options": ["`(7,)`", "`(7)`", "`[7]`"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "ca3ca3ea-1abd-f470-f692-6711ca967fc5",
+      "title": "Dictionaries",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "How does a Python dictionary organize its data?", "explanation": "A dictionary associates keys with values so code can look up a value by its key.", "options": ["As key-value pairs", "Only as an ordered sequence of characters", "As rows that can only be accessed by numeric position"] },
+          "ar": { "prompt": "كيف ينظم القاموس (dictionary) في Python بياناته؟", "explanation": "يربط القاموس كل مفتاح بقيمة، فيمكن الوصول إلى القيمة من خلال مفتاحها.", "options": ["على شكل أزواج مفتاح وقيمة", "كسلسلة مرتبة من الحروف فقط", "كصفوف لا يمكن الوصول إليها إلا برقم الموضع"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What happens when a value is assigned to an existing dictionary key?", "explanation": "Dictionary keys are unique; assigning the key again replaces its previous value.", "options": ["The key's value is updated", "A duplicate key is added beside it", "The dictionary is automatically cleared"] },
+          "ar": { "prompt": "ماذا يحدث عند إسناد قيمة إلى مفتاح موجود بالفعل في القاموس؟", "explanation": "مفاتيح القاموس فريدة، لذلك يستبدل الإسناد الجديد القيمة السابقة.", "options": ["تُحدَّث قيمة المفتاح", "يُضاف مفتاح مكرر بجانبه", "يُفرَّغ القاموس تلقائيًا"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "9a577192-3a33-ef8b-96b2-3c37d27a54f8",
+      "title": "Functions",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "Which Python keyword begins a function definition?", "explanation": "The `def` keyword introduces a function definition.", "options": ["`def`", "`func`", "`method`"] },
+          "ar": { "prompt": "ما الكلمة المحجوزة في Python التي يبدأ بها تعريف الدالة؟", "explanation": "تبدأ تعريفات الدوال بالكلمة `def`.", "options": ["`def`", "`func`", "`method`"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What does a `return` statement do inside a function?", "explanation": "`return` sends a result back to the code that called the function.", "options": ["Sends a value back to the caller", "Repeats the function forever", "Imports a package"] },
+          "ar": { "prompt": "ماذا تفعل جملة `return` داخل الدالة؟", "explanation": "تعيد `return` النتيجة إلى الكود الذي استدعى الدالة.", "options": ["تعيد قيمة إلى من استدعى الدالة", "تكرر الدالة إلى الأبد", "تستورد حزمة"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "e205fd01-a8b4-686b-ef7d-0c4f6b108273",
+      "title": "Intro To OOP",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "In OOP, what are an object's attributes and methods?", "explanation": "Attributes are the object's data (for a car: model, colour, price); methods are its actions (drive, stop).", "options": ["Attributes are actions and methods are data", "Attributes are its data and methods are its actions", "Both are just comments in the code"] },
+          "ar": { "prompt": "في البرمجة كائنية التوجه، ما المقصود بخصائص (attributes) الكائن ودواله (methods)؟", "explanation": "الخصائص هي بيانات الكائن (للسيارة: الموديل واللون والسعر)، والدوال هي أفعاله (تتحرك، تتوقف).", "options": ["الخصائص أفعال والدوال بيانات", "الخصائص بياناته والدوال أفعاله", "كلاهما مجرد تعليقات في الكود"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "What is a class?", "explanation": "A class is a template (blueprint) from which many objects with the same structure are created.", "options": ["A single variable that stores a number", "A loop that creates lists", "A template (blueprint) used to create objects"] },
+          "ar": { "prompt": "ما هو الـ class؟", "explanation": "الـ class قالب (مخطط) تُنشأ منه كائنات كثيرة لها البنية نفسها.", "options": ["متغير واحد يخزن رقمًا", "حلقة تنشئ قوائم", "قالب (مخطط) تُنشأ منه الكائنات"] }
+        }
+      ]
+    }
+  ]
+}

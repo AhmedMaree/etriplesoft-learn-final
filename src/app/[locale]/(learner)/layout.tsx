@@ -12,6 +12,7 @@ import { getLearnerTimeZone } from '@/features/calendar/server/calendar'
 import { syncAndCountNotifications } from '@/features/notifications/server/notifications'
 import { listSchedulableCourses } from '@/features/calendar/server/staff'
 import { getInboxSummary } from '@/features/messages/server/messages'
+import { isGeminiConfigured } from '@/features/ai-assistant/server/gemini'
 
 export default async function LearnerLayout({ children, params }: { children: ReactNode; params: Promise<{ locale: string }> }) {
   const { locale: value } = await params
@@ -53,5 +54,5 @@ export default async function LearnerLayout({ children, params }: { children: Re
     // Instructors (not admins, who use the admin area) see the schedule link once a course is assigned.
     canSchedule = !isAdmin && Boolean(instructorRole) && (await listSchedulableCourses(value)).courses.length > 0
   }
-  return <LearnerShell locale={value} displayName={displayName} avatarUrl={avatarUrl} authenticated={Boolean(user)} continueLearning={continueLearning} isAdmin={isAdmin} canSchedule={canSchedule} unreadNotifications={unreadNotifications} unreadMessages={unreadMessages} timeZone={timeZone} footer={<div className="mk mk--embedded"><SiteFooter localeSwitcher /></div>}>{children}</LearnerShell>
+  return <LearnerShell locale={value} displayName={displayName} avatarUrl={avatarUrl} authenticated={Boolean(user)} continueLearning={continueLearning} isAdmin={isAdmin} canSchedule={canSchedule} unreadNotifications={unreadNotifications} unreadMessages={unreadMessages} timeZone={timeZone} assistantAvailable={isGeminiConfigured()} footer={<div className="mk mk--embedded"><SiteFooter localeSwitcher /></div>}>{children}</LearnerShell>
 }

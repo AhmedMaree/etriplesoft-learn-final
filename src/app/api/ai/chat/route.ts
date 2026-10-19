@@ -30,7 +30,8 @@ export const maxDuration = 120;
 const MAX_BODY_BYTES = 16_384;
 const MAX_QUESTION_CHARS = 4000;
 const MAX_REPLY_CHARS = 32_000;
-const HISTORY_MESSAGES = 20;
+// Every turn re-sends this history, so it is the main input cost of a long conversation (about five exchanges).
+const HISTORY_MESSAGES = 10;
 const TITLE_TIMEOUT_MS = 10_000;
 const OUTPUT_TOKENS = { fast: 8192, deep: 16384 } as const;
 
@@ -80,6 +81,7 @@ function toTurns(messages: { role: "user" | "assistant"; content: string }[]): G
 function beginTurnError(error: { code: string; message: string }): Response {
   if (error.code === "54000") {
     if (error.message.includes("ai_rate_daily")) return fail("rateDaily", 429);
+    if (error.message.includes("ai_rate_deep")) return fail("rateDeep", 429);
     if (error.message.includes("ai_conversation_full")) return fail("conversationFull", 409);
     return fail("rateMinute", 429);
   }
@@ -118,6 +120,7 @@ export async function POST(request: Request) {
     p_locale: input.locale,
     p_content: input.message,
     p_kind: input.kind,
+    p_mode: input.mode,
   });
   if (turnError) return beginTurnError(turnError);
   const started = turn?.[0];

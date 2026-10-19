@@ -7,7 +7,7 @@ import { LearnerQuiz } from "@/features/assessments/components/learner-quiz";
 import { QuizLockNav } from "@/features/assessments/components/quiz-lock-nav";
 import { CompletionControls } from "@/features/learning/components/completion-controls";
 import type { CatalogCourseDetail, CatalogOutlineLesson, LearnerLesson } from "@/features/courses/server/course-repository";
-import { courseHref, lessonHref } from "./course-links";
+import { courseHref, lessonHref, pairedVideoChecks } from "./course-links";
 
 type Props = {
   course: CatalogCourseDetail;
@@ -34,10 +34,15 @@ function clock(seconds: number | null) {
   return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${s}` : `${m}:${s}`;
 }
 
-export async function LearnerLessonView({ course, outline, lessonId, lesson, locale, trackProgress, adminPreview, autoplayNext, progress, resources, enrolled, unlocked }: Props) {
+export async function LearnerLessonView({ course, outline: fullOutline, lessonId, lesson, locale, trackProgress, adminPreview, autoplayNext, progress, resources, enrolled, unlocked }: Props) {
   const t = await getTranslations("courses");
   const navigationT = await getTranslations("navigation");
   const completionT = await getTranslations('completion');
+  // A video's practice check is answered inside its player, so it is not listed as a separate lesson
+  // (unless it is the lesson being opened directly).
+  const checks = pairedVideoChecks(fullOutline);
+  const checkIds = new Set(checks.values());
+  const outline = fullOutline.filter((item) => !checkIds.has(item.lessonId) || item.lessonId === lessonId);
   const readingReady = !!lesson && (lesson.lessonType === 'article' ? !!lesson.body?.trim() : lesson.lessonType === 'resource' ? resources.length>0 : true);
   const index = outline.findIndex((item) => item.lessonId === lessonId);
   const current = outline[index];
@@ -150,6 +155,7 @@ export async function LearnerLessonView({ course, outline, lessonId, lesson, loc
               title={lesson.title}
               trackProgress={trackProgress}
               autoplayNext={autoplayNext}
+              checkLessonId={checks.get(lessonId) ?? null}
               next={next ? { href: lessonHref(course.slug, next.lessonId), title: next.lessonTitle, isPracticeCheck: next.lessonType === "assessment" } : null}
             />
           )

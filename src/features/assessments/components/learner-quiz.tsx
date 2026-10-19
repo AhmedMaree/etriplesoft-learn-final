@@ -92,12 +92,14 @@ export function LearnerQuiz({
       );
       setState(next);
       if (next?.attempt) {
-        clock.current = {
-          deadline:
-            Date.parse(next.attempt.deadline) - Date.parse(next.serverNow),
-          at: performance.now(),
-        };
-        setRemaining(Math.max(0, Math.ceil(clock.current.deadline / 1000)));
+        if (next.attempt.deadline) {
+          clock.current = {
+            deadline:
+              Date.parse(next.attempt.deadline) - Date.parse(next.serverNow),
+            at: performance.now(),
+          };
+          setRemaining(Math.max(0, Math.ceil(clock.current.deadline / 1000)));
+        }
         if (action !== "save") {
           answersRef.current = next.attempt.answers;
           setAnswers(next.attempt.answers);
@@ -134,8 +136,9 @@ export function LearnerQuiz({
       setBusy(false);
     }
   }, [request]);
+  const timed = !!state?.attempt?.deadline;
   useEffect(() => {
-    if (state?.attempt?.status !== "active") return;
+    if (state?.attempt?.status !== "active" || !timed) return;
     const timer = setInterval(() => {
       const seconds = Math.max(
         0,
@@ -151,7 +154,7 @@ export function LearnerQuiz({
       }
     }, 1000);
     return () => clearInterval(timer);
-  }, [state?.attempt?.status, submit]);
+  }, [state?.attempt?.status, timed, submit]);
   const locked = state?.attempt?.status === "active" && !state.adminPreview;
   useEffect(() => {
     setQuizLock(locked);
@@ -298,7 +301,8 @@ export function LearnerQuiz({
     attempt?.possibleScore
       ? Math.round(((attempt.score ?? 0) / attempt.possibleScore) * 100)
       : 0;
-  const minutes = Math.round(state.durationSeconds / 60);
+  const minutes =
+    state.durationSeconds === null ? null : Math.round(state.durationSeconds / 60);
   const attemptsLeft = state.attemptsUsed < state.maxAttempts;
   const messages = (
     <>
@@ -320,7 +324,7 @@ export function LearnerQuiz({
       </div>
       <div>
         <Clock aria-hidden="true" />
-        <p>{t("instructionTime", { n: minutes })}</p>
+        <p>{minutes === null ? t("noTimeLimit") : t("instructionTime", { n: minutes })}</p>
       </div>
       <div>
         <CircleCheck aria-hidden="true" />
@@ -377,7 +381,7 @@ export function LearnerQuiz({
                 <span>{t("percentComplete", { n: percentDone })}</span>
               </div>
             </Panel>
-            <Panel className="timer">
+            {timed && <Panel className="timer">
               <Clock aria-hidden="true" />
               <div role="timer" aria-label={t("remaining")}>
                 <small>{t("remaining")}</small>
@@ -386,7 +390,7 @@ export function LearnerQuiz({
                   {String(remaining % 60).padStart(2, "0")}
                 </b>
               </div>
-            </Panel>
+            </Panel>}
           </div>
         )}
         <Panel className="question-card">
@@ -408,7 +412,7 @@ export function LearnerQuiz({
                 <div>
                   <Clock size={20} aria-hidden="true" />
                   <dt>{t("timeLimit")}</dt>
-                  <dd>{t("minutesValue", { n: minutes })}</dd>
+                  <dd>{minutes === null ? t("noTimeLimitValue") : t("minutesValue", { n: minutes })}</dd>
                 </div>
                 <div>
                   <RotateCcw size={20} aria-hidden="true" />

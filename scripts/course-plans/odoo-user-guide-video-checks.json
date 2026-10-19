@@ -1,0 +1,70 @@
+{
+  "courseSlug": "odoo-user-guide",
+  "source": "Lesson video transcripts (ai_private.video_transcripts).",
+  "videos": [
+    {
+      "lessonId": "4e06440c-5a44-a610-4a5f-e74c9005040a",
+      "title": "Accounting",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "What state is a customer invoice in when it first reaches the accountant?", "explanation": "The invoice arrives as a Draft; the accountant reviews the date, taxes and journal items, then confirms it so it becomes Posted.", "options": ["Paid", "Draft", "Cancelled"] },
+          "ar": { "prompt": "ما حالة فاتورة العميل عندما تصل إلى المحاسب أول مرة؟", "explanation": "تصل الفاتورة بحالة مسودة (Draft)، فيراجع المحاسب التاريخ والضرائب والقيود ثم يؤكدها فتصبح مُرحّلة (Posted).", "options": ["مدفوعة (Paid)", "مسودة (Draft)", "ملغاة (Cancelled)"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "A posted invoice shows \"Not Paid\". What does the accountant do next?", "explanation": "Register Payment records the customer's payment by choosing a Bank or Cash journal and the amount, after which the invoice shows Paid.", "options": ["Register Payment and choose a Bank or Cash journal", "Delete the invoice and create a new one", "Send it back to the CRM team"] },
+          "ar": { "prompt": "فاتورة مُرحّلة تظهر عليها \"غير مدفوعة\". ما الخطوة التالية للمحاسب؟", "explanation": "يسجّل خيار Register Payment دفعة العميل باختيار دفتر البنك أو النقدية والمبلغ، فتصبح الفاتورة مدفوعة.", "options": ["تسجيل الدفعة (Register Payment) واختيار دفتر البنك أو النقدية", "حذف الفاتورة وإنشاء فاتورة جديدة", "إعادتها إلى فريق الـ CRM"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "7c7429eb-ff4e-ef2f-5e47-21bab03cb7c2",
+      "title": "CRM",
+      "questions": [
+        {
+          "correct": 2,
+          "en": { "prompt": "Where does the CRM sales cycle start in this video?", "explanation": "The cycle starts in the Pipeline, where a new opportunity card is created for the customer.", "options": ["In the Accounting dashboard", "In Inventory receipts", "In the Pipeline, by creating a new opportunity"] },
+          "ar": { "prompt": "من أين تبدأ دورة المبيعات في الـ CRM في هذا الفيديو؟", "explanation": "تبدأ الدورة من خط المبيعات (Pipeline) بإنشاء بطاقة فرصة جديدة للعميل.", "options": ["من لوحة المحاسبة", "من استلامات المخزون", "من خط المبيعات (Pipeline) بإنشاء فرصة جديدة"] }
+        },
+        {
+          "correct": 0,
+          "en": { "prompt": "What do the stars on an opportunity card show?", "explanation": "Stars mark how important or promising the deal is: one star means low priority, more stars mean higher priority.", "options": ["The priority of the deal", "The customer's age", "The number of invoices paid"] },
+          "ar": { "prompt": "ماذا تعني النجوم على بطاقة الفرصة؟", "explanation": "تشير النجوم إلى أهمية الصفقة: نجمة واحدة تعني أولوية منخفضة، وكلما زادت النجوم زادت الأولوية.", "options": ["أولوية الصفقة", "عمر العميل", "عدد الفواتير المدفوعة"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "968c1153-5f66-ba15-b009-b735146d143b",
+      "title": "Sales",
+      "questions": [
+        {
+          "correct": 1,
+          "en": { "prompt": "After confirming a quotation, why must the salesperson create an invoice?", "explanation": "Creating the invoice is what makes it appear for the accountant to review and collect payment.", "options": ["To delete the customer", "So the invoice appears for the accountant", "To reset the product prices"] },
+          "ar": { "prompt": "بعد تأكيد عرض السعر، لماذا يجب على مسؤول المبيعات إنشاء فاتورة؟", "explanation": "إنشاء الفاتورة هو ما يجعلها تظهر للمحاسب ليراجعها ويحصّل الدفعة.", "options": ["لحذف العميل", "لكي تظهر الفاتورة للمحاسب", "لإعادة ضبط أسعار المنتجات"] }
+        },
+        {
+          "correct": 2,
+          "en": { "prompt": "Which invoice options does Odoo offer when you create an invoice from a sales order?", "explanation": "You can invoice the full amount (regular invoice) or a down payment, either as a percentage or as a fixed amount.", "options": ["Only a full invoice", "Only a credit note", "Regular invoice, or a down payment as a percentage or fixed amount"] },
+          "ar": { "prompt": "ما خيارات الفوترة التي يعرضها Odoo عند إنشاء فاتورة من أمر البيع؟", "explanation": "يمكنك فوترة المبلغ كاملًا (فاتورة عادية) أو دفعة مقدمة بنسبة مئوية أو بمبلغ ثابت.", "options": ["فاتورة كاملة فقط", "إشعار دائن فقط", "فاتورة عادية، أو دفعة مقدمة بنسبة أو بمبلغ ثابت"] }
+        }
+      ]
+    },
+    {
+      "lessonId": "b28ecd8c-6eb4-2e5c-4587-6a0529249e2a",
+      "title": "Purchase",
+      "questions": [
+        {
+          "correct": 0,
+          "en": { "prompt": "What happens to a Request for Quotation (RFQ) when you click Confirm Order?", "explanation": "Confirming the RFQ turns it into a Purchase Order.", "options": ["It becomes a Purchase Order", "It becomes a customer invoice", "It is deleted"] },
+          "ar": { "prompt": "ماذا يحدث لطلب عرض السعر (RFQ) عند الضغط على Confirm Order؟", "explanation": "تأكيد طلب عرض السعر يحوّله إلى أمر شراء (Purchase Order).", "options": ["يتحول إلى أمر شراء", "يتحول إلى فاتورة عميل", "يُحذف"] }
+        },
+        {
+          "correct": 1,
+          "en": { "prompt": "How are the ordered products received in this video?", "explanation": "From the purchase order you open Receive Products, check the demand and quantity, then click Validate.", "options": ["They are received automatically when the RFQ is emailed", "Receive Products, check the quantity, then Validate", "By creating a new vendor"] },
+          "ar": { "prompt": "كيف تم استلام المنتجات المطلوبة في هذا الفيديو؟", "explanation": "من أمر الشراء نفتح Receive Products، ونراجع الكمية المطلوبة والمستلمة، ثم نضغط Validate.", "options": ["تُستلم تلقائيًا عند إرسال طلب عرض السعر بالبريد", "من Receive Products ومراجعة الكمية ثم Validate", "بإنشاء مورد جديد"] }
+        }
+      ]
+    }
+  ]
+}

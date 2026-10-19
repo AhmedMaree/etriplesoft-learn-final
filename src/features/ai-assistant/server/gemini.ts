@@ -184,7 +184,7 @@ export type GeminiChunk = {
 type RawResponse = {
   candidates?: { content?: { parts?: { text?: unknown; thought?: unknown }[] }; finishReason?: unknown }[];
   promptFeedback?: { blockReason?: unknown };
-  usageMetadata?: { promptTokenCount?: unknown; candidatesTokenCount?: unknown };
+  usageMetadata?: { promptTokenCount?: unknown; candidatesTokenCount?: unknown; thoughtsTokenCount?: unknown };
 };
 
 const BLOCKED_FINISH = new Set(["SAFETY", "BLOCKLIST", "PROHIBITED_CONTENT", "SPII", "RECITATION"]);
@@ -199,6 +199,7 @@ function readChunk(raw: RawResponse): GeminiChunk {
   const finishReason = typeof candidate?.finishReason === "string" ? candidate.finishReason : null;
   if (finishReason && BLOCKED_FINISH.has(finishReason) && !text) throw new GeminiError("blocked");
   const usage = raw.usageMetadata;
+  const count = (value: unknown) => (typeof value === "number" ? value : 0);
   return {
     text,
     finishReason,
@@ -206,7 +207,8 @@ function readChunk(raw: RawResponse): GeminiChunk {
       usage && typeof usage.promptTokenCount === "number"
         ? {
             input: usage.promptTokenCount,
-            output: typeof usage.candidatesTokenCount === "number" ? usage.candidatesTokenCount : 0,
+            // Thinking is billed at the output rate, so the recorded output covers reply and thinking tokens.
+            output: count(usage.candidatesTokenCount) + count(usage.thoughtsTokenCount),
           }
         : null,
   };

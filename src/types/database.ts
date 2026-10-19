@@ -258,18 +258,21 @@ export type Database = {
           course_id: string | null
           created_at: string
           id: number
+          mode: string
           user_id: string
         }
         Insert: {
           course_id?: string | null
           created_at?: string
           id?: never
+          mode?: string
           user_id: string
         }
         Update: {
           course_id?: string | null
           created_at?: string
           id?: never
+          mode?: string
           user_id?: string
         }
         Relationships: [
@@ -2240,7 +2243,7 @@ export type Database = {
       }
       quiz_versions: {
         Row: {
-          duration_seconds: number
+          duration_seconds: number | null
           id: string
           max_attempts: number
           pass_basis_points: number
@@ -2250,7 +2253,7 @@ export type Database = {
           version_number: number
         }
         Insert: {
-          duration_seconds?: number
+          duration_seconds?: number | null
           id?: string
           max_attempts?: number
           pass_basis_points?: number
@@ -2260,7 +2263,7 @@ export type Database = {
           version_number: number
         }
         Update: {
-          duration_seconds?: number
+          duration_seconds?: number | null
           id?: string
           max_attempts?: number
           pass_basis_points?: number
@@ -2885,6 +2888,10 @@ export type Database = {
         Args: { p_locale: string; p_module_id: string; p_publish: boolean }
         Returns: undefined
       }
+      admin_set_quiz_draft_untimed: {
+        Args: { p_version_id: string }
+        Returns: undefined
+      }
       admin_set_resource_translation_publication: {
         Args: { p_locale: string; p_publish: boolean; p_resource_id: string }
         Returns: undefined
@@ -3125,6 +3132,7 @@ export type Database = {
           p_course_id?: string
           p_kind?: string
           p_locale?: string
+          p_mode?: string
         }
         Returns: {
           conversation_id: string
