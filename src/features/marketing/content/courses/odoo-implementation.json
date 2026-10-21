@@ -2,14 +2,14 @@
   "slug": "odoo-implementation",
   "title": "Odoo Implementation",
   "image": "/marketing/odoo-implementation.png",
-  "tagline": "Learn requirement gathering, process mapping, solution design, configuration planning, testing, go-live, and handover.",
+  "tagline": "Configure Odoo for a real business, app by app: Accounting, CRM and Sales, Purchase, Inventory, Human Resources and Manufacturing.",
   "description": [
-    "An Odoo implementor must understand people, processes, priorities, and system behavior. The role is not limited to configuring applications — it requires discovering what the business truly needs and guiding the organization through change.",
-    "This course follows the implementation lifecycle from first discovery meeting to a tested solution, trained users, go-live plan, and handover package."
+    "A hands-on course for functional consultants, implementers and key users who set up Odoo for a company. It starts with the implementation cycle, then shows how each application is configured and how its business cycle runs.",
+    "You will work through six applications in depth, from the core flows to advanced options such as purchase approvals, routes and drop-shipping, lots and expiry dates, landed costs, payroll and MRP planning. Every lesson ends with a quick check, and a final assessment leads to your certificate."
   ],
   "status": "published",
   "badge": "None",
-  "level": "Advanced",
+  "level": "Intermediate",
   "language": "English",
   "durationHours": 12.9,
   "durationLabel": "6–8 Weeks",
@@ -18,47 +18,112 @@
   "externalCourseUrl": "https://etriple.odoo.com/slides/odoo-implementation-4",
   "price": null,
   "roles": ["implementer"],
-  "moduleTags": ["Implementation", "Discovery", "Configuration"],
-  "coveredModuleSlugs": ["sales", "crm", "accounting", "inventory", "manufacturing", "purchase", "human-resources", "website-ecommerce"],
+  "moduleTags": [
+    "Accounting",
+    "Sales",
+    "Purchase",
+    "Inventory",
+    "HR",
+    "Manufacturing"
+  ],
+  "coveredModuleSlugs": [
+    "accounting",
+    "crm",
+    "sales",
+    "purchase",
+    "inventory",
+    "human-resources",
+    "manufacturing"
+  ],
   "learningOutcomes": [
-    "Gather and document clear business requirements",
-    "Map current and future business processes",
-    "Design an Odoo solution aligned with operational priorities",
-    "Plan configuration, testing, and user acceptance",
-    "Support training, go-live, handover, and early adoption"
+    "Apply the implementation cycle to an Odoo project",
+    "Configure Accounting for customers, vendors and the full accounting cycle",
+    "Set up the CRM and sales cycles",
+    "Configure purchasing with agreements, approvals, alternatives and warnings",
+    "Design warehouses, locations, routes and traceability with lots and serial numbers",
+    "Set up Human Resources, from employees and contracts to payroll and recruitment",
+    "Plan manufacturing with bills of materials, work centers and MRP"
   ],
   "whoItsFor": [
-    "System admins progressing from platform management into implementation delivery",
-    "Business analysts turning business pain points into clear requirements and solution maps",
-    "Functional consultants structuring configuration, testing, and client-facing delivery",
-    "Project and operations leads connecting operational knowledge with ERP project execution"
+    "Functional consultants configuring Odoo for clients",
+    "Odoo implementers and ERP key users responsible for setting up company processes",
+    "System admins moving from platform management into functional configuration",
+    "Operations and finance professionals who want to see how their department runs in Odoo"
   ],
   "requirements": [
-    "Confident Odoo usage across multiple applications",
+    "Comfortable everyday use of Odoo",
     "Understanding of common business workflows",
-    "System administration or ERP support experience is helpful",
-    "Strong communication and analytical interest"
+    "No programming experience is required"
   ],
   "curriculum": [
-    { "number": "01", "title": "Implementation Role and Project Mindset", "description": "Understand responsibilities, stakeholders, scope, communication, and implementation success factors." },
-    { "number": "02", "title": "Business Discovery and Requirements", "description": "Ask effective questions, document processes, identify pain points, and clarify priorities." },
-    { "number": "03", "title": "Process Mapping and Solution Design", "description": "Translate current and future workflows into Odoo modules, roles, decisions, and data structures." },
-    { "number": "04", "title": "Configuration Planning", "description": "Plan companies, applications, settings, approvals, master data, and cross-department dependencies." },
-    { "number": "05", "title": "Testing and User Acceptance", "description": "Design scenarios, validate results, document issues, and manage user acceptance." },
-    { "number": "06", "title": "Training, Go-Live, and Handover", "description": "Prepare users, launch operations, manage early support, and transfer knowledge responsibly." },
-    { "number": "07", "title": "Capstone Implementation Scenario", "description": "Analyze a realistic company, define requirements, design the solution, and present an implementation roadmap." }
+    {
+      "number": "01",
+      "title": "Accounting",
+      "description": "The implementation cycle, the Accounting dashboard, customers, vendors and the full accounting cycle."
+    },
+    {
+      "number": "02",
+      "title": "CRM and Sales",
+      "description": "The CRM pipeline and the sales cycle from quotation to order."
+    },
+    {
+      "number": "03",
+      "title": "Purchase",
+      "description": "RFQs and purchase orders, purchase agreements, vendor bills, approvals, alternatives, and product and vendor warnings."
+    },
+    {
+      "number": "04",
+      "title": "Inventory Setup",
+      "description": "Warehouses, locations, operation types, routes, drop-shipping, putaway rules and packages."
+    },
+    {
+      "number": "05",
+      "title": "Products and Inventory Operations",
+      "description": "Product categories, templates and variants, units of measure, lots and serial numbers, expiry dates, reordering rules, landed costs, scrap, consignment, batch and wave transfers, adjustments and reports."
+    },
+    {
+      "number": "06",
+      "title": "Human Resources",
+      "description": "Departments, employees, contracts, time off, attendance, payroll, payslips and recruitment."
+    },
+    {
+      "number": "07",
+      "title": "Manufacturing and Final Assessment",
+      "description": "Manufacturing orders, bills of materials, operations, work centers and MRP planning, followed by the final assessment."
+    }
   ],
   "projects": [
-    { "title": "Discovery Workshop", "description": "Plan and conduct a structured requirements session for a multi-department company." },
-    { "title": "Solution Blueprint", "description": "Map processes, modules, roles, data, integrations, risks, and acceptance criteria." },
-    { "title": "Go-Live Readiness Plan", "description": "Prepare testing, training, migration, support, and handover activities." }
+    {
+      "title": "Multi-App Configuration",
+      "description": "Set up Accounting, Sales, Purchase and Inventory so they work together for one company."
+    },
+    {
+      "title": "Warehouse Design",
+      "description": "Configure warehouses, locations, routes and reordering rules for a realistic product range."
+    },
+    {
+      "title": "People and Production",
+      "description": "Configure employees, contracts and payroll, then plan production with bills of materials and work centers."
+    }
   ],
   "relatedCourseSlugs": ["odoo-system-admin", "odoo-automation"],
   "faq": [
-    { "question": "Is this a technical development course?", "answer": "No. It is primarily a functional implementation track focused on business analysis, solution design, configuration planning, testing, and delivery." },
-    { "question": "Do I need client experience?", "answer": "No, but prior operations, support, administration, or business-analysis experience will help." },
-    { "question": "Will the course cover project documentation?", "answer": "Yes. The work includes requirements, process maps, solution structure, test scenarios, and handover planning." },
-    { "question": "What roles can this support?", "answer": "The skills align with Odoo Implementor, Functional Consultant, ERP Business Analyst, and implementation-support responsibilities." }
+    {
+      "question": "Is this a technical development course?",
+      "answer": "No. It is a functional course about configuring Odoo applications. No programming is needed."
+    },
+    {
+      "question": "What should I know before starting?",
+      "answer": "Comfortable everyday use of Odoo. The Odoo User Guide or the Crash Course Odoo ERP are good preparation."
+    },
+    {
+      "question": "Which apps are covered?",
+      "answer": "Accounting, CRM, Sales, Purchase, Inventory, Human Resources and Manufacturing."
+    },
+    {
+      "question": "What roles can this support?",
+      "answer": "Functional consultants, Odoo implementers, ERP key users and implementation-support roles."
+    }
   ],
   "instructor": {
     "name": "Maram",

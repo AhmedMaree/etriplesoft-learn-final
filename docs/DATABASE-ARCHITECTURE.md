@@ -56,7 +56,7 @@ mux_webhook_events (server-only event idempotency)
 admin_audit_log -- profiles (actor and typed action targets)
 ```
 
-Organizations, persistent calendar, notifications, and AI history are later domains. V1 audit records cover high-value privileged actions.
+Persistent calendar, notifications, and AI history are later domains. Organizations are implemented (F01, `20261020171500_organizations.sql`): `organizations`, `organization_members`, `organization_invitations` (SHA-256 token hash, email-bound, 14-day expiry) and `organization_licenses` (seats per course and term). Organization-sponsored enrollments use `grant_source = 'organization'` with `organization_license_id`; seat orders are `orders.organization_id` plus `order_items.seats`. No table grants: everything goes through `org_*`, `learner_*invitation*` and `admin_*organization*` functions authorized by `learning_private.org_access` (active manager of an active organization, or an MFA-verified admin, whose writes are audited). V1 audit records cover high-value privileged actions.
 
 ## 4. Table inventory
 
@@ -266,7 +266,7 @@ RLS and SQL privileges are separate gates: grant Data API/table access only to i
 | `ai_messages` | No access | Later: own messages | No permission from attribution; own learner rights only | No access | Restricted, audited support only if approved |
 | `admin_audit_log` | No access | No access | No permission from attribution; own learner rights only | No access | Trusted append/read, restricted and audited; append-only |
 
-The organization-manager column is explicitly future policy, not permission to inspect employees by default. Build one documented authorization helper or server policy per trust boundary; test owner spoofing, cross-user IDs, unpublished content, answer-key reads, and direct writes to server-managed state.
+Organization managers may see progress, quiz results, certificates and activity for organization-assigned courses only (F01); personal enrollments stay private. Build one documented authorization helper or server policy per trust boundary; test owner spoofing, cross-user IDs, unpublished content, answer-key reads, and direct writes to server-managed state.
 
 ## 11. Constraints and deletion behavior
 
@@ -407,3 +407,8 @@ Signup, login, password recovery, email verification, and app-level role grants 
 Four outcome/directory migrations are applied locally and to DEV. Quiz identities/versions, normalized question/option translations, attempts/answers and selections are relational. Answer keys and raw certificate-link tokens live in non-exposed assessment_private; exposed tables default to deny and RPCs project permitted fields. Draft translations preserve shared grading identity, and published content is immutable. Completion snapshots retain required lesson identities and passing attempts; certificates store immutable display snapshots and hash public verification tokens. Initial authoring uses one-point exact-set questions; remaining lifecycle/retention/reissue administration is explicitly deferred in [the learning guide](LEARNING-FEATURES-GUIDE.md).
 
 Course-content administration migration `20261014090458` adds current-admin projections and atomic wrappers around existing course/curriculum/resource operations. No new tables or direct grants. Exact-locale publishing, stable course URLs and audit history remain authoritative. Catalog requirements combine module and lesson requirements, matching completion rules.
+
+## Learner placement and recommendations — 2026-10-20
+
+Migration `20261020120000_learner_placement.sql` adds the level check. Skill-check content is versioned (`placement_versions`, `placement_questions`, `placement_options` with `(id, locale)` translation rows); a published version and its questions, options and keys are immutable (triggers), so changes mean publishing a new version. Answer keys live in non-exposed `learning_private.placement_answer_keys`. `learner_placement_goals` holds the learner's current role, areas and experience; `placement_results` and `placement_result_areas` are an append-only history of levels per area (`quiz` or `self_reported`); `learner_placement_skips` records "Skip for now". Areas are course categories, validated against published courses. `course_recommendation_events` keeps at most one `shown` and one `clicked` row per learner, course and day. No table grants: learners use `learner_placement_status`, `learner_placement_questions`, `learner_placement_submit` (scores on the server; 10 per day), `learner_placement_update_goals`, `learner_placement_skip` and `learner_record_recommendation_events`; current admins read aggregate counts with `admin_recommendation_stats(p_since)`. All learner rows cascade with the profile. Migration `20261020145000_placement_review.sql` publishes skill check v2 (one corrected answer; v1 kept as history) and adds `enrolled` to the status projection. The questions are draft content pending instructor and native Arabic review ([review sheet](PLACEMENT-QUESTIONS-REVIEW.md)). Recommendation and level rules (completed courses raise the current level) are plain functions in `src/features/placement/recommend.ts`.
+

@@ -1,12 +1,12 @@
 import { ASSET_BASE } from "@/lib/assets";
 
 const IMAGES = [
-  "course-0.svg",
-  "course-1.svg",
-  "course-2.svg",
-  "course-3.svg",
-  "course-4.svg",
-  "course-5.svg",
+  "course-0.webp",
+  "course-1.webp",
+  "course-2.webp",
+  "course-3.webp",
+  "course-4.webp",
+  "course-5.webp",
 ];
 const KNOWN_SLUGS = [
   "crash-course-odoo-erp",

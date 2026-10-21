@@ -102,7 +102,7 @@ test("general chat reply is saved, titled, reopened and deleted", async ({ page 
   await signIn(page);
   await page.goto("/en/ai-page");
   await expect(page.getByRole("tab", { name: "General chat" })).toHaveAttribute("aria-selected", "true");
-  await expect(page.locator(".context-course")).toBeVisible();
+  await expect(page.locator(".chat-course-banner")).toHaveCount(0);
 
   const answer = await ask(page, "In one short paragraph, what is a domain filter in Odoo?");
   expect(answer.length).toBeGreaterThan(20);

@@ -5,8 +5,11 @@ import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import {
   BookOpen,
+  Building2,
   CalendarDays,
+  ChartColumn,
   ClipboardCheck,
+  Landmark,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -53,7 +56,13 @@ export function AdminShell({
   }, [open])
 
   const groups: { label: string; items: NavItem[] }[] = [
-    { label: t('nav.groups.general'), items: [{ href: '/admin', label: t('nav.overview'), icon: LayoutDashboard }] },
+    {
+      label: t('nav.groups.general'),
+      items: [
+        { href: '/admin', label: t('nav.overview'), icon: LayoutDashboard },
+        { href: '/admin/analytics', label: t('nav.analytics'), icon: ChartColumn },
+      ],
+    },
     {
       label: t('nav.groups.content'),
       items: [
@@ -69,6 +78,8 @@ export function AdminShell({
       items: [
         { href: '/admin/enrollments', label: t('nav.enrollments'), icon: UserPlus },
         { href: '/admin/coupons', label: t('nav.coupons'), icon: TicketPercent },
+        { href: '/admin/organizations', label: t('nav.organizations'), icon: Building2 },
+        { href: '/admin/institutions', label: t('nav.institutions'), icon: Landmark },
       ],
     },
     {

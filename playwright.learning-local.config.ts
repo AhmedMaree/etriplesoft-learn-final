@@ -10,7 +10,7 @@ if (
   );
 export default defineConfig({
   testDir: "tests",
-  testMatch: ["learning-flow.spec.ts", "assessment-flow.spec.ts", "i18n-messages.spec.ts", "messages-flow.spec.ts"],
+  testMatch: ["learning-flow.spec.ts", "assessment-flow.spec.ts", "i18n-messages.spec.ts", "messages-flow.spec.ts", "placement-flow.spec.ts", "admin-analytics.spec.ts", "organizations-flow.spec.ts"],
   workers: 1,
   use: {
     baseURL,

@@ -11,6 +11,8 @@ import {
 } from "@/features/checkout/server/commerce";
 import { record } from "@/features/checkout/server/kashier-contract";
 import { dialCode, toE164 } from "@/features/checkout/billing-countries";
+import { CART_LIMIT } from "@/features/checkout/cart/cart-cookie";
+const UUID = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 const COUPON_REASONS = ["invalid", "notApplicable", "used", "exhausted", "limit", "locked"];
 const ruleError = (code?: string) =>
   code === "55000" ? "closed" : code === "22023" ? "billing" : "rule";
@@ -29,11 +31,51 @@ export async function POST(request: Request) {
   } catch {
     return reply({ error: "invalid" }, 400);
   }
-  if (
-    !record(body) ||
-    typeof body.id !== "string" ||
-    !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(body.id)
-  )
+  // Cart checkout sends course ids only; the RPC prices them and rejects owned or unpublished courses.
+  // `cart-coupon` applies a code from the cart page to that same server-priced order.
+  if (record(body) && (body.action === "create-cart-order" || body.action === "cart-coupon")) {
+    const ids = body.ids;
+    if (
+      typeof body.locale !== "string" ||
+      !isLocale(body.locale) ||
+      !Array.isArray(ids) ||
+      ids.length < 1 ||
+      ids.length > CART_LIMIT ||
+      !ids.every((id) => typeof id === "string" && UUID.test(id)) ||
+      (body.action === "cart-coupon" && (typeof body.code !== "string" || body.code.length > 64))
+    )
+      return reply({ error: "invalid" }, 400);
+    try {
+      const order = await client.rpc("learner_create_cart_order", {
+        p_course_ids: ids as string[],
+        p_locale: body.locale,
+      });
+      if (order.error || !order.data)
+        return reply(
+          {
+            error:
+              order.error?.code === "23514" ? "owned" : order.error?.code === "54000" ? "limit" : "rule",
+          },
+          409,
+        );
+      if (body.action === "create-cart-order")
+        return reply({ url: `/${body.locale}/payment?order=${order.data}&step=checkout` });
+      const result = await client.rpc("learner_apply_coupon", {
+        p_order_id: order.data,
+        p_code: String(body.code),
+      });
+      if (result.error) return reply({ error: ruleError(result.error.code) }, 409);
+      if (record(result.data) && result.data.ok === true) return reply({ applied: true });
+      const reason =
+        record(result.data) && typeof result.data.reason === "string" && COUPON_REASONS.includes(result.data.reason)
+          ? result.data.reason
+          : "invalid";
+      return reply({ error: "coupon", reason }, 422);
+    } catch {
+      return reply({ error: "retry" }, 503);
+    }
+  }
+  if (!record(body) || typeof body.id !== "string" || !UUID.test(body.id))
     return reply({ error: "invalid" }, 400);
   try {
     if (
@@ -45,24 +87,15 @@ export async function POST(request: Request) {
         p_course_id: body.id,
         p_locale: body.locale,
       });
-      if (order.error || !order.data) return reply({ error: "rule" }, 409);
+      if (order.error || !order.data)
+        return reply(
+          {
+            error:
+              order.error?.code === "23514" ? "owned" : order.error?.code === "54000" ? "limit" : "rule",
+          },
+          409,
+        );
       return reply({ url: `/${body.locale}/payment?order=${order.data}` });
-    }
-    if (
-      body.action === "start" &&
-      typeof body.locale === "string" &&
-      isLocale(body.locale)
-    ) {
-      if (!checkoutConfiguration()) return reply({ error: "unavailable" }, 503);
-      const order = await client.rpc("learner_create_order", {
-        p_course_id: body.id,
-        p_locale: body.locale,
-      });
-      if (order.error || !order.data || !user.email)
-        return reply({ error: "rule" }, 409);
-      return reply({
-        url: await startProviderCheckout(order.data, user.email),
-      });
     }
     if (body.action === "apply-coupon") {
       if (typeof body.code !== "string" || body.code.length > 64)
@@ -109,6 +142,26 @@ export async function POST(request: Request) {
       if (saved.error) return reply({ error: ruleError(saved.error.code) }, 409);
       const order = await readCommerceOrder(body.id);
       if (order.userId !== user.id) return reply({ error: "access" }, 403);
+      // Seat orders buy seats for an organization, so the buyer's own enrollments do not matter.
+      const { data: orderRow } = await client.from("orders").select("organization_id").eq("id", body.id).maybeSingle();
+      // An older pending order may hold a course the learner has since bought; never charge for it twice.
+      const { data: items } = orderRow?.organization_id ? { data: [] } : await client
+        .from("order_items")
+        .select("course_id")
+        .eq("order_id", body.id);
+      const courseIds = (items ?? []).map((item) => item.course_id);
+      if (courseIds.length) {
+        const { data: owned, error: ownedError } = await client
+          .from("enrollments")
+          .select("course_id")
+          .eq("user_id", user.id)
+          .in("course_id", courseIds)
+          .in("status", ["active", "completed"])
+          .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
+          .limit(1);
+        if (ownedError) return reply({ error: "retry" }, 503);
+        if (owned?.length) return reply({ error: "owned" }, 409);
+      }
       return reply({ url: await startProviderCheckout(body.id, user.email) });
     }
     if (body.action === "check") {
@@ -118,7 +171,12 @@ export async function POST(request: Request) {
       return reply({ status: await reconcileOrder(body.id) });
     }
     return reply({ error: "invalid" }, 400);
-  } catch {
+  } catch (error) {
+    // Operator diagnostics only: internal error codes (no secrets or learner data); the learner gets "retry".
+    console.error("checkout_failed", {
+      action: body.action,
+      reason: error instanceof Error ? error.message.slice(0, 80) : "unknown",
+    });
     return reply({ error: "retry" }, 503);
   }
 }

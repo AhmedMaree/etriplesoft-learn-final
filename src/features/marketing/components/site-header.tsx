@@ -10,6 +10,7 @@ import { roleSlugs } from "../model/course";
 import type { MarketingMessages } from "../lib/messages";
 import { getOdooPartnerUrl } from "../lib/business";
 import { useSignedInLearner } from "../lib/use-signed-in-learner";
+import { CartLink } from "@/features/checkout/cart/cart-link";
 
 type SiteHeaderProps = {
   shell: MarketingMessages["shell"];
@@ -164,6 +165,7 @@ export function SiteHeader({ shell, roles }: SiteHeaderProps) {
               {shell.partner}
             </a>
             <LocaleSwitcher className="mk-locale" />
+            <CartLink className="mk-cart" />
             {learner ? (
               <MyLearningLink label={shell.myLearning} avatarUrl={learner.avatarUrl} className="mk-btn--sm" />
             ) : (
@@ -178,6 +180,7 @@ export function SiteHeader({ shell, roles }: SiteHeaderProps) {
             )}
           </div>
 
+          <CartLink className="mk-cart mk-cart--mobile" onClick={closeMobile} />
           <button
             type="button"
             className="mk-menu-button"

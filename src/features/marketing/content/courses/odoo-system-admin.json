@@ -2,10 +2,10 @@
   "slug": "odoo-system-admin",
   "title": "Odoo System Admin",
   "image": "/marketing/odoo-system-admin.png",
-  "tagline": "Learn to manage users, permissions, applications, company settings, data quality, and operational support.",
+  "tagline": "Run Odoo safely for your whole company: users, access rights, security groups, companies, languages, Studio and backups.",
   "description": [
-    "Odoo administrators keep the platform organized, secure, and usable across departments. Their decisions influence what users can see, how records are structured, and whether teams can follow the intended process.",
-    "This course focuses on operational administration rather than programming, preparing learners to manage access, settings, data, workflows, and day-to-day platform support."
+    "For administrators, IT staff and power users responsible for an Odoo database. No programming is required.",
+    "You will learn Odoo’s administration settings, how to manage users, how access rights and security groups control what each person can see and do, and how to set up multiple companies and languages. You will also adapt screens with Odoo Studio and keep your data safe with backups. A downloadable admin guide supports every topic, and a final assessment confirms your skills."
   ],
   "status": "published",
   "badge": "None",
@@ -18,14 +18,15 @@
   "externalCourseUrl": "https://etriple.odoo.com/slides/odoo-system-admin-6",
   "price": null,
   "roles": ["system-admin", "implementer"],
-  "moduleTags": ["Settings", "Deployment", "Security"],
-  "coveredModuleSlugs": ["human-resources", "sales", "inventory", "purchase"],
+  "moduleTags": ["Settings", "Security", "Studio"],
+  "coveredModuleSlugs": [],
   "learningOutcomes": [
-    "Manage users, roles, groups, and access permissions",
-    "Configure company and operational settings responsibly",
-    "Understand applications, module relationships, and change impact",
-    "Improve record structure and data quality",
-    "Support users and troubleshoot common administration issues"
+    "Navigate Odoo’s administration settings",
+    "Create and manage users",
+    "Control access with access rights and security groups",
+    "Configure multiple companies and languages",
+    "Customize forms and apps with Odoo Studio, without code",
+    "Protect your data with database backups"
   ],
   "whoItsFor": [
     "Experienced end users taking on more responsibility for the system and its users",
@@ -39,25 +40,74 @@
     "No programming experience is required"
   ],
   "curriculum": [
-    { "number": "01", "title": "System Admin Foundations", "description": "Understand administrator responsibilities and the impact of configuration decisions." },
-    { "number": "02", "title": "Users, Groups, and Access Rights", "description": "Create users, assign groups, control permissions, and separate departmental access." },
-    { "number": "03", "title": "Companies and Operational Settings", "description": "Configure companies, departments, sequences, languages, and shared settings." },
-    { "number": "04", "title": "Applications and Module Dependencies", "description": "Understand installed apps, dependencies, configuration flow, and safe change management." },
-    { "number": "05", "title": "Data Structure and Quality", "description": "Organize master data, prevent duplication, import carefully, and establish clear ownership." },
-    { "number": "06", "title": "Workflow Support and Monitoring", "description": "Support teams, monitor usage, diagnose permission problems, and improve adoption." },
-    { "number": "07", "title": "Administration Capstone", "description": "Configure a multi-role company environment and resolve a realistic set of admin issues." }
+    {
+      "number": "01",
+      "title": "Administration Basics",
+      "description": "The administration settings and the downloadable System Admin Guide."
+    },
+    {
+      "number": "02",
+      "title": "Access Rights",
+      "description": "How Odoo decides what each user can read, create, edit and delete."
+    },
+    {
+      "number": "03",
+      "title": "Users",
+      "description": "Create, invite and manage the people who use your database."
+    },
+    {
+      "number": "04",
+      "title": "Security Groups",
+      "description": "Group users by role and assign permissions consistently."
+    },
+    {
+      "number": "05",
+      "title": "Companies and Languages",
+      "description": "Set up multiple companies and add languages for your users."
+    },
+    {
+      "number": "06",
+      "title": "Odoo Studio",
+      "description": "Adapt forms, fields and apps without writing code."
+    },
+    {
+      "number": "07",
+      "title": "Backups and Final Assessment",
+      "description": "Back up your database, then complete the final assessment."
+    }
   ],
   "projects": [
-    { "title": "Multi-Role Access Design", "description": "Create users and permissions for Sales, Inventory, Accounting, and management roles." },
-    { "title": "Company Configuration Audit", "description": "Review settings, master data, access risks, and operational consistency." },
-    { "title": "Admin Support Simulation", "description": "Diagnose and resolve common access, configuration, and data-quality problems." }
+    {
+      "title": "Multi-Role Access Design",
+      "description": "Create users and permissions for Sales, Inventory, Accounting and management roles."
+    },
+    {
+      "title": "Company Setup",
+      "description": "Configure companies and languages for a multi-company organization."
+    },
+    {
+      "title": "Studio Customization",
+      "description": "Add fields and adjust a form with Odoo Studio to fit a team’s needs."
+    }
   ],
   "relatedCourseSlugs": ["odoo-implementation", "odoo-automation"],
   "faq": [
-    { "question": "Does this course teach server administration?", "answer": "The main focus is functional and operational Odoo administration. Hosting and advanced infrastructure are outside the core scope." },
-    { "question": "Do I need to know Python?", "answer": "No. This course focuses on users, access, settings, data, and operational support rather than development." },
-    { "question": "Is this a prerequisite for implementation?", "answer": "It is not always mandatory, but it provides a valuable foundation for learners moving into implementation work." },
-    { "question": "Will access-right scenarios be included?", "answer": "Yes. The exercises include designing and testing access for multiple business roles." }
+    {
+      "question": "Does this course teach server administration?",
+      "answer": "No. It focuses on administering Odoo itself: users, access, companies, languages, Studio and backups. Server hosting is outside its scope."
+    },
+    {
+      "question": "Do I need to know Python?",
+      "answer": "No. Everything is done through Odoo’s settings and Studio."
+    },
+    {
+      "question": "Is this a prerequisite for implementation?",
+      "answer": "It is not mandatory, but it gives a valuable foundation for learners moving into implementation work."
+    },
+    {
+      "question": "Will I learn to design access for different roles?",
+      "answer": "Yes. Access rights and security groups each have dedicated lessons."
+    }
   ],
   "instructor": {
     "name": "Mahmoud Elfeky",

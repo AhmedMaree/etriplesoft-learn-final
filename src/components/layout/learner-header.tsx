@@ -14,10 +14,12 @@ import {
   Settings,
 } from "lucide-react";
 import { Avatar } from "@/components/shared/profile-avatar";
+import { LocaleSwitcher } from "@/components/shared/locale-switcher";
 import { logoutAction } from "@/features/auth/actions";
 import type { Locale } from "@/i18n/config";
 import { useQuizLock } from "@/features/assessments/quiz-lock";
 import { NotificationBell } from "@/features/notifications/components/notification-bell";
+import { CartLink } from "@/features/checkout/cart/cart-link";
 
 export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, authenticated, unreadNotifications, timeZone }: {
   onOpenMenu: () => void
@@ -61,12 +63,16 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
         <Menu />
       </button>
       <div className="greeting">
-        {["courses", "payment", "detail-course"].includes(page) ? (
+        {["courses", "payment", "cart", "detail-course"].includes(page) ? (
           <div className="crumb">
             <Link href="/courses">{t("navigation.ourCourses")}</Link>
             <ChevronRight size={17} className="flip-rtl" aria-hidden="true" />
             <span>
-              {page === "payment" ? t("checkout.title") : t("courses.allCourses")}
+              {page === "payment"
+                ? t("checkout.title")
+                : page === "cart"
+                  ? t("cart.open")
+                  : t("courses.allCourses")}
             </span>
           </div>
         ) : (
@@ -82,6 +88,7 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
           onChange={(e) => changeQuery(e.target.value)}
         />
       </form>
+      <CartLink className="icon-button notification-button" />
       {authenticated ? (
         <NotificationBell initialUnread={unreadNotifications} timeZone={timeZone} />
       ) : (
@@ -117,6 +124,7 @@ export function LearnerHeader({ onOpenMenu, locale, displayName, avatarUrl, auth
               <Settings size={16} />
               {t("navigation.settings")}
             </Link>
+            <LocaleSwitcher className="popover-item" />
             {authenticated ? <form action={logoutAction.bind(null, locale)}>
               <button type="submit"><LogOut size={16} />{t("auth.logout")}</button>
             </form> : <Link href="/login" onClick={() => setMenu(false)}>

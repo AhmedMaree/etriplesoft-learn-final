@@ -8,10 +8,20 @@ import {
   type AdminCoupon,
 } from "@/features/checkout/components/admin-coupons";
 import { AdminPageHeader } from "@/features/admin/components/admin-page-header";
+import {
+  AdminCheckoutFunnel,
+  FUNNEL_WINDOWS,
+} from "@/features/checkout/components/admin-checkout-funnel";
 
 export const metadata = { robots: { index: false, follow: false } };
-export default async function CouponAdministration() {
+export default async function CouponAdministration({
+  searchParams,
+}: {
+  searchParams: Promise<{ days?: string | string[] }>;
+}) {
   if ((await getAdminAccess()).status !== "admin") return null;
+  const requested = Number((await searchParams).days);
+  const days = FUNNEL_WINDOWS.find((window) => window === requested) ?? 30;
   const t = await getTranslations("coupons");
   const admin = await getTranslations("admin");
   const client = await createClient();
@@ -35,6 +45,7 @@ export default async function CouponAdministration() {
   return (
     <>
       <AdminPageHeader eyebrow={admin("nav.groups.learners")} title={t("title")} description={t("description")} />
+      <AdminCheckoutFunnel days={days} />
       <section className="panel admin-card" aria-labelledby="admin-coupon-create">
         <h2 id="admin-coupon-create">{t("create")}</h2>
         <CouponCreateForm slugs={courses.map((course) => course.slug)} />

@@ -21,7 +21,8 @@ import type { Course } from "../../model/course";
 import { formatMessage, getMarketingMessages, type MarketingMessages } from "../../lib/messages";
 import { toCatalogCourse } from "../../lib/catalog-data";
 import { getModulesForCourse } from "../../lib/module-queries";
-import { getCourseBySlug } from "../../server/course-repository";
+import { getCourseBySlug, platformSlug } from "../../server/course-repository";
+import { CourseCartButton } from "./course-cart-button";
 import { teamAnchorId } from "../../lib/team";
 import { CourseCard } from "../catalog/course-card";
 import { ModuleIcon } from "../module-icon";
@@ -151,6 +152,14 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
                 {cta.label}
                 <ArrowRight size={18} className="mk-flip-rtl" aria-hidden="true" />
               </CtaLink>
+              {!isComingSoon && (
+                <CourseCartButton
+                  slug={platformSlug(course)}
+                  title={course.title}
+                  locale={locale}
+                  className="mk-btn mk-btn--outline"
+                />
+              )}
               <a href="#curriculum" className="mk-btn mk-btn--outline">
                 {c.viewCurriculum}
                 <ArrowDown size={18} aria-hidden="true" />
@@ -362,6 +371,14 @@ export function CourseDetail({ course, locale }: { course: Course; locale: Local
                 {cta.label}
                 <ArrowRight size={18} className="mk-flip-rtl" aria-hidden="true" />
               </CtaLink>
+              {!isComingSoon && (
+                <CourseCartButton
+                  slug={platformSlug(course)}
+                  title={course.title}
+                  locale={locale}
+                  className="mk-btn mk-btn--outline mk-btn--block mk-side-cart"
+                />
+              )}
 
               {course.certificate && (
                 <a href="#certificate" className="mk-side-cert">

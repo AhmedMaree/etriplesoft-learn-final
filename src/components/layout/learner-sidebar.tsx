@@ -5,9 +5,9 @@ import Image from "next/image";
 import {
   Award,
   BookOpen,
+  Building2,
   CalendarClock,
   CalendarDays,
-  Compass,
   Home,
   Lock,
   MessageSquare,
@@ -26,12 +26,11 @@ import { courseImage } from "@/features/courses/components/course-image";
 import { courseHref, lessonHref } from "@/features/courses/components/course-links";
 import { useQuizLock } from "@/features/assessments/quiz-lock";
 
-type NavId = DemoRoute | "catalog";
+type NavId = DemoRoute;
 
 const nav: [NavId, typeof Home][] = [
   ["overview", Home],
   ["courses", BookOpen],
-  ["catalog", Compass],
   ["ai-page", Sparkles],
   ["community", Users],
   ["messages", MessageSquare],
@@ -42,7 +41,6 @@ const nav: [NavId, typeof Home][] = [
 const navMessage = {
   overview: "overview",
   courses: "courses",
-  catalog: "catalog",
   "ai-page": "ai",
   community: "community",
   messages: "messages",
@@ -58,6 +56,7 @@ export function LearnerSidebar({
   continueLearning,
   isAdmin = false,
   canSchedule = false,
+  hasOrganization = false,
   unreadMessages = 0,
 }: {
   activePage: string;
@@ -66,6 +65,7 @@ export function LearnerSidebar({
   continueLearning: LearningSummary["courses"][number] | null;
   isAdmin?: boolean;
   canSchedule?: boolean;
+  hasOrganization?: boolean;
   unreadMessages?: number;
 }) {
   const t = useTranslations("navigation");
@@ -135,6 +135,12 @@ export function LearnerSidebar({
           <Link className="sidebar-admin-link" href="/schedule" onClick={onClose} inert={quizLocked}>
             <CalendarClock aria-hidden="true" />
             <span>{t("teachingSchedule")}</span>
+          </Link>
+        )}
+        {hasOrganization && (
+          <Link className="sidebar-admin-link" href="/organization" onClick={onClose} inert={quizLocked}>
+            <Building2 aria-hidden="true" />
+            <span>{t("organization")}</span>
           </Link>
         )}
         {isAdmin && (

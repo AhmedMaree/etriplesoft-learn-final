@@ -19,6 +19,7 @@ export function PageHeading({
   const settings = useTranslations("settings");
   const checkout = useTranslations("checkout");
   const dashboard = useTranslations("dashboard");
+  const placement = useTranslations("placement");
   const copy = {
     overview: [dashboard("pageTitle"), dashboard("pageSubtitle")],
     courses: [courses("allCourses"), courses("subtitle")],
@@ -30,6 +31,7 @@ export function PageHeading({
     settings: [settings("title"), settings("subtitle")],
     assessment: [assessment("title"), assessment("instructions")],
     payment: [checkout("title"), checkout("subtitle")],
+    placement: [placement("title"), placement("subtitle")],
   }[page];
   const standalone = ["courses", "payment", "certificates"].includes(page);
   return (

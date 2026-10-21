@@ -2,7 +2,15 @@
 
 import { useSyncExternalStore } from "react";
 
-let currentMessage = "";
+export type ToastOptions = {
+  tone?: "success" | "error";
+  /** An in-app link shown beside the message, such as "View cart". */
+  action?: { href: string; label: string };
+};
+type Toast = ToastOptions & { message: string };
+
+const EMPTY: Toast = { message: "" };
+let current: Toast = EMPTY;
 let timeout: ReturnType<typeof setTimeout> | undefined;
 const listeners = new Set<() => void>();
 
@@ -11,19 +19,19 @@ function subscribe(listener: () => void) {
   return () => listeners.delete(listener);
 }
 
-function getMessage() {
-  return currentMessage;
+function getToast() {
+  return current;
 }
 
-function publish(message: string) {
-  currentMessage = message;
+function publish(toast: Toast) {
+  current = toast;
   for (const listener of listeners) listener();
 }
 
-export function notifyDemoToast(message: string) {
-  publish(message);
+export function notifyDemoToast(message: string, options: ToastOptions = {}) {
+  publish({ message, ...options });
   if (timeout) clearTimeout(timeout);
-  timeout = setTimeout(() => publish(""), 4500);
+  timeout = setTimeout(() => publish(EMPTY), 4500);
 }
 
 export function useDemoToast() {
@@ -31,6 +39,6 @@ export function useDemoToast() {
 }
 
 export function useDemoToastMessage() {
-  const message = useSyncExternalStore(subscribe, getMessage, () => "");
-  return { message, dismiss: () => publish("") };
+  const toast = useSyncExternalStore(subscribe, getToast, () => EMPTY);
+  return { ...toast, dismiss: () => publish(EMPTY) };
 }

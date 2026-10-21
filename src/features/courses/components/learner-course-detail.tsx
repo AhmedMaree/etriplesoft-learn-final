@@ -29,6 +29,7 @@ import type {
 } from "@/features/courses/server/course-repository";
 import { enrollFreeCourseAction } from "@/features/courses/server/enrollment-actions";
 import { EnrollmentSubmitButton } from "@/features/marketing/components/course/enrollment-submit-button";
+import { AddToCartButton } from "./add-to-cart-button";
 import { getMarketingMessages } from "@/features/marketing/lib/messages";
 import { courseImage } from "./course-image";
 import { courseHref, lessonHref, pairedVideoChecks } from "./course-links";
@@ -645,12 +646,20 @@ export async function LearnerCourseDetail({
                 </Link>
               ))}
             {course.priceMinor > 0 && !entitled && (
-              <Link
-                className="btn primary full"
-                href={`/payment?course=${encodeURIComponent(course.slug)}`}
-              >
-                {t("checkout")}
-              </Link>
+              <>
+                <Link
+                  className="btn primary full"
+                  href={`/payment?course=${encodeURIComponent(course.slug)}`}
+                >
+                  {t("checkout")}
+                </Link>
+                <AddToCartButton
+                  courseSlug={course.slug}
+                  courseTitle={course.title}
+                  variant="button"
+                  className="btn outline full"
+                />
+              </>
             )}
           </div>
           {includes.length > 0 && (

@@ -2,10 +2,10 @@
   "slug": "crash-course-odoo-erp",
   "title": "Crash Course: Odoo ERP",
   "image": "/marketing/odoo-erp-crash-course.png",
-  "tagline": "Understand how CRM, Sales, Inventory, delivery, invoicing, and payments connect through one practical Odoo workflow.",
+  "tagline": "See how a business runs in Odoo: ERP basics, accounting, and the supply chain across CRM, Sales, Purchase and Inventory, brought together in one business case.",
   "description": [
-    "This course is the main entry point for students, fresh graduates, employees, business owners, and future ERP professionals who need more than isolated software tutorials.",
-    "Learners follow one connected business story across Odoo applications, building both system confidence and a practical understanding of how departments exchange information."
+    "The best place to start if you are new to ERP. This course explains what business workflows are, why companies use ERP systems and where Odoo fits, then walks through the applications almost every company relies on.",
+    "You will learn accounting fundamentals, follow the supply chain from CRM and Sales to Purchase and Inventory, and see everything connected in a complete business case. Each session comes with reading material and a quick check, and the course ends with a final assessment."
   ],
   "status": "published",
   "badge": "Best Seller",
@@ -18,15 +18,15 @@
   "externalCourseUrl": "https://etriple.odoo.com/slides/crash-course-odoo-erp-2",
   "price": null,
   "roles": ["end-user", "implementer", "automation"],
-  "moduleTags": ["Sales", "Accounting", "Inventory", "CRM"],
-  "coveredModuleSlugs": ["crm", "sales", "inventory", "accounting", "website-ecommerce"],
+  "moduleTags": ["Accounting", "CRM", "Sales", "Purchase", "Inventory"],
+  "coveredModuleSlugs": ["crm", "sales", "purchase", "inventory", "accounting"],
   "learningOutcomes": [
-    "Explain the purpose and value of ERP systems",
-    "Navigate essential Odoo applications confidently",
-    "Complete a connected CRM-to-payment workflow",
-    "Configure a small product catalog and stock movements",
-    "Understand how business departments share records and responsibilities",
-    "Choose an appropriate next Odoo learning track"
+    "Explain business workflows and the role of an ERP system",
+    "Describe how Odoo connects departments in one database",
+    "Understand the accounting fundamentals behind invoices, bills and payments",
+    "Follow the supply chain across CRM, Sales, Purchase and Inventory",
+    "Trace a complete business case from first contact to accounting",
+    "Choose the right next Odoo learning track"
   ],
   "whoItsFor": [
     "Students and graduates building a practical ERP foundation before choosing a specialization",
@@ -41,23 +41,64 @@
     "A laptop or desktop for practical activities"
   ],
   "curriculum": [
-    { "number": "01", "title": "Introduction to ERP and Odoo", "description": "Understand what ERP systems are, why organizations use them, and how Odoo connects departments." },
-    { "number": "02", "title": "CRM and Sales Workflow", "description": "Follow leads, opportunities, quotations, and sales orders through a realistic sales process." },
-    { "number": "03", "title": "Inventory Basics", "description": "Explore products, warehouses, stock movements, receipts, deliveries, and availability." },
-    { "number": "04", "title": "Accounting Flow Overview", "description": "Understand invoices, payments, commercial documents, and their connection to operations." },
-    { "number": "05", "title": "Complete Business Scenario", "description": "Apply the full customer journey from enquiry and quotation through sale, delivery, invoice, and payment." }
+    {
+      "number": "01",
+      "title": "Business Workflows, ERP and Odoo",
+      "description": "The course agenda, how business workflows run, what an ERP system does and where Odoo fits."
+    },
+    {
+      "number": "02",
+      "title": "Accounting Fundamentals",
+      "description": "Core accounting concepts and a guided tour of the Odoo Accounting app."
+    },
+    {
+      "number": "03",
+      "title": "CRM, Sales, Purchase and Inventory",
+      "description": "The supply chain in Odoo: leads and opportunities, quotations and sales orders, purchasing and stock."
+    },
+    {
+      "number": "04",
+      "title": "Business Case",
+      "description": "One company followed end to end, connecting every application covered so far."
+    },
+    {
+      "number": "05",
+      "title": "Final Assessment",
+      "description": "Check your understanding of the whole course and complete it."
+    }
   ],
   "projects": [
-    { "title": "Lead-to-Cash Scenario", "description": "Process a customer opportunity through sales, stock delivery, invoicing, and payment." },
-    { "title": "Product and Stock Setup", "description": "Create a small product catalog and complete receipt and delivery movements." },
-    { "title": "ERP Process Map", "description": "Visualize how information moves between Sales, Inventory, and Accounting." }
+    {
+      "title": "Business Case Walkthrough",
+      "description": "Follow one company’s operations across CRM, Sales, Purchase, Inventory and Accounting."
+    },
+    {
+      "title": "Supply Chain Map",
+      "description": "Trace how a customer order turns into purchasing, stock movements and accounting entries."
+    },
+    {
+      "title": "Knowledge Checks",
+      "description": "Confirm each session with a quick check and finish with the final assessment."
+    }
   ],
   "relatedCourseSlugs": ["odoo-system-admin", "odoo-implementation"],
   "faq": [
-    { "question": "How is this different from the Odoo User Guide?", "answer": "The User Guide focuses on daily usage habits, while this course explains the larger ERP picture through a structured, connected business scenario." },
-    { "question": "Is accounting knowledge required?", "answer": "No. The course introduces the operational meaning of invoices and payments without requiring advanced accounting." },
-    { "question": "Will I work in a real Odoo environment?", "answer": "The planned delivery includes guided practice in an Odoo training environment." },
-    { "question": "What comes after this course?", "answer": "System Admin is a strong operational next step; Implementation suits functional learners; Development suits technical learners." }
+    {
+      "question": "How is this different from the Odoo User Guide?",
+      "answer": "The User Guide teaches the everyday tasks in each app. This course explains the bigger ERP picture: how the departments and their data connect in one business."
+    },
+    {
+      "question": "Is accounting knowledge required?",
+      "answer": "No. The accounting session starts from the fundamentals."
+    },
+    {
+      "question": "What format are the lessons?",
+      "answer": "Recorded video sessions with reading material, a quick check after each session, and a final assessment."
+    },
+    {
+      "question": "What comes after this course?",
+      "answer": "Odoo User Guide for daily use, Odoo Implementation to configure Odoo for a business, or Python Fundamentals to start the technical track."
+    }
   ],
   "instructor": {
     "name": "Khaled Ahmed",

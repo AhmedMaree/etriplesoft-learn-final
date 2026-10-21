@@ -2,14 +2,14 @@
   "slug": "python-development-for-odoo",
   "title": "Python Development for Odoo",
   "image": "/marketing/python-development.png",
-  "tagline": "Develop advanced Odoo backend skills using Python, ORM, relationships, computed logic, constraints, APIs, testing, and optimization.",
+  "tagline": "Learn Python from zero, the language behind Odoo: variables, control flow, data structures, functions and object-oriented programming, with three mini projects.",
   "description": [
-    "This is not a generic Python course. It is designed for developers who want to apply Python to live ERP requirements, structured business data, workflow rules, integrations, and maintainable Odoo modules.",
-    "The track gives extra attention to backend reasoning: how records behave, how relationships are modeled, where logic belongs, and how code supports operational accuracy."
+    "No programming experience needed. You will install Python and a code editor, then learn the language step by step with short video lessons and a quick check after each one.",
+    "The course covers variables and naming rules, input and output, operators, conditions and loops, lists, tuples and dictionaries, functions, and an introduction to object-oriented programming. You will finish by building a calculator, a command-line to-do list and a number-guessing game, ready to move on to Odoo Development."
   ],
   "status": "published",
   "badge": "None",
-  "level": "Advanced",
+  "level": "Beginner",
   "language": "English",
   "durationHours": 12.2,
   "durationLabel": "8–12 Weeks",
@@ -18,49 +18,101 @@
   "externalCourseUrl": "https://etriple.odoo.com/slides/python-fundamentals-1",
   "price": null,
   "roles": ["developer"],
-  "moduleTags": ["Python", "Development", "APIs"],
-  "coveredModuleSlugs": ["sales", "crm", "inventory"],
+  "moduleTags": ["Python", "Programming"],
+  "coveredModuleSlugs": [],
   "learningOutcomes": [
-    "Model complex business data using the Odoo ORM",
-    "Write maintainable Python business logic and validations",
-    "Connect backend models with XML interfaces and workflows",
-    "Build advanced modules and extension patterns",
-    "Integrate, debug, test, optimize, and document Odoo solutions"
+    "Install Python and set up a code editor",
+    "Use variables, data types, input and output",
+    "Control program flow with conditions and loops",
+    "Store and organize data with lists, tuples and dictionaries",
+    "Write reusable functions",
+    "Understand classes and objects, the foundation of Odoo models"
   ],
   "whoItsFor": [
-    "Python developers moving into Odoo technical work",
-    "Backend engineers applying data modeling and business logic skills inside the Odoo ORM",
-    "Module builders creating advanced modules, extensions, and reusable technical solutions",
-    "Freelance developers preparing for technical Odoo customization and integration projects"
+    "Complete beginners who want to start programming",
+    "Functional Odoo users who want to understand the technical side",
+    "Students preparing for a career in Odoo development",
+    "Anyone who needs Python basics before Odoo Development"
   ],
   "requirements": [
-    "Confident Python fundamentals and object-oriented programming",
-    "Basic relational database and SQL understanding",
-    "Some HTML/XML and web-application knowledge",
-    "Git, command-line, and development-environment familiarity"
+    "No programming experience required",
+    "A computer where you can install Python",
+    "Basic computer skills"
   ],
   "curriculum": [
-    { "number": "01", "title": "Odoo Architecture for Python Developers", "description": "Understand framework structure, addons, registries, environments, and how Python code is executed." },
-    { "number": "02", "title": "Models, Fields, and ORM", "description": "Define data models, relationships, recordsets, domains, contexts, and ORM operations." },
-    { "number": "03", "title": "Recordsets and Relationships", "description": "Work with recordsets and model relationships as the backbone of Odoo data structures." },
-    { "number": "04", "title": "Computed Logic, Constraints, and Validations", "description": "Build dependable rules, computed values, validations, and responsive form behavior." },
-    { "number": "05", "title": "XML Integration", "description": "Connect backend models to inherited views, actions, menus, and search experiences." },
-    { "number": "06", "title": "Advanced Extension Patterns", "description": "Structure reusable modules, extend core behavior, and avoid fragile customization." },
-    { "number": "07", "title": "APIs", "description": "Expose or consume APIs and coordinate data exchange with external services." },
-    { "number": "08", "title": "Testing, Debugging, and Optimization", "description": "Trace problems, validate logic, improve performance, and follow production-minded practices." },
-    { "number": "09", "title": "Python/Odoo Capstone", "description": "Build and present an advanced Odoo solution driven by realistic business logic and integration needs." }
+    {
+      "number": "01",
+      "title": "Introduction to Python",
+      "description": "What Python is, installing Python and choosing a code editor, plus a downloadable Python guide."
+    },
+    {
+      "number": "02",
+      "title": "Variables and Data Types",
+      "description": "Variables and naming rules, and basic input and output with input() and print()."
+    },
+    {
+      "number": "03",
+      "title": "Operators",
+      "description": "Arithmetic, comparison and logical operators."
+    },
+    {
+      "number": "04",
+      "title": "Control Flow",
+      "description": "Conditional statements and loops."
+    },
+    {
+      "number": "05",
+      "title": "Data Structures",
+      "description": "Lists, tuples and dictionaries."
+    },
+    {
+      "number": "06",
+      "title": "Functions",
+      "description": "Write reusable functions with parameters and return values."
+    },
+    {
+      "number": "07",
+      "title": "Object-Oriented Programming",
+      "description": "An introduction to classes and objects."
+    },
+    {
+      "number": "08",
+      "title": "Practical Exercises and Mini Projects",
+      "description": "Build a calculator, a command-line to-do list and a number-guessing game."
+    }
   ],
   "projects": [
-    { "title": "ORM Data Model", "description": "Design connected business models with relationships, computed fields, and constraints." },
-    { "title": "Advanced Workflow Logic", "description": "Implement multi-step rules, validations, and automated backend behavior." },
-    { "title": "Portfolio Capstone", "description": "Deliver a tested module with backend logic, an XML interface, documentation, and an API connection." }
+    {
+      "title": "Calculator Program",
+      "description": "Combine input, operators and conditions in a working calculator."
+    },
+    {
+      "title": "To-Do List App (CLI)",
+      "description": "Manage tasks in the command line using lists and functions."
+    },
+    {
+      "title": "Number Guessing Game",
+      "description": "Use loops and conditions to build a small interactive game."
+    }
   ],
   "relatedCourseSlugs": ["odoo-development"],
   "faq": [
-    { "question": "Is this a beginner Python course?", "answer": "No. It assumes confidence with Python fundamentals and focuses on applying Python inside Odoo." },
-    { "question": "How is it different from Odoo Development?", "answer": "This track goes deeper into Python, the ORM, data modeling, backend logic, testing, and optimization. Odoo Development covers the broader framework workflow — architecture, views, actions, and integrations." },
-    { "question": "Will APIs be included?", "answer": "Yes. The curriculum includes external connections and data-exchange patterns." },
-    { "question": "Is there a portfolio project?", "answer": "Yes. The capstone is intended to demonstrate Python-driven Odoo development through a complete business solution." }
+    {
+      "question": "Do I need programming experience?",
+      "answer": "No. The course starts from installing Python."
+    },
+    {
+      "question": "Why learn Python for Odoo?",
+      "answer": "Odoo is written in Python, and its models are Python classes. This course gives you the foundation you need before Odoo Development."
+    },
+    {
+      "question": "Does this course cover the Odoo ORM?",
+      "answer": "No. It focuses on Python itself. You will use the ORM in Odoo Development."
+    },
+    {
+      "question": "What comes next?",
+      "answer": "Odoo Development, where you build your first Odoo modules."
+    }
   ],
   "instructor": {
     "name": "Emad",

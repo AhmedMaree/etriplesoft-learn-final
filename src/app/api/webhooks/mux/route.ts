@@ -3,6 +3,7 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import type { Database, Json } from '@/types/database'
 import { getMuxClient } from '@/lib/mux/server'
 import { getSupabasePublicEnv } from '@/lib/supabase/env'
+import { refreshCatalogCache } from '@/features/courses/server/catalog-cache'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -94,5 +95,7 @@ export async function POST(request: Request) {
     p_data: eventData,
   })
   if (error) return NextResponse.json({ error: 'Webhook processing failed.' }, { status: 503 })
+  // A finished video can change catalog lesson durations.
+  refreshCatalogCache()
   return NextResponse.json({ received: true }, { status: 200, headers: { 'Cache-Control': 'no-store' } })
 }

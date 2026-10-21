@@ -1,0 +1,362 @@
+/* Level check (/placement) and the overview recommendation additions. Builds on the .ov-section look. */
+
+.pl-wrap {
+  container-type: inline-size;
+  max-width: 880px;
+}
+.pl-panel h2 {
+  margin: 0 0 8px;
+  color: #0b1533;
+  font-size: clamp(24px, 3.2cqi, 34px);
+  line-height: 1.15;
+  letter-spacing: -0.6px;
+}
+.pl-panel h2:focus {
+  outline: none;
+}
+.pl-panel h2:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+.pl-step {
+  margin: 0 0 8px;
+  color: #45557c;
+  font-size: 14px;
+  font-weight: 500;
+}
+.pl-intro {
+  margin: 0 0 24px;
+  color: #52618a;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.pl-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.pl-question {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.pl-question > legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-bottom: 12px;
+  padding: 0;
+  color: #0b1533;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.pl-hint,
+.pl-number {
+  color: #596992;
+  font-size: 14px;
+  font-weight: 500;
+}
+.pl-number {
+  flex-basis: 100%;
+}
+.pl-choices {
+  display: grid;
+  gap: 10px;
+}
+.pl-choices--cards {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+}
+.pl-choices--inline {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+}
+.pl-choice {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 12px 14px;
+  border: 1px solid #e0e4eb;
+  border-radius: 12px;
+  background: #fff;
+  color: #2c3c63;
+  font-size: 15px;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.pl-choice:hover {
+  border-color: #b9d2ff;
+}
+.pl-choice.chosen {
+  border-color: #b9d2ff;
+  background: #e8f2ff;
+}
+.pl-choice.muted {
+  color: #596992;
+}
+.pl-choice:has(input:focus-visible) {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+.pl-choice input[type="checkbox"] {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--blue);
+}
+.pl-card {
+  align-items: flex-start;
+}
+.pl-card > span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pl-card strong {
+  color: #0b1533;
+}
+.pl-card small {
+  color: #596992;
+  font-size: 14px;
+}
+.pl-area {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.pl-area + .pl-area {
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+.pl-area h3 {
+  margin: 0;
+  color: #0b1533;
+  font-size: 19px;
+}
+.pl-note {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--mint);
+  color: #0d4f3a;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.pl-error {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff1f0;
+  color: #b42318;
+  font-size: 14px;
+}
+.pl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.pl-actions > :only-child {
+  margin-inline-start: auto;
+}
+.pl-actions-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-inline-start: auto;
+}
+.pl-skip {
+  min-height: 44px;
+  color: #596992;
+  font-weight: 500;
+}
+.pl-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 12px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+.pl-results li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  border: 1px solid #e6edf8;
+  border-radius: 16px;
+  background: #fff;
+}
+.pl-results strong {
+  color: #0b1533;
+}
+.pl-results small {
+  color: #596992;
+}
+.pl-level {
+  color: var(--blue);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* Overview: level strip, "Start here", reasons and the level-check prompt. */
+.ov-levels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin: -8px 0 22px;
+}
+.ov-levels ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ov-levels li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid #dbe6fb;
+  border-radius: 999px;
+  background: #fff;
+  color: #2c3c63;
+  font-size: 14px;
+}
+.ov-levels li b {
+  color: var(--blue);
+  font-weight: 600;
+}
+.ov-levels .ov-up {
+  color: var(--green);
+}
+.ov-levels-label {
+  color: #45557c;
+  font-size: 14px;
+  font-weight: 600;
+}
+.ov-levels-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 14px;
+}
+.ov-levels-links a {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--blue);
+  font-weight: 500;
+}
+.ov-retake {
+  margin: -10px 0 22px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--mint);
+  color: #0d4f3a;
+  font-size: 14px;
+}
+.ov-retake a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.ov-start {
+  position: absolute;
+  inset-block-start: 14px;
+  inset-inline-end: 14px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #ff7a1a;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ov-card.ov-card--start {
+  border-color: #ffc89e;
+}
+.ov-reason {
+  margin: 0;
+  color: #00875b;
+  font-size: 14px;
+  font-weight: 500;
+}
+.ov-prompt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 20px;
+  padding: 18px clamp(16px, 2.6cqi, 28px);
+  border: 1px solid #dbe6fb;
+  border-radius: 18px;
+  background: #fff;
+}
+.ov-prompt h2 {
+  margin: 0 0 4px;
+  color: #0b1533;
+  font-size: 19px;
+}
+.ov-prompt p {
+  margin: 0;
+  color: #52618a;
+}
+.ov-recs-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+.ov-recs-empty p {
+  margin: 0;
+  color: #52618a;
+}
+.ov-recs-empty div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+html[lang="ar"] .pl-panel h2,
+html[lang="ar"] .ov-prompt h2 {
+  letter-spacing: 0;
+}
+@media (max-width: 700px) {
+  .pl-actions .btn {
+    flex: 1 1 auto;
+    white-space: normal;
+    text-align: center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pl-choice {
+    transition: none;
+  }
+}
+
+/* Settings → Learning: level check links. */
+.placement-settings {
+  margin-block: 18px;
+}
+.settings-note .placement-settings-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  margin-top: 6px;
+}
+.placement-settings-links a {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+}

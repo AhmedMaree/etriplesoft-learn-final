@@ -1,0 +1,102 @@
+.admin-funnel-window {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 10px;
+  background: #f1f5fb;
+}
+.admin-funnel-window a {
+  padding: 5px 10px;
+  border-radius: 8px;
+  color: #425c86;
+  font-size: 13px;
+  font-weight: 600;
+}
+.admin-funnel-window a[aria-current="page"] {
+  color: #101b38;
+  background: #fff;
+  box-shadow: 0 1px 3px #173e6814;
+}
+.admin-funnel-intro {
+  margin: 4px 0 16px;
+  color: #52658a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.admin-funnel-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 24px;
+}
+.admin-funnel {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.admin-funnel-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #23385f;
+  font-size: 14px;
+}
+.admin-funnel-label strong {
+  font-variant-numeric: tabular-nums;
+}
+.admin-funnel-bar {
+  height: 10px;
+  margin-block: 6px 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #edf1f7;
+}
+.admin-funnel-bar span {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  border-radius: inherit;
+  background: var(--blue);
+}
+.admin-funnel small {
+  color: #52658a;
+  font-size: 12px;
+}
+.admin-funnel-abandoned h3 {
+  margin: 0 0 10px;
+  color: #101b38;
+  font-size: 15px;
+}
+.admin-funnel-abandoned ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.admin-funnel-abandoned li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 12px;
+  border: 1px solid #edf1f7;
+  border-radius: 10px;
+  font-size: 13px;
+}
+.admin-funnel-abandoned li span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-funnel-abandoned p {
+  margin: 0;
+  color: #52658a;
+  font-size: 13px;
+}
+@media (max-width: 900px) {
+  .admin-funnel-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

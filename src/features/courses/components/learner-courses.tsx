@@ -341,10 +341,8 @@ export async function LearnerCourses(props: LearnerCoursesProps) {
                       </Link>
                       {!entitled && !adminPreview && course.priceMinor > 0 && (
                         <AddToCartButton
-                          courseId={course.id}
                           courseSlug={course.slug}
                           courseTitle={course.title}
-                          signedIn={signedIn}
                         />
                       )}
                     </div>

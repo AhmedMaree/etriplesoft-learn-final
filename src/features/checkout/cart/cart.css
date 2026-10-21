@@ -1,0 +1,323 @@
+/* Header cart icon (public site and learner app) and its count badge. */
+.cart-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+.cart-count {
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border: 2px solid #fff;
+  border-radius: 9px;
+  background: var(--mk-circuit, var(--blue));
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+}
+
+/* Public site header: a 44px round target like the menu button. */
+.mk-cart {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  color: var(--mk-text);
+  transition: color 0.2s;
+}
+.mk-cart:hover {
+  color: var(--mk-circuit);
+}
+.mk-cart:focus-visible {
+  outline: 2px solid var(--mk-circuit);
+  outline-offset: 2px;
+}
+.mk-cart svg {
+  width: 22px;
+  height: 22px;
+}
+.mk-cart .cart-count {
+  top: 2px;
+  inset-inline-end: 0;
+}
+/* Below 1024px the header actions live in the drawer; the cart stays beside the menu button. */
+.mk-cart--mobile {
+  margin-inline-start: auto;
+}
+@media (min-width: 1024px) {
+  .mk-cart--mobile {
+    display: none;
+  }
+}
+
+.mk-side-cart {
+  margin-top: 12px;
+}
+.checkout-order-item-price {
+  color: var(--blue);
+  font-weight: 700;
+}
+.mk-cart-placeholder {
+  visibility: hidden;
+}
+
+/* Step 1 (Review Order): same cards and sidebar as the billing/payment step. */
+.checkout-review-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-block-end: 6px;
+}
+.checkout-review-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  color: #075dcc;
+  background: #e8f2ff;
+  font-size: 13px;
+  font-weight: 600;
+}
+.checkout-review-count svg {
+  width: 16px;
+  height: 16px;
+}
+.checkout-review-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.checkout-review-item {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 16px;
+  padding-block: 16px;
+  border-block-end: 1px solid #edf1f7;
+}
+.checkout-review-thumb {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 11px;
+  background: #e8f2ff;
+}
+.checkout-review-thumb img {
+  object-fit: cover;
+}
+.checkout-review-text {
+  min-width: 0;
+}
+.checkout-review-text h3 {
+  margin: 0 0 8px;
+  color: #101b38;
+  font-size: 16px;
+  line-height: 1.35;
+}
+.checkout-review-text h3 a {
+  color: inherit;
+}
+.checkout-review-text h3 a:hover {
+  color: #075dcc;
+}
+.checkout-review-price {
+  color: var(--blue);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.checkout-item-remove {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 1px solid #e3e8f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #5b6475;
+  cursor: pointer;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    background-color 0.18s ease;
+}
+.checkout-item-remove:hover:not(:disabled) {
+  border-color: #f2b8b5;
+  background: #fff5f5;
+  color: #c62828;
+}
+.checkout-item-remove:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+.checkout-item-remove:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.checkout-item-remove svg {
+  width: 18px;
+  height: 18px;
+}
+.checkout-review-page .checkout-pay-button {
+  margin-block-start: 0;
+}
+.checkout-coupon-guest {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 11px 12px;
+  border-radius: 10px;
+  color: #425c86;
+  background: #f4f8fe;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.checkout-coupon-guest svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--blue);
+}
+.checkout-review-empty {
+  display: grid;
+  gap: 18px;
+}
+.checkout-review-empty .checkout-empty-state {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Suggestions ("You might also like"). */
+.checkout-suggest {
+  margin-block-start: 18px;
+}
+.checkout-suggest-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.checkout-suggest-item {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #edf1f7;
+  border-radius: 13px;
+}
+.checkout-suggest-image {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 9px;
+  background: #e8f2ff;
+}
+.checkout-suggest-image img {
+  object-fit: cover;
+}
+.checkout-suggest-text h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  line-height: 1.35;
+}
+.checkout-suggest-text h3 a {
+  color: #101b38;
+}
+.checkout-suggest-text h3 a:hover {
+  color: #075dcc;
+}
+.checkout-suggest-text strong {
+  color: var(--blue);
+  font-size: 14px;
+}
+.checkout-suggest-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+  border: 1px solid #bfd8fb;
+  border-radius: 10px;
+  color: #075dcc;
+  background: #edf5ff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.checkout-suggest-add:hover {
+  color: #fff;
+  background: var(--blue);
+}
+.checkout-suggest-add:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+  .checkout-review-item {
+    grid-template-columns: 96px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "thumb text remove"
+      "thumb price remove";
+    gap: 6px 12px;
+    padding-block: 12px;
+  }
+  .checkout-review-thumb {
+    grid-area: thumb;
+    align-self: start;
+  }
+  .checkout-review-text {
+    grid-area: text;
+  }
+  .checkout-review-text h3 {
+    margin-block-end: 4px;
+    font-size: 14px;
+  }
+  .checkout-review-price {
+    grid-area: price;
+    font-size: 16px;
+  }
+  .checkout-item-remove {
+    grid-area: remove;
+    align-self: start;
+    width: 34px;
+    height: 34px;
+  }
+  .checkout-suggest-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .checkout-suggest-item {
+    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+  .checkout-suggest-image {
+    grid-row: span 2;
+  }
+}
+.checkout-cart-dropped {
+  margin-block-end: 16px;
+}
+
+/* Learner top bar: matches the notification bell. */
+.topbar .cart-link:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 8px;
+}

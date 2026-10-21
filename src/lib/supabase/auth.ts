@@ -10,7 +10,8 @@ import { ACTIVITY_COOKIE, isMaxAgeExceeded, parseActivity, sessionIdOf } from '.
 
 export type ElevatedRole = 'admin' | 'instructor'
 
-async function getAuthContext() {
+// One Auth server round trip per request: layouts, pages and helpers rendering together share it.
+const getAuthContext = cache(async () => {
   const supabase = await createClient()
   const { data, error } = await supabase.auth.getUser()
 
@@ -18,14 +19,43 @@ async function getAuthContext() {
     supabase,
     user: error ? null : data.user,
   }
-}
+})
 
-export async function getCurrentUser(): Promise<User | null> {
-  const { user } = await getAuthContext()
-  return user
+/** The signed-in user as the verified session token states it. */
+export type SessionUser = { id: string; email: string | null }
+
+// Verifies the session JWT's signature and expiry locally against the project's cached public key
+// (ES256), so page guards cost no Auth server round trip. The proxy has already refreshed the token
+// and applied the session policy; every data read is still authorized by RLS with this same token.
+// Use requireAccountUser() where the Auth server's current user record itself is needed.
+const getSessionUser = cache(async (): Promise<SessionUser | null> => {
+  const supabase = await createClient()
+  const { data, error } = await supabase.auth.getClaims()
+  const claims = error ? null : data?.claims
+  if (!claims?.sub) return null
+  return { id: claims.sub, email: typeof claims.email === 'string' && claims.email ? claims.email : null }
+})
+
+export async function getCurrentUser(): Promise<SessionUser | null> {
+  return getSessionUser()
 }
 
 export async function requireAuthenticatedUser(
+  locale: Locale,
+  requestedPath: string = `/${locale}/overview`,
+): Promise<SessionUser> {
+  const user = await getSessionUser()
+
+  if (!user) {
+    const next = safeReturnPath(locale, requestedPath)
+    redirect(`/${locale}/login?next=${encodeURIComponent(next)}`)
+  }
+
+  return user
+}
+
+/** The full Auth user record (sign-in dates, pending email change), confirmed by the Auth server. */
+export async function requireAccountUser(
   locale: Locale,
   requestedPath: string = `/${locale}/overview`,
 ): Promise<User> {
@@ -68,7 +98,6 @@ export type AdminAccess =
   | { status: 'mfaVerify' }
   | { status: 'admin'; user: User }
 
-export const PENDING_ADMIN_STATUSES = ['reauth', 'mfaEnroll', 'mfaVerify'] as const
 
 // Local development only (`next dev`): ADMIN_MFA_DISABLED=true skips the admin MFA screen. Builds
 // ignore it. The database keeps its own switch (learning_private.admin_security), which must also be
@@ -86,17 +115,21 @@ export const getAdminAccess = cache(async (): Promise<AdminAccess> => {
   const { supabase, user } = await getAuthContext()
   if (!user) return { status: 'anonymous' }
 
-  const { data, error } = await supabase
-    .from('user_roles')
-    .select('id')
-    .eq('user_id', user.id)
-    .eq('role', 'admin')
-    .is('revoked_at', null)
-    .maybeSingle()
+  // The role row, verified claims and activity cookie are independent; read them together.
+  const [{ data, error }, { data: verified }, cookieStore] = await Promise.all([
+    supabase
+      .from('user_roles')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('role', 'admin')
+      .is('revoked_at', null)
+      .maybeSingle(),
+    supabase.auth.getClaims(),
+    cookies(),
+  ])
 
   if (error || !data) return { status: 'denied' }
 
-  const [{ data: verified }, cookieStore] = await Promise.all([supabase.auth.getClaims(), cookies()])
   const claims = verified?.claims
   const activity = parseActivity(cookieStore.get(ACTIVITY_COOKIE)?.value)
   const sessionActivity = claims && activity?.sessionId === sessionIdOf(claims) ? activity : null

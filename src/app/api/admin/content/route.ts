@@ -5,14 +5,18 @@ import { hasTrustedRequestOrigin } from "@/lib/http/trusted-origin";
 import { readBoundedJson } from "@/lib/http/bounded-json";
 import { isLocale } from "@/i18n/config";
 import { COURSE_SLUG_PATTERN } from "@/features/courses/server/course-repository";
+import { expireCatalogCache } from "@/features/courses/server/catalog-cache";
 
 const uuid = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 const object = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === "object" && !Array.isArray(value);
 const str = (value: unknown, max: number): value is string =>
   typeof value === "string" && value.length <= max;
-const reply = (body: object, status = 200) =>
-  NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } });
+const reply = (body: object, status = 200) => {
+  // A successful edit may change what the public catalog shows.
+  if (status === 200) expireCatalogCache();
+  return NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } });
+};
 export async function POST(request: Request) {
   if (!hasTrustedRequestOrigin(request)) return reply({ error: "origin" }, 403);
   if ((await getAdminAccess()).status !== "admin")

@@ -1,0 +1,65 @@
+/* Organization screens (admin console and the managers' portal in the learner shell). Built on the admin
+   tokens and components; logical properties keep English and Arabic shared. */
+.org-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.org-identity h2 { margin: 0; }
+.org-identity p { margin: 2px 0 0; }
+.org-invitation-list {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+.org-invitation-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.org-invitation-list li > div { display: grid; gap: 2px; min-width: 0; }
+.org-assign { display: grid; gap: 14px; }
+.org-assign .admin-field { max-inline-size: 520px; }
+.org-checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 8px 16px;
+  max-block-size: 280px;
+  margin: 0;
+  padding: 12px 14px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.org-checklist legend { padding: 0 6px; color: var(--muted); font-size: 13px; font-weight: 600; }
+.org-checklist label { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 14px; overflow-wrap: anywhere; }
+.org-checklist input { flex: none; inline-size: 16px; block-size: 16px; accent-color: var(--blue); }
+.org-invite { display: grid; gap: 16px; }
+.org-invite-results { padding: 14px; border-radius: 12px; background: var(--mint); }
+.org-invite-results h3 { margin: 0 0 4px; font-size: 15px; }
+.org-invite-results ul { display: grid; gap: 10px; margin: 10px 0 0; padding: 0; list-style: none; }
+.org-invite-results li { display: grid; gap: 6px; min-width: 0; }
+.org-copy { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.org-copy input {
+  flex: 1 1 260px;
+  min-width: 0;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid #d8deea;
+  border-radius: 7px;
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+}
+.org-total { margin: 0; color: var(--muted); }
+.org-total strong { color: var(--admin-ink); font-size: 18px; }
+.org-join { display: grid; gap: 12px; justify-items: start; }
+.org-join h2 { margin: 0; }
+.org-portal .admin-kpis { margin: 0; }

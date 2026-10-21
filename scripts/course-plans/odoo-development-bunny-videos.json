@@ -4,6 +4,12 @@
   "lessons": [
     { "lessonId": "1c850ff6-9886-2550-61ef-455c7753554b", "title": "Introduction To Odoo Development", "bunnyTitle": "Introduction To Odoo Development" },
     { "lessonId": "02f78b01-1880-b721-6471-e230f73e4ac3", "title": "Configure & Install Odoo", "bunnyTitle": "Configure & Install Odoo" },
-    { "lessonId": "3973cb12-4776-65b8-5f24-2bdf725df158", "title": "Scaffolding your first module & Create Custom Addon", "bunnyTitle": "Scaffolding your first module & Create Custom Addon" }
+    { "lessonId": "3973cb12-4776-65b8-5f24-2bdf725df158", "title": "Scaffolding your first module & Create Custom Addon", "bunnyTitle": "Scaffolding your first module & Create Custom Addon" },
+    { "lessonId": "22ed63d7-e37c-4b19-91ca-ae04a876648a", "title": "Create an Addon", "bunnyTitle": "Create an Addon" },
+    { "lessonId": "17152419-7f2a-4d2f-b64d-47baa1a99692", "title": "The Module Manifest", "bunnyTitle": "The Module Manifest" },
+    { "lessonId": "d055cd65-1f0a-4767-8cf5-aba7b8efa356", "title": "Adding a Model", "bunnyTitle": "Adding a Model" },
+    { "lessonId": "0eb96a88-900d-4828-a32d-e8eb334e69cf", "title": "Menu Items and Views", "bunnyTitle": "Menu Items and Views" },
+    { "lessonId": "a8be1234-305a-4a99-b89d-04c8935aebc6", "title": "Recap and Field Types", "bunnyTitle": "Recap and Field Types" },
+    { "lessonId": "6d01b312-a3ec-4546-a2ba-f08e867afd8b", "title": "Model Representation and Ordering", "bunnyTitle": "Model Representation and Ordering" }
   ]
 }

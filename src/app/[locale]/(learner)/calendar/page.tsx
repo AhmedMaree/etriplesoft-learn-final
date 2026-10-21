@@ -30,15 +30,16 @@ export default async function CalendarRoute({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const user = await requireAuthenticatedUser(locale, `/${locale}/calendar`);
-  const timeZone = await getLearnerTimeZone(user.id);
   const now = new Date();
-  const today = civilDateOf(now, timeZone);
-  const range = rangeFor("month", today, timeZone);
-  const [events, upcoming, streak] = await Promise.all([
-    listCalendarEvents(locale, new Date(range.from), new Date(range.to)),
+  // Only the month view needs the learner's time zone; the rest loads alongside it.
+  const [timeZone, upcoming, streak] = await Promise.all([
+    getLearnerTimeZone(user.id),
     listCalendarEvents(locale, now, new Date(now.getTime() + 8 * 86_400_000)),
     getLearningStreak(),
   ]);
+  const today = civilDateOf(now, timeZone);
+  const range = rangeFor("month", today, timeZone);
+  const events = await listCalendarEvents(locale, new Date(range.from), new Date(range.to));
   return (
     <>
       <PageHeading

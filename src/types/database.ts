@@ -913,6 +913,7 @@ export type Database = {
           granted_by: string
           id: string
           order_item_id: string | null
+          organization_license_id: string | null
           refund_confirmed_at: string | null
           revoked_at: string | null
           revoked_by: string | null
@@ -928,6 +929,7 @@ export type Database = {
           granted_by: string
           id?: string
           order_item_id?: string | null
+          organization_license_id?: string | null
           refund_confirmed_at?: string | null
           revoked_at?: string | null
           revoked_by?: string | null
@@ -943,6 +945,7 @@ export type Database = {
           granted_by?: string
           id?: string
           order_item_id?: string | null
+          organization_license_id?: string | null
           refund_confirmed_at?: string | null
           revoked_at?: string | null
           revoked_by?: string | null
@@ -981,6 +984,80 @@ export type Database = {
           {
             foreignKeyName: "enrollments_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institution_aliases: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          institution_id: string
+          kind: string
+          normalized_name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          institution_id: string
+          kind: string
+          normalized_name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          institution_id?: string
+          kind?: string
+          normalized_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institution_aliases_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "institution_aliases_institution_id_kind_fkey"
+            columns: ["institution_id", "kind"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id", "kind"]
+          },
+        ]
+      }
+      institutions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          kind: string
+          name_ar: string | null
+          name_en: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind: string
+          name_ar?: string | null
+          name_en: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: string
+          name_ar?: string | null
+          name_en?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institutions_created_by_fkey"
+            columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -1040,6 +1117,7 @@ export type Database = {
       learner_profiles: {
         Row: {
           birth_year: number | null
+          company_id: string | null
           company_name: string | null
           created_at: string
           faculty: string | null
@@ -1047,12 +1125,14 @@ export type Database = {
           job_title: string | null
           learner_type: string
           university: string | null
+          university_id: string | null
           updated_at: string
           user_id: string
           years_experience: number | null
         }
         Insert: {
           birth_year?: number | null
+          company_id?: string | null
           company_name?: string | null
           created_at?: string
           faculty?: string | null
@@ -1060,12 +1140,14 @@ export type Database = {
           job_title?: string | null
           learner_type: string
           university?: string | null
+          university_id?: string | null
           updated_at?: string
           user_id: string
           years_experience?: number | null
         }
         Update: {
           birth_year?: number | null
+          company_id?: string | null
           company_name?: string | null
           created_at?: string
           faculty?: string | null
@@ -1073,11 +1155,26 @@ export type Database = {
           job_title?: string | null
           learner_type?: string
           university?: string | null
+          university_id?: string | null
           updated_at?: string
           user_id?: string
           years_experience?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "learner_profiles_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "learner_profiles_university_id_fkey"
+            columns: ["university_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "learner_profiles_user_id_fkey"
             columns: ["user_id"]
@@ -1778,12 +1875,32 @@ export type Database = {
           },
         ]
       }
+      cart_items: {
+        Row: {
+          added_at: string
+          course_id: string
+          user_id: string
+        }
+        Insert: {
+          added_at?: string
+          course_id: string
+          user_id: string
+        }
+        Update: {
+          added_at?: string
+          course_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           amount_minor: number
           course_id: string
           id: string
           order_id: string
+          position: number
+          seats: number
           title: string
         }
         Insert: {
@@ -1791,6 +1908,8 @@ export type Database = {
           course_id: string
           id?: string
           order_id: string
+          position?: number
+          seats?: number
           title: string
         }
         Update: {
@@ -1798,6 +1917,8 @@ export type Database = {
           course_id?: string
           id?: string
           order_id?: string
+          position?: number
+          seats?: number
           title?: string
         }
         Relationships: [
@@ -1830,7 +1951,9 @@ export type Database = {
           discount_minor: number
           expires_at: string
           id: string
+          kind: string
           locale: string
+          organization_id: string | null
           status: string
           subtotal_minor: number
           total_minor: number
@@ -1848,7 +1971,9 @@ export type Database = {
           discount_minor?: number
           expires_at?: string
           id?: string
+          kind?: string
           locale: string
+          organization_id: string | null
           status?: string
           subtotal_minor: number
           total_minor: number
@@ -1866,7 +1991,9 @@ export type Database = {
           discount_minor?: number
           expires_at?: string
           id?: string
+          kind?: string
           locale?: string
+          organization_id?: string | null
           status?: string
           subtotal_minor?: number
           total_minor?: number
@@ -2541,6 +2668,74 @@ export type Database = {
         }
         Returns: undefined
       }
+      admin_analytics_course_lessons: {
+        Args: { p_course_id: string; p_locale: string }
+        Returns: {
+          average_watch_percent: number
+          completed: number
+          is_required: boolean
+          learners: number
+          lesson_id: string
+          lesson_position: number
+          lesson_type: string
+          module_position: number
+          started: number
+          streamed_minutes: number
+          title: string
+        }[]
+      }
+      admin_analytics_courses: {
+        Args: { p_days: number; p_locale: string }
+        Returns: {
+          active_learners: number
+          admin_enrollments: number
+          average_progress: number
+          cohort_completed: number
+          cohort_size: number
+          completed: number
+          course_id: string
+          enrollments: number
+          enrollments_new: number
+          free_enrollments: number
+          paid_enrollments: number
+          price_minor: number
+          quiz_attempts: number
+          quiz_passed: number
+          rating: number
+          revenue_minor: number
+          reviews: number
+          slug: string
+          status: string
+          streamed_minutes: number
+          title: string
+          watched_minutes: number
+        }[]
+      }
+      admin_analytics_learners: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_search: string
+          p_segment: string
+        }
+        Returns: {
+          average_progress: number
+          completed: number
+          display_name: string
+          email: string
+          enrollments: number
+          institution: string
+          joined_at: string
+          last_active: string
+          learner_type: string
+          segment: string
+          streamed_minutes: number
+          total_count: number
+          user_id: string
+          watched_minutes: number
+        }[]
+      }
+      admin_analytics_overview: { Args: { p_days: number }; Returns: Json }
       admin_attach_bunny_video: {
         Args: {
           p_bunny_video_id: string
@@ -2550,6 +2745,7 @@ export type Database = {
         Returns: string
       }
       admin_cancel_course_event: { Args: { p_id: string }; Returns: undefined }
+      admin_checkout_funnel: { Args: { p_days: number }; Returns: Json }
       admin_create_coupon: {
         Args: {
           p_amount_off_minor: number | null
@@ -2558,6 +2754,15 @@ export type Database = {
           p_expires_at: string | null
           p_max_redemptions: number | null
           p_percent_off: number | null
+        }
+        Returns: string
+      }
+      admin_create_institution: {
+        Args: {
+          p_kind: string
+          p_link_name?: string
+          p_name_ar: string
+          p_name_en: string
         }
         Returns: string
       }
@@ -2696,6 +2901,55 @@ export type Database = {
           title: string
         }[]
       }
+      admin_list_institutions: {
+        Args: { p_kind: string }
+        Returns: {
+          aliases: number
+          id: string
+          learners: number
+          name_ar: string
+          name_en: string
+        }[]
+      }
+      admin_create_organization: {
+        Args: { p_institution_id?: string; p_kind: string; p_name: string }
+        Returns: string
+      }
+      admin_grant_organization_license: {
+        Args: {
+          p_course_id: string
+          p_months: number
+          p_note?: string
+          p_org: string
+          p_seats: number
+        }
+        Returns: string
+      }
+      admin_list_organizations: {
+        Args: never
+        Returns: {
+          active_members_30d: number
+          average_progress: number
+          completions: number
+          created_at: string
+          id: string
+          institution_name: string
+          kind: string
+          managers: number
+          members: number
+          name: string
+          next_expiry: string
+          pending_invitations: number
+          revenue_minor: number
+          seats_total: number
+          seats_used: number
+          status: string
+        }[]
+      }
+      admin_set_organization_status: {
+        Args: { p_org: string; p_status: string }
+        Returns: undefined
+      }
       admin_list_audit: {
         Args: { p_limit?: number; p_offset?: number }
         Returns: {
@@ -2761,6 +3015,17 @@ export type Database = {
           updated_at: string
         }[]
       }
+      admin_link_institution_name: {
+        Args: { p_institution_id: string; p_kind: string; p_name: string }
+        Returns: number
+      }
+      admin_list_unmatched_institution_names: {
+        Args: { p_kind: string }
+        Returns: {
+          learners: number
+          name: string
+        }[]
+      }
       admin_list_role_grants: {
         Args: { p_limit?: number; p_offset?: number }
         Returns: {
@@ -2799,6 +3064,16 @@ export type Database = {
       admin_publish_quiz_version: {
         Args: { p_version_id: string }
         Returns: undefined
+      }
+      admin_recommendation_stats: {
+        Args: { p_since?: string }
+        Returns: {
+          course_id: string
+          enrolled_after_click: number
+          learners_clicked: number
+          learners_shown: number
+          slug: string
+        }[]
       }
       admin_reorder_course_modules: {
         Args: { p_course_id: string; p_module_ids: string[] }
@@ -3224,6 +3499,14 @@ export type Database = {
         Args: { p_lesson_id: string; p_locale: string }
         Returns: undefined
       }
+      learner_cart_sync: {
+        Args: { p_add: string[] | null; p_remove: string[] | null }
+        Returns: string[]
+      }
+      learner_create_cart_order: {
+        Args: { p_course_ids: string[]; p_locale: string }
+        Returns: string
+      }
       learner_create_order: {
         Args: { p_course_id: string; p_locale: string }
         Returns: string
@@ -3339,6 +3622,151 @@ export type Database = {
           resource_id: string
         }[]
       }
+      learner_accept_invitation: {
+        Args: { p_code?: string; p_invitation_id?: string }
+        Returns: string
+      }
+      learner_list_invitations: {
+        Args: never
+        Returns: {
+          expires_at: string
+          id: string
+          organization_kind: string
+          organization_name: string
+          role: string
+        }[]
+      }
+      learner_list_organizations: {
+        Args: never
+        Returns: {
+          id: string
+          joined_at: string
+          kind: string
+          name: string
+          role: string
+          status: string
+        }[]
+      }
+      learner_preview_invitation: {
+        Args: { p_code: string }
+        Returns: {
+          email_matches: boolean
+          expires_at: string
+          organization_kind: string
+          organization_name: string
+          role: string
+        }[]
+      }
+      org_assign_course: {
+        Args: { p_course_id: string; p_org: string; p_user_ids: string[] }
+        Returns: {
+          result: string
+          user_id: string
+        }[]
+      }
+      org_create_invitations: {
+        Args: { p_emails: string[]; p_org: string; p_role: string }
+        Returns: {
+          code: string
+          email: string
+          result: string
+        }[]
+      }
+      org_create_seat_order: {
+        Args: {
+          p_course_ids: string[]
+          p_locale: string
+          p_org: string
+          p_seats: number[]
+        }
+        Returns: string
+      }
+      org_get: {
+        Args: { p_org: string }
+        Returns: {
+          access: string
+          id: string
+          kind: string
+          managers: number
+          members: number
+          name: string
+          seats_total: number
+          seats_used: number
+          status: string
+        }[]
+      }
+      org_list_invitations: {
+        Args: { p_org: string }
+        Returns: {
+          created_at: string
+          email: string
+          expired: boolean
+          expires_at: string
+          id: string
+          role: string
+        }[]
+      }
+      org_list_licenses: {
+        Args: { p_locale: string; p_org: string }
+        Returns: {
+          course_id: string
+          course_slug: string
+          course_title: string
+          ends_at: string
+          license_id: string
+          seats: number
+          seats_used: number
+          source: string
+          starts_at: string
+          state: string
+        }[]
+      }
+      org_list_member_courses: {
+        Args: { p_locale: string; p_org: string; p_user: string }
+        Returns: {
+          certificate_number: string
+          completed_at: string
+          course_id: string
+          course_slug: string
+          course_title: string
+          expires_at: string
+          granted_at: string
+          last_activity: string
+          progress: number
+          quiz_percent: number
+          status: string
+          streamed_minutes: number
+        }[]
+      }
+      org_list_members: {
+        Args: { p_org: string }
+        Returns: {
+          assigned: number
+          average_progress: number
+          certificates: number
+          completed: number
+          display_name: string
+          email: string
+          joined_at: string
+          last_active: string
+          quiz_percent: number
+          role: string
+          streamed_minutes: number
+          user_id: string
+        }[]
+      }
+      org_release_seat: {
+        Args: { p_course_id: string; p_org: string; p_user_id: string }
+        Returns: undefined
+      }
+      org_remove_member: {
+        Args: { p_org: string; p_user_id: string }
+        Returns: undefined
+      }
+      org_revoke_invitation: {
+        Args: { p_invitation_id: string; p_org: string }
+        Returns: undefined
+      }
       learner_list_notifications: {
         Args: { p_limit?: number; p_locale: string }
         Returns: {
@@ -3362,6 +3790,23 @@ export type Database = {
         Args: { p_ids?: string[] }
         Returns: number
       }
+      learner_placement_questions: { Args: { p_locale: string }; Returns: Json }
+      learner_placement_skip: { Args: never; Returns: undefined }
+      learner_placement_status: { Args: never; Returns: Json }
+      learner_placement_submit: {
+        Args: {
+          p_answers?: Json
+          p_experience: string
+          p_interests: string[]
+          p_role: string
+          p_version_id?: string
+        }
+        Returns: Json
+      }
+      learner_placement_update_goals: {
+        Args: { p_experience: string; p_interests: string[]; p_role: string }
+        Returns: Json
+      }
       learner_quiz_action: {
         Args: {
           p_action: string
@@ -3372,6 +3817,10 @@ export type Database = {
           p_sequence?: number
         }
         Returns: Json
+      }
+      learner_record_recommendation_events: {
+        Args: { p_course_ids: string[]; p_event: string }
+        Returns: undefined
       }
       learner_remove_coupon: {
         Args: { p_order_id: string }

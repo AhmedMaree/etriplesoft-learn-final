@@ -9,6 +9,7 @@ import { saveSettingsAction } from '@/features/settings/actions'
 import type { PreferenceKey } from '@/features/settings/tabs'
 import type { Database } from '@/types/database'
 import { SettingsButtons } from './settings-buttons'
+import { PlacementSettingsLinks } from '@/features/placement/components/placement-settings-links'
 
 type LearnerPreferences = Database['public']['Tables']['learner_preferences']['Row']
 
@@ -112,6 +113,7 @@ export function PreferencesSection({
           </label>
         ))}
       </div>
+      {group === 'learning' && <PlacementSettingsLinks />}
       <SettingsButtons dirty={dirty} saving={saving} onCancel={() => update(saved)} />
     </form>
   )

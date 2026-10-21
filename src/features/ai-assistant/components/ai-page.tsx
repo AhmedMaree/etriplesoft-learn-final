@@ -31,7 +31,7 @@ import {
   PlayCircle,
   type LucideIcon,
 } from "lucide-react";
-import { Panel, Title, IconBox, Progress } from "@/components/ui/primitives";
+import { Panel, Title, IconBox } from "@/components/ui/primitives";
 import { Avatar } from "@/components/shared/profile-avatar";
 import { Link } from "@/i18n/navigation";
 import { courseHref, lessonHref } from "@/features/courses/components/course-links";
@@ -166,7 +166,7 @@ export function AIPage({
       if (abortRef.current === controller) abortRef.current = null;
       setMessages((list) => list.map((m) => (m.id === replyTemp && m.content ? { ...m, pending: false } : m)));
       setBusy("idle");
-      inputRef.current?.focus();
+      inputRef.current?.focus({ preventScroll: true });
     };
 
     try {
@@ -295,25 +295,26 @@ export function AIPage({
     }
   }
 
+  // Switching tab or course keeps the page where it is; only "New chat" moves focus to the composer.
   function switchKind(next: ChatKind) {
     if (next === kind) return;
-    newChat();
+    newChat(false);
     setKind(next);
     setMorePrompts(false);
   }
 
   function chooseCourse(slug: string) {
     if (slug === courseSlug) return;
-    if (kind === "course") newChat();
+    if (kind === "course") newChat(false);
     setCourseSlug(slug);
   }
 
-  function newChat() {
+  function newChat(focus = true) {
     abortRef.current?.abort();
     setActiveId(null);
     setMessages([]);
     setError(null);
-    inputRef.current?.focus();
+    if (focus) inputRef.current?.focus({ preventScroll: true });
   }
 
   async function copyReply(message: UiMessage) {
@@ -401,10 +402,25 @@ export function AIPage({
           </div>
           <div id="ai-chat-region" role="tabpanel" aria-labelledby={`ai-tab-${kind}`}>
           {kind === "course" && course && (
-            <p className="chat-course-banner">
-              <BookOpen size={15} aria-hidden="true" />
-              <span>{t("courseChatBanner", { course: course.title })}</span>
-            </p>
+            <div className="chat-course-banner">
+              <div className="chat-course-row">
+                <BookOpen size={15} aria-hidden="true" />
+                <span>{t("courseChatBanner")}</span>
+                {courses.length > 1 ? (
+                  <select className="context-select" aria-label={t("courseSelect")} value={course.slug} onChange={(e) => chooseCourse(e.target.value)} disabled={busy !== "idle"}>
+                    {courses.map((c) => (
+                      <option key={c.slug} value={c.slug}>
+                        {c.title}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <b>{course.title}</b>
+                )}
+                <small>{t("lessonsProgress", { finished: course.finished, required: course.required })}</small>
+              </div>
+              <p>{t("courseChatInfo")}</p>
+            </div>
           )}
           <div className="chat-toolbar">
             <h2 title={activeTitle}>{activeTitle}</h2>
@@ -428,7 +444,7 @@ export function AIPage({
                 <Trash2 size={17} aria-hidden="true" />
               </button>
             )}
-            <button type="button" className="btn outline chat-new" onClick={newChat} disabled={busy === "loading" || (!activeId && messages.length === 0)}>
+            <button type="button" className="btn outline chat-new" onClick={() => newChat()} disabled={busy === "loading" || (!activeId && messages.length === 0)}>
               <Plus size={16} aria-hidden="true" />
               {t("newChat")}
             </button>
@@ -490,21 +506,26 @@ export function AIPage({
               {error}
             </p>
           )}
-          {promptSet.more.length > 0 ? (
-            <Title link={morePrompts ? t("showLess") : t("viewPrompts")} onClick={() => setMorePrompts(!morePrompts)}>
-              {t("tryAsking")}
-            </Title>
-          ) : (
-            <Title>{t("tryAsking")}</Title>
+          {/* Starter prompts only on an empty chat; "New chat" brings them back. */}
+          {messages.length === 0 && (
+            <>
+              {promptSet.more.length > 0 ? (
+                <Title link={morePrompts ? t("showLess") : t("viewPrompts")} onClick={() => setMorePrompts(!morePrompts)}>
+                  {t("tryAsking")}
+                </Title>
+              ) : (
+                <Title>{t("tryAsking")}</Title>
+              )}
+              <div className={"prompt-grid" + (morePrompts ? " expanded" : "")}>
+                {prompts.map(([key, Icon], i) => (
+                  <button type="button" onClick={() => send(promptText(key))} key={key} disabled={busy !== "idle" || !configured || !courseChatReady}>
+                    <IconBox icon={Icon} color={i % 2 ? "green" : "blue"} />
+                    {promptLabel(key)}
+                  </button>
+                ))}
+              </div>
+            </>
           )}
-          <div className={"prompt-grid" + (morePrompts ? " expanded" : "")}>
-            {prompts.map(([key, Icon], i) => (
-              <button type="button" onClick={() => send(promptText(key))} key={key} disabled={busy !== "idle" || !configured || !courseChatReady}>
-                <IconBox icon={Icon} color={i % 2 ? "green" : "blue"} />
-                {promptLabel(key)}
-              </button>
-            ))}
-          </div>
           {configured && !courseChatReady ? (
             <div className="chat-unavailable" role="status">
               <Info aria-hidden="true" />
@@ -552,53 +573,6 @@ export function AIPage({
         </Panel>
       </div>
       <aside className="right-rail">
-        <Panel>
-          <Title href="/courses">{t("contextTitle")}</Title>
-          {course ? (
-            <>
-              <div className="context-course">
-                <span className="odoo-tile" aria-hidden="true">odoo</span>
-                <div>
-                  {courses.length > 1 ? (
-                    <select className="context-select" aria-label={t("courseSelect")} value={course.slug} onChange={(e) => chooseCourse(e.target.value)} disabled={busy !== "idle"}>
-                      {courses.map((c) => (
-                        <option key={c.slug} value={c.slug}>
-                          {c.title}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <b>{course.title}</b>
-                  )}
-                  <small>{t("lessonsProgress", { finished: course.finished, required: course.required })}</small>
-                  <Progress value={course.required ? Math.round((course.finished / course.required) * 100) : 0} />
-                </div>
-              </div>
-              <div className="context-info">
-                <p>
-                  <Info aria-hidden="true" />
-                  {kind === "course" ? t("courseChatInfo") : t("generalChatInfo")}
-                </p>
-                {kind === "general" && (
-                  <button type="button" className="btn outline context-browse" onClick={() => switchKind("course")} disabled={busy !== "idle"}>
-                    <BookOpen size={16} aria-hidden="true" />
-                    {t("openCourseChat")}
-                  </button>
-                )}
-              </div>
-            </>
-          ) : (
-            <div className="context-info">
-              <p>
-                <Info aria-hidden="true" />
-                {t("noCourses")}
-              </p>
-              <Link className="btn outline context-browse" href="/courses">
-                {t("browseCourses")}
-              </Link>
-            </div>
-          )}
-        </Panel>
         <Panel>
           {kindConversations.length > RECENT_LIMIT ? (
             <Title link={showAll ? t("showLess") : t("viewAll")} onClick={() => setShowAll(!showAll)}>

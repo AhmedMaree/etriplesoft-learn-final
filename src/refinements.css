@@ -1629,7 +1629,8 @@ html[lang="ar"] .learner-detail .course-banner img {
   display: grid;
   gap: 16px;
 }
-.popover form button {
+.popover form button,
+.popover .popover-item {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -2861,6 +2862,7 @@ html[lang="ar"] .learner-detail .course-banner img {
 }
 .learner-course-card .course-cart-button:focus-visible { outline: 3px solid #0066ff; outline-offset: 3px; }
 .learner-course-card .course-cart-button:disabled { cursor: wait; opacity: .65; }
+.learner-course-card .course-cart-button.is-in-cart { color: #fff; background: var(--blue); border-color: var(--blue); }
 .continue-course span {
   display: -webkit-box;
   overflow: hidden;
@@ -5491,4 +5493,45 @@ html[lang="ar"] .courses-eyebrow {
 @media (max-width: 700px) {
   .video-check { padding: 16px; }
   .video-check-actions .btn { flex: 1 1 140px; justify-content: center; }
+}
+/* Generic learner page loading skeleton ((learner)/loading.tsx). */
+.learner-loading > div { display: grid; gap: 14px; }
+.learner-loading-label {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.learner-skeleton {
+  border: 0;
+  background: linear-gradient(90deg, #edf3fa 0, #f6f9fd 50%, #edf3fa 100%) 0 0 / 200% 100%;
+  animation: courses-skeleton 1.4s ease-in-out infinite;
+}
+.learner-skeleton-hero { min-height: 180px; border-radius: 18px; }
+.learner-skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.learner-skeleton-card { min-height: 220px; border-radius: 12px; }
+@media (prefers-reduced-motion: reduce) {
+  .learner-skeleton { animation: none; }
+}
+
+/* Navigation progress: instant feedback between a link click and the next page rendering. */
+.nav-progress {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 1000;
+  height: 3px;
+  background: var(--blue);
+  box-shadow: 0 0 8px rgb(0 102 255 / 45%);
+  transform-origin: left center;
+  pointer-events: none;
+}
+[dir="rtl"] .nav-progress { transform-origin: right center; }
+.nav-progress-loading { animation: nav-progress-grow 8s cubic-bezier(0.1, 0.7, 0.2, 1) forwards; }
+.nav-progress-done { transform: scaleX(1); opacity: 0; transition: transform 0.2s ease-out, opacity 0.3s ease 0.15s; }
+@keyframes nav-progress-grow {
+  from { transform: scaleX(0.08); }
+  to { transform: scaleX(0.92); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-progress-loading { animation: none; transform: scaleX(0.6); }
+  .nav-progress-done { transition: opacity 0.2s ease; }
 }

@@ -4,8 +4,9 @@ import { SettingsPage } from "@/features/settings/components/settings-page";
 import { isSettingsTab } from "@/features/settings/tabs";
 import { isLocale } from '@/i18n/config'
 import { notFound } from 'next/navigation'
-import { requireAuthenticatedUser } from '@/lib/supabase/auth'
+import { requireAccountUser } from '@/lib/supabase/auth'
 import { createClient } from '@/lib/supabase/server'
+import '@/features/placement/placement.css'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   return createPageMetadata(params, "settings", "/settings");
@@ -21,7 +22,7 @@ export default async function SettingsRoute({
   const { locale: value } = await params
   if (!isLocale(value)) notFound()
   const { tab } = await searchParams
-  const user = await requireAuthenticatedUser(value, `/${value}/settings`)
+  const user = await requireAccountUser(value, `/${value}/settings`)
   const supabase = await createClient()
   const [
     { data: profile, error: profileError },

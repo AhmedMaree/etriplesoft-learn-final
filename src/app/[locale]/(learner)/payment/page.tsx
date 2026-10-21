@@ -12,8 +12,27 @@ import {
 } from "@/features/courses/server/course-repository";
 import { Checkout, type CheckoutCartItem } from "@/features/checkout/components/checkout";
 import { CheckoutPayment } from "@/features/checkout/components/checkout-payment";
-import { checkoutConfiguration } from "@/features/checkout/server/commerce";
+import {
+  checkoutConfiguration,
+  readCommerceOrder,
+  reconcileOrder,
+} from "@/features/checkout/server/commerce";
 import { billingCountryOptions } from "@/features/checkout/billing-countries";
+
+const UUID = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
+
+// Request-time check (server only), kept out of the component body.
+const isPast = (timestamp: string) => Date.parse(timestamp) <= Date.now();
+
+// Only orders that reached Kashier can have been paid; any provider error leaves the order pending.
+async function settleExpiredOrder(id: string) {
+  try {
+    const order = await readCommerceOrder(id);
+    return typeof order.sessionId === "string" ? await reconcileOrder(id) : "pending";
+  } catch {
+    return "pending";
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -42,28 +61,38 @@ export default async function PaymentRoute({
   const {
     data: { user },
   } = await client.auth.getUser();
-  if (!user)
-    redirect({
-      href: `/login?next=${encodeURIComponent(`/${locale}/payment${typeof query.course === "string" ? `?course=${encodeURIComponent(query.course)}` : ""}`)}`,
-      locale,
-    });
+  const orderId =
+    typeof query.order === "string" && UUID.test(query.order) ? query.order : null;
+  if (!user) {
+    // Keep the order (and the Kashier return marker) across sign-in so a learner whose session
+    // ended while paying comes back to the confirmation instead of an empty cart.
+    const next = orderId
+      ? `/${locale}/payment?order=${orderId}&step=checkout${query.returned === "1" ? "&returned=1" : ""}`
+      : `/${locale}/payment${typeof query.course === "string" ? `?course=${encodeURIComponent(query.course)}` : ""}`;
+    redirect({ href: `/login?next=${encodeURIComponent(next)}`, locale });
+  }
   const t = await getTranslations("realCheckout");
   let content;
-  if (
-    typeof query.order === "string" &&
-    /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(query.order)
-  ) {
-    const { data: order } = await client
+  if (orderId) {
+    let { data: order } = await client
       .from("orders")
       .select(
-        "id,status,subtotal_minor,discount_minor,total_minor,coupon_code,billing_name,billing_country,billing_phone",
+        "id,status,kind,expires_at,subtotal_minor,discount_minor,total_minor,coupon_code,billing_name,billing_country,billing_phone",
       )
-      .eq("id", query.order)
+      .eq("id", orderId)
       .maybeSingle();
+    const enabled = Boolean(checkoutConfiguration());
+    // An expired order may still have been paid at the last moment (the webhook can lag), so ask
+    // Kashier before offering a fresh checkout that could charge the learner twice.
+    if (order?.status === "pending" && isPast(order.expires_at) && enabled) {
+      const settled = await settleExpiredOrder(order.id);
+      if (settled !== "pending") order = { ...order, status: settled };
+    }
     const { data: orderItems } = await client
       .from("order_items")
       .select("course_id,title,amount_minor")
-      .eq("order_id", query.order)
+      .eq("order_id", orderId)
+      .order("position", { ascending: true })
       .order("id", { ascending: true });
     const courseIds = (orderItems ?? []).map((item) => item.course_id);
     const [{ data: courses }, durations] = await Promise.all([
@@ -82,8 +111,9 @@ export default async function PaymentRoute({
     }));
     // Our own Kashier return marker; it is display-only and only triggers server reconciliation.
     const returned = query.returned === "1";
-    const enabled = Boolean(checkoutConfiguration());
-    if (order && user && (query.step === "checkout" || returned || order.status !== "pending")) {
+    const expired =
+      order?.status === "pending" && isPast(order.expires_at);
+    if (order && user && (query.step === "checkout" || returned || expired || order.status !== "pending")) {
       const first = items[0];
       const [{ data: profile }, detail, outline] = await Promise.all([
         client.from("profiles").select("display_name").eq("id", user.id).maybeSingle(),
@@ -95,6 +125,8 @@ export default async function PaymentRoute({
           order={{
             id: order.id,
             status: order.status,
+            kind: order.kind === "cart" ? "cart" : "course",
+            expired,
             subtotalMinor: Number(order.subtotal_minor),
             discountMinor: Number(order.discount_minor),
             totalMinor: Number(order.total_minor),
@@ -156,14 +188,7 @@ export default async function PaymentRoute({
           </Link>
         </Panel>
       );
-  } else
-    content = (
-      <Checkout
-        items={[]}
-        amount={0}
-        enabled={false}
-      />
-    );
+  } else redirect({ href: "/cart", locale });
   return (
     <>{content}</>
   );

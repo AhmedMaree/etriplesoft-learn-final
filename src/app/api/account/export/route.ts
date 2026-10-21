@@ -18,7 +18,7 @@ export async function GET() {
     return error ? { unavailable: true } : data;
   };
 
-  const [profile, preferences, learnerProfile, enrollments, orders, certificates, studySessions, activityDays, notifications, conversations] = await Promise.all([
+  const [profile, preferences, learnerProfile, enrollments, orders, certificates, studySessions, activityDays, notifications, conversations, cartItems] = await Promise.all([
     section(client.from("profiles").select("display_name, created_at, updated_at").eq("id", user.id).maybeSingle()),
     section(client.from("learner_preferences").select("*").eq("user_id", user.id).maybeSingle()),
     section(client.from("learner_profiles").select("*").eq("user_id", user.id).maybeSingle()),
@@ -29,6 +29,7 @@ export async function GET() {
     section(client.from("learning_activity_days").select("activity_date, first_at, last_at, activity_count").eq("user_id", user.id)),
     section(client.from("notifications").select("kind, data, created_at, read_at").eq("user_id", user.id)),
     section(client.rpc("messages_export_mine")),
+    section(client.from("cart_items").select("course_id, added_at").eq("user_id", user.id)),
   ]);
 
   // Child records are scoped to this learner's own enrollments and orders explicitly, so an
@@ -58,6 +59,7 @@ export async function GET() {
     enrollments,
     orders,
     order_items: orderItems,
+    cart_items: cartItems,
     lesson_progress: lessonProgress,
     video_progress: videoProgress,
     course_completions: completions,

@@ -10,10 +10,12 @@ import { useTranslations } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { isLocale, type Locale } from '@/i18n/config';
 import { demoFeaturesEnabled } from '@/lib/features';
-import { createClient } from '@/lib/supabase/server';
 import type { CatalogCourse } from '@/features/courses/server/course-repository';
-import { getCatalogCourseDurations, getCatalogCourseOutline, listCatalogCourses } from '@/features/courses/server/course-repository';
-import { AvailableCourses, YourCourses, type OverviewCourse } from '@/features/dashboard/components/overview-courses';
+import { CATALOG_PAGE_SIZE } from '@/features/courses/server/course-repository';
+import { cachedCatalogCourses, cachedCatalogDurations, cachedCatalogOutline } from '@/features/courses/server/catalog-cache';
+import { AvailableCourses, PlacementPrompt, RecommendedCourses, YourCourses, type OverviewCourse } from '@/features/dashboard/components/overview-courses';
+import { getPlacementStatus, recordRecommendationsShown } from '@/features/placement/server/placement';
+import { currentLevels, recommendCourses } from '@/features/placement/recommend';
 import { getLearningSummary } from '@/features/learning/server/summary';
 import { LearningSummaryPanel, QuickLinksCard } from '@/features/learning/components/learning-summary';
 import { LearningStreakCard } from '@/features/learning/components/learning-streak';
@@ -51,9 +53,22 @@ export async function Overview() {
   const learningT = await getTranslations('realLearning');
   const locale = await getLocale();
   if (!isLocale(locale)) throw new Error('Unsupported locale.');
-  const client = await createClient();
-  const [summary, catalog, streak] = await Promise.all([getLearningSummary(locale),listCatalogCourses(client,{locale,limit:3}),getLearningStreak()]);
-  const courses = await withCardDetails(client, locale, catalog.courses);
+  const [summary, catalog, streak, placement] = await Promise.all([
+    getLearningSummary(locale),
+    cachedCatalogCourses({ locale, limit: CATALOG_PAGE_SIZE }),
+    getLearningStreak(),
+    getPlacementStatus(),
+  ]);
+  // Learners who shared their goals (level check or "Change goals") get recommendations instead of the default list.
+  const goals = placement?.goals ?? null;
+  const levels = placement && goals ? currentLevels(placement) : [];
+  const recommendations = goals
+    ? recommendCourses(catalog.courses, levels, goals.interests, new Set(summary.courses.map((course) => course.slug)))
+    : [];
+  const [courses] = await Promise.all([
+    withCardDetails(locale, goals ? recommendations.map(({ course }) => course) : catalog.courses.slice(0, 3)),
+    recordRecommendationsShown(recommendations.map(({ course }) => course.id)),
+  ]);
   return (
     <div className="columns">
       <div className="primary">
@@ -103,7 +118,16 @@ export async function Overview() {
           </div>
         </section>
         <div className="ov-courses">
-          <AvailableCourses courses={courses} locale={locale} />
+          {placement && !placement.result && <PlacementPrompt />}
+          {goals ? (
+            <RecommendedCourses
+              recommendations={recommendations.map((item, index) => ({ ...item, course: courses[index] }))}
+              levels={levels}
+              locale={locale}
+            />
+          ) : (
+            <AvailableCourses courses={courses} locale={locale} />
+          )}
           <YourCourses courses={summary.courses} />
         </div>
         <Community />
@@ -127,13 +151,12 @@ export async function Overview() {
 
 /** Real duration and published lesson counts for the three overview cards; missing values are simply omitted. */
 async function withCardDetails(
-  client: Awaited<ReturnType<typeof createClient>>,
   locale: Locale,
   courses: CatalogCourse[],
 ): Promise<OverviewCourse[]> {
   const [durations, outlines] = await Promise.all([
-    getCatalogCourseDurations(client, locale, courses.map((course) => course.id)).catch(() => ({} as Record<string, number>)),
-    Promise.all(courses.map((course) => getCatalogCourseOutline(client, locale, course.slug).catch(() => null))),
+    cachedCatalogDurations(locale, courses.map((course) => course.id)).catch(() => ({} as Record<string, number>)),
+    Promise.all(courses.map((course) => cachedCatalogOutline(locale, course.slug).catch(() => null))),
   ]);
   return courses.map((course, index) => ({
     ...course,

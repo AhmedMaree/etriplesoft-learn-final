@@ -1,21 +1,41 @@
 "use client";
 
-import { Check, X } from "lucide-react";
+import { Check, CircleAlert, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { useDemoToastMessage } from "@/lib/browser/demo-toast";
 
 export function ToastViewport() {
   const t = useTranslations("common");
-  const { message, dismiss } = useDemoToastMessage();
+  const { message, tone, action, dismiss } = useDemoToastMessage();
   if (!message) return null;
+  const error = tone === "error";
 
   return (
-    <div role="status" className="toast" key={message}>
+    <div
+      role={error ? "alert" : "status"}
+      className={error ? "toast toast-error" : "toast"}
+      key={message}
+    >
       <span className="toast-icon" aria-hidden="true">
-        <Check size={16} strokeWidth={3} />
+        {error ? (
+          <CircleAlert size={16} strokeWidth={3} />
+        ) : (
+          <Check size={16} strokeWidth={3} />
+        )}
       </span>
       <span className="toast-message">{message}</span>
-      <button type="button" className="toast-close" aria-label={t("dismiss")} onClick={dismiss}>
+      {action && (
+        <Link className="toast-action" href={action.href} onClick={dismiss}>
+          {action.label}
+        </Link>
+      )}
+      <button
+        type="button"
+        className="toast-close"
+        aria-label={t("dismiss")}
+        onClick={dismiss}
+      >
         <X size={16} />
       </button>
       <span className="toast-progress" aria-hidden="true" />

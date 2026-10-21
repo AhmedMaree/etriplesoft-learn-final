@@ -1,6 +1,8 @@
 'use server'
 
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { CART_COOKIE } from '@/features/checkout/cart/cart-cookie'
 import { isLocale, type Locale } from '@/i18n/config'
 import { authCallbackUrl, safeReturnPath } from '@/lib/supabase/auth-redirects'
 import { createClient } from '@/lib/supabase/server'
@@ -44,6 +46,7 @@ export async function signupAction(
   if (password !== confirmPassword) return { error: 'passwordMismatch' }
 
   const learnerProfile: Record<string, string | number | null> = { learner_type: learnerType }
+  let next = requestedNext
   if (learnerType === 'student') {
     const university = text(formData, 'university')
     const faculty = text(formData, 'faculty')
@@ -74,8 +77,10 @@ export async function signupAction(
       years_experience: experience,
     })
   } else if (learnerType === 'company_invited') {
-    // The organization invitation backend is deferred. The code is intentionally
-    // discarded here and this classification never grants company access.
+    // The code grants nothing here: after email confirmation the learner lands on the join page, where
+    // the invitation is checked against their verified email and accepted explicitly.
+    const code = text(formData, 'company_invitation_code')
+    if (/^[A-Za-z0-9_-]{32}$/.test(code)) next = `/${locale}/join?code=${code}`
   } else {
     return { error: 'invalidLearnerType' }
   }
@@ -89,7 +94,7 @@ export async function signupAction(
         // This raw signup metadata is untrusted onboarding input. The database
         // trigger validates it again; it is never used for authorization.
         data: { display_name: displayName, learner_profile: learnerProfile },
-        emailRedirectTo: authCallbackUrl(locale, safeReturnPath(locale, requestedNext)),
+        emailRedirectTo: authCallbackUrl(locale, safeReturnPath(locale, next)),
       },
     })
     if (error) {
@@ -201,6 +206,8 @@ export async function logoutAction(localeValue: string): Promise<never> {
   if (!locale) redirect('/en/login')
   const supabase = await createClient()
   await supabase.auth.signOut()
+  // The cart stays on the account; this browser's copy is cleared for the next person.
+  ;(await cookies()).delete(CART_COOKIE)
   redirect(`/${locale}/login`)
 }
 

@@ -9,7 +9,7 @@ export async function AdminPager({
   total,
   query = {},
 }: {
-  href: "/admin/roles" | "/admin/audit" | "/admin/courses";
+  href: "/admin/roles" | "/admin/audit" | "/admin/courses" | "/admin/analytics/learners";
   page: number;
   total: number;
   // Filters to keep while paging (e.g. the course status tab).

@@ -39,6 +39,10 @@ const AUDIT_ACTIONS = {
   'coupon.created': ['couponCreated', 'commerce'],
   'coupon.activated': ['couponActivated', 'commerce'],
   'coupon.deactivated': ['couponDeactivated', 'neutral'],
+  'organization.created': ['organizationCreated', 'commerce'],
+  'organization.status_changed': ['organizationStatusChanged', 'danger'],
+  'organization.license_granted': ['organizationLicenseGranted', 'success'],
+  'organization.members_changed': ['organizationMembersChanged', 'neutral'],
 } as const satisfies Record<string, readonly [string, AuditTone]>
 
 export type AuditTone = 'security' | 'danger' | 'neutral' | 'content' | 'success' | 'commerce'

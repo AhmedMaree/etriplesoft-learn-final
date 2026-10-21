@@ -63,9 +63,7 @@ test("published course filters and search work together", async ({ page }) => {
   await page.goto("/en/courses");
   await expect(page.getByTestId("learner-course-card")).toHaveCount(6);
   await expect(page.getByTestId("course-enroll-now").first()).toBeVisible();
-  const cartAction = page.getByTestId("course-add-to-cart").first();
-  await expect(cartAction).toBeVisible();
-  await expect(cartAction).toHaveAttribute("href", /\/en\/payment\?course=/);
+  await expect(page.getByTestId("course-add-to-cart").first()).toBeVisible();
   await page
     .getByRole("link", { name: "Technical", exact: true })
     .first()
@@ -272,6 +270,7 @@ test("legacy routes, query strings, and language switching preserve the page", a
     await expect(page).toHaveURL(new RegExp(`${escapedTarget}$`));
   }
   await page.goto("/en/courses?q=Python");
+  await page.locator(".user-menu").click();
   await page.getByRole("button", { name: "Switch language: Arabic" }).click();
   await expect(page).toHaveURL(/\/ar\/courses\?q=Python$/);
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");

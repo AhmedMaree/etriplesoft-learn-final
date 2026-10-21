@@ -100,7 +100,8 @@ async function providerJson(url: string, init: RequestInit) {
     redirect: "error",
     signal: AbortSignal.timeout(12000),
   });
-  if (!response.ok) throw new Error("provider_unavailable");
+  // The status (never the body, which may echo request data) is enough to tell auth from rejection.
+  if (!response.ok) throw new Error(`provider_unavailable:${response.status}`);
   const body = await response.text();
   if (body.length > 1024 * 1024) throw new Error("provider_contract");
   return JSON.parse(body) as unknown;

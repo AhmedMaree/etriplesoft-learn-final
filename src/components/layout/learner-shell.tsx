@@ -9,9 +9,8 @@ import type { Locale } from "@/i18n/config";
 import type { LearningSummary } from "@/features/learning/server/summary";
 import { AssistantLauncher } from "@/features/ai-assistant/components/assistant-launcher";
 
-export function LearnerShell({ children, footer, locale, displayName, avatarUrl, authenticated, continueLearning, isAdmin = false, canSchedule = false, unreadNotifications = 0, unreadMessages = 0, timeZone = "UTC", assistantAvailable = false }: {
+export function LearnerShell({ children, locale, displayName, avatarUrl, authenticated, continueLearning, isAdmin = false, canSchedule = false, hasOrganization = false, unreadNotifications = 0, unreadMessages = 0, timeZone = "UTC", assistantAvailable = false }: {
   children: ReactNode
-  footer: ReactNode
   locale: Locale
   displayName: string | null
   avatarUrl: string | null
@@ -19,6 +18,7 @@ export function LearnerShell({ children, footer, locale, displayName, avatarUrl,
   continueLearning: LearningSummary["courses"][number] | null
   isAdmin?: boolean
   canSchedule?: boolean
+  hasOrganization?: boolean
   unreadNotifications?: number
   unreadMessages?: number
   timeZone?: string
@@ -44,12 +44,12 @@ export function LearnerShell({ children, footer, locale, displayName, avatarUrl,
         continueLearning={continueLearning}
         isAdmin={isAdmin}
         canSchedule={canSchedule}
+        hasOrganization={hasOrganization}
         unreadMessages={unreadMessages}
       />
       <main className="main" id="learner-main" tabIndex={-1}>
         <LearnerHeader onOpenMenu={() => setMobileOpen(true)} locale={locale} displayName={displayName} avatarUrl={avatarUrl} authenticated={authenticated} unreadNotifications={unreadNotifications} timeZone={timeZone} />
         {children}
-        {footer}
       </main>
       {/* The full assistant page already has the chat, so the floating button stays off it. */}
       {authenticated && assistantAvailable && activePage !== "ai-page" && <AssistantLauncher />}

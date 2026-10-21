@@ -89,6 +89,7 @@
     "description": "Build in-demand Odoo skills with expert-led courses from ETripleSoft Learn."
   },
   "pageMetadata": {
+    "placement": "Find your level",
     "overview": "Overview",
     "courses": "Courses",
     "detailCourse": "Course Details",
@@ -106,7 +107,13 @@
     "resetPassword": "Reset password",
     "admin": "Admin: overview",
     "adminAudit": "Admin: audit log",
-    "adminRoles": "Admin: roles"
+    "adminRoles": "Admin: roles",
+    "cart": "Cart",
+    "adminAnalytics": "Admin: analytics",
+    "adminAnalyticsCourses": "Admin: course analytics",
+    "adminAnalyticsLearners": "Admin: learner analytics",
+    "adminInstitutions": "Admin: institutions",
+    "adminOrganizations": "Admin: organizations"
   },
   "common": {
     "dashboard": "Dashboard",
@@ -202,7 +209,8 @@
     "notStarted": "Not started",
     "lessonsProgress": "{finished} of {required} lessons done",
     "resumeLesson": "Resume lesson",
-    "startCourse": "Start course"
+    "startCourse": "Start course",
+    "organization": "Organization"
   },
   "dashboard": {
     "welcome": "Welcome back",
@@ -459,7 +467,6 @@
     "tryAsking": "Try asking me...",
     "placeholderLong": "Ask me anything about your courses, topics, or learning goals...",
     "disclaimerLong": "The AI Assistant can make mistakes. Always verify important information with your course materials.",
-    "contextTitle": "Current Course Context",
     "contextInfo": "I can use your current course content to give more relevant and personalized answers.",
     "useContext": "Use current course context",
     "recentConversations": "Recent Conversations",
@@ -491,7 +498,6 @@
     "noConversations": "Your saved conversations will appear here.",
     "showLess": "Show less",
     "openConversation": "Open conversation: {title}",
-    "noCourses": "Enroll in a course to let the assistant use its lessons as context.",
     "browseCourses": "Browse courses",
     "courseSelect": "Course used as context",
     "lessonsProgress": "{finished} / {required} lessons",
@@ -536,10 +542,8 @@
     "chatTabsLabel": "Chat type",
     "chatGeneral": "General chat",
     "chatCourse": "Course chat",
-    "courseChatBanner": "Answering from: {course}",
+    "courseChatBanner": "Answering from:",
     "courseChatInfo": "Course chat answers only from this course’s lessons, resources and video transcripts, and shows its sources.",
-    "generalChatInfo": "General chat answers any Odoo question. Use Course chat for answers from this course, with sources.",
-    "openCourseChat": "Ask about this course",
     "courseChatNeedsEnrollment": "Enroll in a course to use Course chat.",
     "sources": "Sources",
     "sourceVideo": "From the lesson video",
@@ -987,7 +991,7 @@
     "yearsExperienceExample": "e.g. 5",
     "invitationCode": "Company invitation code",
     "invitationCodeExample": "Enter your invitation code",
-    "invitationUnavailable": "Company invitations are not available yet. A code will not be verified or grant organization access.",
+    "invitationUnavailable": "Enter the code from your invitation. After you confirm your email, we take you to your organization’s invitation; it only works for the invited email address.",
     "student": {
       "label": "Student",
       "description": "Currently enrolled at a university or a recent graduate (within 2 years)"
@@ -1075,7 +1079,10 @@
         "learners": "Learners & sales",
         "security": "Access & security"
       },
-      "calendar": "Schedule"
+      "calendar": "Schedule",
+      "analytics": "Analytics",
+      "institutions": "Institutions",
+      "organizations": "Organizations"
     },
     "roles": {
       "title": "Role management",
@@ -1151,7 +1158,11 @@
         "couponActivated": "Coupon activated",
         "couponDeactivated": "Coupon deactivated",
         "courseEventScheduled": "Course event scheduled",
-        "courseEventCancelled": "Course event cancelled"
+        "courseEventCancelled": "Course event cancelled",
+        "organizationCreated": "Organization created",
+        "organizationStatusChanged": "Organization status changed",
+        "organizationLicenseGranted": "Seats granted",
+        "organizationMembersChanged": "Organization members changed"
       },
       "entries": "Entries"
     },
@@ -1265,6 +1276,217 @@
         "role": "Grant a role"
       },
       "activity": "Recent activity"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "subtitle": "Learners, learning activity and revenue across the platform. Staff accounts are excluded.",
+      "trends": "Trends",
+      "empty": "No data yet.",
+      "emptyRange": "Nothing in this period.",
+      "definitions": "Days follow Cairo time. Paid learners have at least one paid order that was not refunded; free learners enrolled in a free course; complimentary learners only have admin-granted access. Streaming minutes count all video playback, including rewatching and faster playback speeds; jumping ahead adds nothing. Unique minutes count each second of a video once per learner. Streaming minutes are recorded from 20 October 2026.",
+      "atRisk": "{count, plural, one {# learner has} other {# learners have}} active course access but no learning activity in the last 14 days.",
+      "atRiskLink": "Review learners",
+      "tabs": {
+        "label": "Analytics views",
+        "overview": "Overview",
+        "courses": "Courses",
+        "learners": "Learners"
+      },
+      "ranges": {
+        "7": "7 days",
+        "30": "30 days",
+        "90": "90 days",
+        "365": "12 months",
+        "label": "Period"
+      },
+      "delta": {
+        "none": "No earlier data to compare",
+        "vsPrevious": "vs previous period"
+      },
+      "kpis": {
+        "label": "Key figures",
+        "learners": "Learners",
+        "learnersDetail": "{count, plural, =0 {No new sign-ups} one {# new sign-up} other {# new sign-ups}} in this period",
+        "active": "Active learners",
+        "activeDetail": "Today {today} · last 7 days {week} · last 30 days {month}",
+        "enrollments": "New enrollments",
+        "enrollmentsDetail": "{count, plural, one {# enrollment} other {# enrollments}} currently in progress",
+        "completions": "Course completions",
+        "completionsDetail": "{count, plural, =0 {No certificates issued} one {# certificate issued} other {# certificates issued}}",
+        "revenue": "Net revenue",
+        "revenueDetail": "Gross {gross} · refunds {refunds} · B2B {b2b}",
+        "orders": "Paid orders",
+        "ordersDetail": "Average order {average} · discounts {discounts}",
+        "progress": "Average progress",
+        "progressDetail": "Across all enrollments in progress or completed",
+        "streamed": "Streaming minutes",
+        "streamedDetail": "In this period · {unique} unique minutes all time"
+      },
+      "chart": {
+        "weekOf": "Week of {date}",
+        "summary": "{title}: {total} from {from} to {to}",
+        "showData": "Show data table",
+        "week": "Week",
+        "day": "Day"
+      },
+      "series": {
+        "signups": "New sign-ups",
+        "active": "Active learners",
+        "enrollments": "New enrollments",
+        "revenue": "Net revenue",
+        "streamed": "Streaming minutes"
+      },
+      "breakdowns": {
+        "segments": "Paid and free learners",
+        "types": "Learner types",
+        "sources": "How learners enrolled (this period)",
+        "universities": "Top universities",
+        "companies": "Top companies",
+        "checkout": "Checkout (this period)"
+      },
+      "segments": {
+        "paid": "Paid",
+        "free": "Free",
+        "complimentary": "Complimentary",
+        "none": "No course access",
+        "organization": "Company-sponsored"
+      },
+      "types": {
+        "student": "Students",
+        "professional": "Professionals",
+        "company_invited": "Company invited",
+        "not_onboarded": "Profile not completed"
+      },
+      "sources": {
+        "free": "Free enrollment",
+        "paid": "Purchase",
+        "admin": "Granted by an admin",
+        "organization": "Organization seat"
+      },
+      "checkout": {
+        "created": "Orders started",
+        "paid": "Orders paid",
+        "abandoned": "Abandoned (expired unpaid)"
+      },
+      "courses": {
+        "title": "Course analytics",
+        "subtitle": "Enrollments, completion and revenue for every published or archived course.",
+        "table": "Courses",
+        "empty": "No published courses yet.",
+        "course": "Course",
+        "learners": "Learners",
+        "access": "Free / paid / granted",
+        "completion": "Completion rate",
+        "progress": "Average progress",
+        "minutes": "Streaming minutes (period)",
+        "quiz": "Quiz pass rate",
+        "rating": "Rating",
+        "revenue": "Net revenue (period)",
+        "newInRange": "{count, plural, =0 {none new} other {# new}} in this period",
+        "accessMix": "{free} / {paid} / {admin}",
+        "cohort": "{completed} of {size} learners with 30+ days of access",
+        "attempts": "{count, plural, =0 {No attempts} one {# attempt} other {# attempts}}",
+        "reviews": "{count, plural, one {# review} other {# reviews}}",
+        "note": "Completion rate only counts learners who have had access for at least 30 days, so new enrollments do not lower it. Open a course to see where learners stop.",
+        "manage": "Manage courses"
+      },
+      "course": {
+        "back": "All course analytics",
+        "subtitle": "How far learners get through this course, lesson by lesson.",
+        "edit": "Edit course",
+        "learners": "Learners",
+        "completion": "Completion rate",
+        "progress": "Average progress",
+        "activeLearners": "{count, plural, one {# learner} other {# learners}} in progress",
+        "revenue": "Net revenue (period)",
+        "minutes": "{count} streaming minutes",
+        "funnel": "Lesson funnel",
+        "noLessons": "This course has no published lessons.",
+        "lesson": "Lesson",
+        "started": "Started",
+        "completed": "Completed",
+        "watch": "Average video watched",
+        "untitled": "Untitled lesson",
+        "types": {
+          "video": "Video",
+          "article": "Article",
+          "assessment": "Assessment",
+          "resource": "Resource"
+        },
+        "optional": "Optional",
+        "biggestDrop": "Biggest drop: {count, plural, one {# fewer learner} other {# fewer learners}}",
+        "note": "Percentages are out of the learners currently in progress or completed. A sharp fall between two lessons usually points to content worth reviewing.",
+        "streamed": "Streaming minutes"
+      },
+      "learners": {
+        "title": "Learner analytics",
+        "subtitle": "Each learner’s access, progress and recent activity. Staff accounts are not listed.",
+        "table": "Learners",
+        "search": "Search learners",
+        "searchPlaceholder": "Name, email, university or company",
+        "searchAction": "Search",
+        "segmentFilter": "Filter by access",
+        "allSegments": "All",
+        "noMatches": "No learners match these filters.",
+        "empty": "No learners yet.",
+        "learner": "Learner",
+        "profile": "Profile",
+        "access": "Access",
+        "courses": "Courses",
+        "progress": "Average progress",
+        "minutes": "Streaming minutes",
+        "lastActive": "Last active",
+        "joined": "Joined",
+        "completedOf": "completed",
+        "never": "Never"
+      },
+      "institutionUnlinked": "Not linked",
+      "unlinkedNames": "{count, plural, one {# learner typed} other {# learners typed}} a university or company name that is not linked to a known institution yet.",
+      "unlinkedLink": "Review names",
+      "uniqueMinutes": "{count} unique"
+    },
+    "institutions": {
+      "title": "Institutions",
+      "subtitle": "Known universities and companies, and the typed names learners entered that still need linking.",
+      "kindFilter": "Institution type",
+      "kinds": {
+        "university": "Universities",
+        "company": "Companies"
+      },
+      "reviewTitle": "Names to review",
+      "reviewHint": "Learners can type a name that is not on the list. Link each spelling to the right institution so analytics count it correctly; future learners who type the same spelling are linked automatically.",
+      "reviewEmpty": "Every typed name is linked.",
+      "typedName": "Typed name",
+      "learners": "Learners",
+      "linkTo": "Link to",
+      "linkLabel": "Institution for “{name}”",
+      "choose": "Choose an institution",
+      "link": "Link",
+      "saving": "Saving…",
+      "create_university": "Add a university",
+      "create_company": "Add a company",
+      "nameEn": "English name",
+      "nameAr": "Arabic name",
+      "foldIn": "Also link a typed name (optional)",
+      "foldInNone": "None",
+      "foldInHint": "Use this when a name waiting for review belongs to the new institution.",
+      "create": "Add institution",
+      "list_university": "Universities",
+      "list_company": "Companies",
+      "listEmpty": "No institutions yet.",
+      "spellings": "Spellings",
+      "note": "Spellings ignore letter case, extra spaces and common Arabic letter variants (أ إ آ, ى ي, ة ه). A spelling can belong to only one institution.",
+      "errors": {
+        "denied": "Administrator access is required.",
+        "duplicate": "That name is already linked to an institution.",
+        "missing": "Institution not found.",
+        "invalid": "Check the names and try again.",
+        "failed": "The change could not be saved."
+      },
+      "success": {
+        "linked": "Linked.",
+        "created": "Institution added."
+      }
     }
   },
   "realQuiz": {
@@ -1607,7 +1829,14 @@
     "successText": "Your payment was verified and the course is now in your library.",
     "startLearning": "Start learning",
     "confirmingTitle": "Confirming your payment",
-    "confirmingText": "We are verifying your payment with Kashier. This can take a moment."
+    "confirmingText": "We are verifying your payment with Kashier. This can take a moment.",
+    "owned": "A course in this order is already in your library. Return to your cart to update it.",
+    "successTextMany": "Your payment was verified and the courses are now in your library.",
+    "expiredTitle": "This checkout has expired",
+    "expiredText": "Checkout stays open for 30 minutes and no payment was completed for this order. Start again to get a fresh checkout; prices are checked again.",
+    "expiredTextCoupon": "Checkout stays open for 30 minutes and no payment was completed for this order. Start again to get a fresh checkout, then re-enter your coupon.",
+    "restart": "Start checkout again",
+    "startRetry": "Could not open Kashier’s secure checkout. Wait a moment and try again."
   },
   "coupons": {
     "title": "Coupons",
@@ -1927,5 +2156,384 @@
     "retry": "Try again ({n} left)",
     "watchAgain": "Watch again",
     "next": "Next lesson"
+  },
+  "placement": {
+    "title": "Find your level",
+    "subtitle": "Answer a few quick questions so we can suggest the right courses for you.",
+    "stepLabel": "Step {current} of {total}",
+    "goalsHeading": "What brings you here?",
+    "goalsCopy": "Tell us about your goals. It takes about two minutes, and you can change your answers later.",
+    "goalsModeHeading": "Change your goals",
+    "goalsModeCopy": "Update what you want to learn. Your measured level stays the same.",
+    "roleLegend": "Which best describes you?",
+    "roles": {
+      "business_user": "I use Odoo in my daily work",
+      "functional_consultant": "I set up Odoo for businesses (functional consultant)",
+      "developer": "I build or customize Odoo (developer)",
+      "system_admin": "I install and maintain Odoo servers",
+      "exploring": "I’m exploring Odoo for the first time"
+    },
+    "areasLegend": "Which areas do you want to learn?",
+    "areasHint": "Choose one or more.",
+    "areas": {
+      "functional": {
+        "title": "Using and implementing Odoo",
+        "description": "Apps, business flows, configuration and implementation projects."
+      },
+      "technical": {
+        "title": "Developing and administering Odoo",
+        "description": "Python, custom modules, servers and maintenance."
+      }
+    },
+    "experienceLegend": "How much have you used Odoo?",
+    "experience": {
+      "none": "Never",
+      "some": "A little",
+      "regular": "Regularly",
+      "expert": "Every day, for years"
+    },
+    "noQuizNote": "Since you’re new to Odoo, we’ll skip the skill check and start you at the beginning.",
+    "quizUnavailable": "The skill check isn’t available in this language yet. We’ll save your goals now, and you can take the check later.",
+    "quizHeading": "Quick skill check",
+    "quizIntro": "{count} short questions. If you don’t know an answer, choose “I’m not sure”. That’s completely fine.",
+    "questionLabel": "Question {n}",
+    "notSure": "I’m not sure",
+    "skip": "Skip for now",
+    "back": "Back",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "seeResults": "See my results",
+    "saveGoals": "Save goals",
+    "saving": "Saving…",
+    "resultHeading": "Your starting point",
+    "resultCopy": "We’ll use this to suggest courses on your overview page.",
+    "resultScore": "{correct} of {total} correct",
+    "resultSelf": "Based on your answers",
+    "goOverview": "See my recommended courses",
+    "errors": {
+      "goalsIncomplete": "Choose an option for each question, and at least one area.",
+      "unanswered": "Answer every question. Choose “I’m not sure” if you don’t know.",
+      "invalid": "Please check your answers and try again.",
+      "changed": "The questions were just updated. Please reload the page.",
+      "limit": "You’ve reached today’s limit for level checks. Please try again tomorrow.",
+      "failed": "We couldn’t save your answers. Please try again."
+    },
+    "overview": {
+      "eyebrow": "Picked for you",
+      "title": "Recommended for you",
+      "copy": "Based on your level and goals. Start with the first one.",
+      "startHere": "Start here",
+      "reasons": {
+        "match": "Matches your {level} level in {area}",
+        "nextStep": "Your next step in {area}",
+        "challenge": "A challenge for your {area} skills",
+        "foundation": "Strengthens your {area} foundations",
+        "explore": "Explore a new area: {area}"
+      },
+      "levelsLabel": "Your level",
+      "raised": "Raised by courses you completed",
+      "retake": "Retake level check",
+      "changeGoals": "Change goals",
+      "retakeSuggestion": "You’ve completed courses since your last level check. Retake it to refresh your suggestions.",
+      "empty": "You’ve already started every course that fits your goals. Browse all courses or follow a learning path.",
+      "learningPaths": "Learning paths",
+      "promptTitle": "Find your level",
+      "promptCopy": "Answer a few quick questions and we’ll recommend where to start.",
+      "promptAction": "Start level check"
+    },
+    "settings": {
+      "heading": "Your level and goals",
+      "copy": "Retake the level check, or change the areas you want to learn."
+    }
+  },
+  "cart": {
+    "open": "Cart",
+    "openCount": "Cart, {count, plural, one {# course} other {# courses}}",
+    "add": "Add to cart",
+    "addTitle": "Add {title} to cart",
+    "inCart": "In cart",
+    "viewCart": "View cart",
+    "viewCartTitle": "{title} is in your cart. View cart",
+    "added": "{title} was added to your cart.",
+    "full": "Your cart is full. Remove a course before adding another.",
+    "remove": "Remove {title} from cart",
+    "signInToCheckout": "Sign in to check out",
+    "signInNote": "Sign in or create an account to pay. Your cart stays saved.",
+    "checkout": "Proceed to checkout",
+    "removedNotice": "{count, plural, one {# course was} other {# courses were}} removed from your cart because {count, plural, one {it is} other {they are}} no longer for sale or already in your library.",
+    "error": "Could not start checkout. Refresh your cart and try again.",
+    "owned": "A course in your cart is already in your library. Refresh your cart and try again.",
+    "buyNow": "Buy now",
+    "limit": "You have started checkout too many times in the last hour. Please try again later.",
+    "suggestTitle": "You might also like",
+    "suggestText": "Learners often take these courses together.",
+    "couponGuest": "Have a coupon? Sign in to apply it before you pay."
+  },
+  "cartFunnel": {
+    "title": "Checkout funnel",
+    "description": "Learners reaching each checkout step in the selected period. Guests are counted once they sign in and their cart is saved to their account.",
+    "window": "Period",
+    "days": "{days} days",
+    "steps": {
+      "carted": "Added to cart",
+      "started": "Started checkout",
+      "billing": "Entered billing details",
+      "payment": "Opened payment",
+      "paid": "Paid"
+    },
+    "ofPrevious": "{percent}% of previous step",
+    "abandonedTitle": "Most left in carts",
+    "abandonedEmpty": "No courses were left in carts in this period.",
+    "learners": "{count, plural, one {# learner} other {# learners}}",
+    "error": "Could not load the checkout funnel."
+  },
+  "organizations": {
+    "saving": "Saving…",
+    "summary": "Organization summary",
+    "tabsLabel": "Organization sections",
+    "visibilityNote": "Managers see each member’s progress, quiz results, certificates and activity for the courses the organization assigns. Courses a member buys personally are never shown. Members are told this before they join.",
+    "errors": {
+      "denied": "You do not have access to this organization.",
+      "missing": "Not found. It may have been removed or already used.",
+      "limit": "Too many requests. Try again later.",
+      "rule": "That change is not allowed.",
+      "duplicate": "That already exists.",
+      "invalid": "Check the details and try again.",
+      "failed": "Something went wrong. Try again.",
+      "noMembers": "Choose at least one member.",
+      "noSeats": "Not enough free seats for everyone you selected. Buy more seats or release some.",
+      "alreadyAssigned": "Everyone you selected already has this course.",
+      "lastManager": "An organization needs at least one manager. Invite another manager first.",
+      "otherEmail": "This invitation is for a different email address. Sign in with the invited email to accept it."
+    },
+    "success": {
+      "invited": "Invitations created. Share each link with its recipient.",
+      "revoked": "Invitation revoked.",
+      "assigned": "Seats assigned.",
+      "assignedPartly": "Some seats were assigned; members who already had the course were skipped.",
+      "released": "Seat released.",
+      "removed": "Member removed.",
+      "reactivated": "Organization reactivated.",
+      "suspended": "Organization suspended.",
+      "granted": "Seats granted.",
+      "invitedEmailed": "Invitations created and emailed. The links below are a backup if an email does not arrive."
+    },
+    "roles": {
+      "manager": "Manager",
+      "member": "Member"
+    },
+    "kinds": {
+      "company": "Company",
+      "university": "University"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "members": "Members",
+      "invitations": "Invitations",
+      "buy": "Buy seats"
+    },
+    "kpis": {
+      "seats": "Seats in use",
+      "seatsDetail": "Across current licenses",
+      "members": "Members",
+      "managers": "{count, plural, one {# manager} other {# managers}}",
+      "progress": "Average progress",
+      "progressDetail": "On assigned courses",
+      "completions": "Completed courses",
+      "streamed": "{count} streaming minutes"
+    },
+    "licenses": {
+      "title": "Seat licenses",
+      "emptyManager": "No seats yet. Buy seats to start assigning courses.",
+      "emptyAdmin": "No licenses yet. Grant seats below or wait for the organization to buy them.",
+      "course": "Course",
+      "seats": "Seats used",
+      "ends": "Ends",
+      "source": "Source",
+      "state": "Status",
+      "sources": {
+        "purchase": "Purchased",
+        "admin": "Granted"
+      },
+      "states": {
+        "active": "Active",
+        "scheduled": "Scheduled",
+        "ended": "Ended",
+        "refunded": "Refunded",
+        "revoked": "Revoked"
+      }
+    },
+    "assign": {
+      "title": "Assign a course",
+      "hint": "Each member you select takes one seat. Access ends when the license ends.",
+      "course": "Course",
+      "chooseCourse": "Choose a course",
+      "courseOption": "{title} ({count, plural, =0 {no free seats} one {# free seat} other {# free seats}})",
+      "members": "Members",
+      "submit": "Assign seats",
+      "noLicenses": "There are no current seat licenses yet.",
+      "noMembers": "Invite members before assigning courses."
+    },
+    "members": {
+      "title": "Members",
+      "empty": "No members yet.",
+      "member": "Member",
+      "courses": "Courses",
+      "progress": "Progress",
+      "quiz": "Quiz score",
+      "streamed": "Streaming minutes",
+      "certificates": "Certificates",
+      "lastActive": "Last active",
+      "actions": "Actions",
+      "completedOf": "completed",
+      "never": "Never",
+      "remove": "Remove",
+      "removeConfirm": "Remove {name} from the organization? Their seats are released and they lose access to assigned courses."
+    },
+    "invite": {
+      "title": "Invite people",
+      "hint": "Each invitation link works once, for 14 days, and only for the email address it was sent to.",
+      "emails": "Email addresses",
+      "emailsHint": "One per line, or separated by commas. Up to 100 at a time.",
+      "role": "Role",
+      "submit": "Create invitations",
+      "resultsTitle": "Invitation links",
+      "resultsHint": "Copy each link now and send it to that person. Links are shown only once.",
+      "link": "Invitation link",
+      "copy": "Copy",
+      "copied": "Copied",
+      "results": {
+        "invited": "Invited",
+        "member": "Already a member",
+        "invalid": "Not a valid email"
+      },
+      "revoke": "Revoke",
+      "pending": "Pending invitations",
+      "none": "No pending invitations.",
+      "email": "Email",
+      "expires": "Expires",
+      "expired": "Expired"
+    },
+    "buy": {
+      "title": "Buy seats",
+      "hint": "Seats are paid through the regular secure checkout and last 12 months from payment. You can assign and reassign them at any time.",
+      "course": "Course",
+      "seats": "Seats",
+      "total": "Total:",
+      "submit": "Continue to payment",
+      "noCourses": "No paid courses are available right now."
+    },
+    "member": {
+      "back": "Back to members",
+      "former": "Former member",
+      "quizDetail": "Average best score per quiz",
+      "lastActive": "Last active {date}",
+      "courses": "Assigned courses",
+      "none": "No courses assigned by the organization.",
+      "status": "Status",
+      "certificate": "Certificate",
+      "access": "Access",
+      "until": "Until {date}",
+      "lastActivity": "Last activity {date}",
+      "statuses": {
+        "active": "In progress",
+        "completed": "Completed",
+        "revoked": "Seat released",
+        "expired": "Expired",
+        "refunded": "Refunded"
+      },
+      "release": "Release seat",
+      "releaseConfirm": "Release this seat for {title}? The member loses access to the course; their progress is kept."
+    },
+    "join": {
+      "heading": "Organization invitation",
+      "subtitle": "Join your company or university on ETripleSoft Learn.",
+      "pendingTitle": "Invitations for you",
+      "asRole": "As {role}",
+      "expires": "Expires {date}",
+      "consent": "When you join, the organization’s managers can see your progress, quiz results, certificates and activity for the courses they assign you. They never see courses you buy yourself.",
+      "accept": "Accept invitation",
+      "codeLabel": "Invitation code",
+      "codePlaceholder": "Paste your invitation code",
+      "continue": "Continue",
+      "invalidTitle": "This invitation is not available",
+      "invalidText": "The link may have expired, been used already or been revoked. Ask your organization for a new invitation.",
+      "openPortal": "Go to organization",
+      "title": "Join {name}"
+    },
+    "portal": {
+      "title": "Organization",
+      "subtitle": "Your company or university on ETripleSoft Learn.",
+      "emptyTitle": "You are not part of an organization",
+      "emptyText": "Companies and universities can give their people seats on courses. If you received an invitation code, enter it below.",
+      "switch": "Your organizations",
+      "yourRole": "You are a {role}",
+      "suspended": "Suspended",
+      "memberText": "Courses your organization assigns you appear in your learning. Your managers can see your progress, quiz results and certificates for those courses.",
+      "myLearning": "Go to my learning"
+    },
+    "admin": {
+      "title": "Organizations",
+      "subtitle": "Companies and universities with seat licenses: usage, engagement, renewals and revenue.",
+      "kpis": {
+        "organizations": "Active organizations",
+        "organizationsDetail": "{count, plural, =0 {None suspended} one {# suspended} other {# suspended}}",
+        "utilization": "{value} of seats in use",
+        "members": "Members",
+        "active30": "{count} active in the last 30 days",
+        "revenue": "B2B revenue",
+        "revenueDetail": "Paid seat orders, all time"
+      },
+      "atRisk": "{count, plural, one {# organization has} other {# organizations have}} a license ending within 60 days with less than half of its seats in use: {names}.",
+      "listTitle": "All organizations",
+      "empty": "No organizations yet. Create the first one below.",
+      "organization": "Organization",
+      "nextExpiry": "Next license end",
+      "active30": "Active (30 days)",
+      "revenue": "Revenue",
+      "suspended": "Suspended",
+      "membersDetail": "{managers, plural, one {# manager} other {# managers}} · {pending} pending",
+      "createTitle": "Add an organization",
+      "createHint": "Then invite its first manager. Managers invite their people and buy or assign seats themselves.",
+      "name": "Name",
+      "kind": "Type",
+      "institution": "Known institution (optional)",
+      "noInstitution": "Not linked",
+      "institutionHint": "Linking a known university or company keeps analytics consistent.",
+      "create": "Create organization",
+      "back": "All organizations",
+      "detailSubtitle": "Seats, members and invitations. Your changes here are recorded in the audit log.",
+      "suspendedSubtitle": "Suspended: managers cannot make changes. Members keep access to assigned courses.",
+      "suspend": "Suspend",
+      "reactivate": "Reactivate",
+      "suspendConfirm": "Suspend {name}? Its managers lose access to management until you reactivate it.",
+      "grantTitle": "Grant seats",
+      "grantHint": "For invoiced contracts and pilots. Purchases create licenses automatically.",
+      "months": "Months",
+      "note": "Note",
+      "notePlaceholder": "For example: invoice number or pilot",
+      "grant": "Grant seats"
+    }
+  },
+  "emails": {
+    "roles": {
+      "manager": "a manager",
+      "member": "a member"
+    },
+    "invitation": {
+      "subject": "You’re invited to join {name}",
+      "heading": "Join {name} on ETripleSoft Learn",
+      "body": "{name} invited you to join as {role}. Your organization gives you seats on Odoo courses so you can learn at your own pace.",
+      "consent": "When you join, the organization’s managers can see your progress, quiz results, certificates and activity for the courses they assign you. They never see courses you buy yourself.",
+      "button": "Accept invitation",
+      "footer": "This invitation is for {email} and expires on {date}. If you did not expect it, you can ignore this email."
+    },
+    "assignment": {
+      "subject": "New course: {course}",
+      "heading": "You have a new course: {course}",
+      "body": "{name} assigned you {course}. It is ready in your learning whenever you are.",
+      "button": "Start learning",
+      "footer": "You received this because you are a member of {name} on ETripleSoft Learn."
+    }
   }
 }

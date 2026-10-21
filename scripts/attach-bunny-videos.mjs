@@ -20,7 +20,7 @@ if (!planPath) throw new Error('Pass --plan=<bunny-videos.json>.')
 const plan = JSON.parse(await readFile(planPath, 'utf8'))
 if (!plan.courseSlug || !Array.isArray(plan.lessons) || !plan.lessons.length) throw new Error('The plan is invalid.')
 
-const requiredEnv = ['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'UPLOAD_ADMIN_EMAIL', 'UPLOAD_ADMIN_PASSWORD', 'UPLOAD_ADMIN_TOTP_SECRET', 'BUNNY_LIBRARY_ID', 'BUNNY_API_KEY']
+const requiredEnv = ['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'UPLOAD_ADMIN_EMAIL', 'UPLOAD_ADMIN_PASSWORD', 'BUNNY_LIBRARY_ID', 'BUNNY_API_KEY']
 const missing = requiredEnv.filter((name) => !process.env[name]?.trim())
 if (missing.length) throw new Error(`Missing local operator settings: ${missing.join(', ')}`)
 if (process.env.MUX_ENVIRONMENT !== 'development') throw new Error('Content publishing is restricted to the development environment.')
@@ -53,7 +53,13 @@ const videos = await listAll(videosRoute)
 const client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
   auth: { autoRefreshToken: true, persistSession: false },
 })
-await signInAdmin(client, { email: process.env.UPLOAD_ADMIN_EMAIL, password: process.env.UPLOAD_ADMIN_PASSWORD, totpSecret: process.env.UPLOAD_ADMIN_TOTP_SECRET })
+// Admin RPCs need an MFA-verified session unless the development database has the MFA requirement switched off.
+if (process.env.UPLOAD_ADMIN_TOTP_SECRET?.trim()) {
+  await signInAdmin(client, { email: process.env.UPLOAD_ADMIN_EMAIL, password: process.env.UPLOAD_ADMIN_PASSWORD, totpSecret: process.env.UPLOAD_ADMIN_TOTP_SECRET })
+} else {
+  const { error } = await client.auth.signInWithPassword({ email: process.env.UPLOAD_ADMIN_EMAIL, password: process.env.UPLOAD_ADMIN_PASSWORD })
+  if (error) throw new Error(`Admin sign-in failed: ${error.message}`)
+}
 async function rpc(name, params) {
   const { data, error } = await client.rpc(name, params)
   if (error) throw new Error(`${name} failed with database code ${error.code ?? 'unknown'}.`)

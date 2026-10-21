@@ -5,7 +5,9 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { getPathname } from "@/i18n/navigation";
 import { LegacyHashRedirect } from "@/components/layout/legacy-hash-redirect";
+import { NavigationProgress } from "@/components/layout/navigation-progress";
 import { ToastViewport } from "@/components/shared/toast-viewport";
+import { siteOpenGraph } from "@/features/marketing/lib/page-meta";
 import "../../styles.css";
 import "../../refinements.css";
 import "../../brand-fonts.css";
@@ -31,6 +33,8 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
     title: { default: t("title"), template: "%s | ETripleSoft Learn" },
     description: t("description"),
     icons: { icon: "/assets/etriplesoft-favicon.png" },
+    openGraph: { ...siteOpenGraph(locale), title: t("title"), description: t("description") },
+    twitter: { card: "summary_large_image" },
     alternates: {
       canonical: new URL(getPathname({ locale, href: "/" }), "https://learn.etriplesoft.com"),
     },
@@ -47,6 +51,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       <body>
         <NextIntlClientProvider>
           <LegacyHashRedirect />
+          <NavigationProgress />
           {children}
           <ToastViewport />
         </NextIntlClientProvider>

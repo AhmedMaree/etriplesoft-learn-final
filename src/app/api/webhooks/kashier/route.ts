@@ -39,7 +39,11 @@ export async function POST(request: Request) {
     // pending is acknowledged; only an unsettled SUCCESS is retried until reconciliation sees it.
     const retry = status === "pending" && body.data.status === "SUCCESS";
     return new Response(null, { status: retry ? 503 : 200 });
-  } catch {
+  } catch (error) {
+    // Kashier retries a 503; the reason code lets an operator see why settlement keeps failing.
+    console.error("kashier_webhook_failed", {
+      reason: error instanceof Error ? error.message.slice(0, 80) : "unknown",
+    });
     return new Response(null, { status: 503 });
   }
 }

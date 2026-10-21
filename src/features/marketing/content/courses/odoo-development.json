@@ -2,10 +2,10 @@
   "slug": "odoo-development",
   "title": "Odoo Development",
   "image": "/marketing/odoo-development.png",
-  "tagline": "Build and extend Odoo modules using models, fields, business logic, XML views, actions, integrations, and debugging.",
+  "tagline": "Build your first Odoo modules: development setup, addon scaffolding, the manifest, models and fields, menus and views, and a service-billing business case.",
   "description": [
-    "Odoo development connects business requirements with maintainable modules, interfaces, logic, and integrations. Strong developers understand both the framework and the operational reason behind every customization.",
-    "This broad technical track covers the complete module-development workflow and prepares learners to build, extend, troubleshoot, and support Odoo solutions in realistic projects."
+    "For developers who know Python and want to customize Odoo. You will start with Odoo’s architecture and set up and configure a local development environment.",
+    "Step by step, you will scaffold a custom module, write its manifest, add a model and connect it to menus and views, then go deeper into field types and how models are represented and ordered. Guided readings cover form, list, kanban and search views and actions, and the course ends with a business case: designing an automated service-billing and contract-management addon."
   ],
   "status": "published",
   "badge": "New",
@@ -18,53 +18,97 @@
   "externalCourseUrl": "https://etriple.odoo.com/slides/odoo-development-3",
   "price": null,
   "roles": ["developer"],
-  "moduleTags": ["Development", "Modules", "Integrations"],
-  "coveredModuleSlugs": ["sales", "crm", "inventory", "website-ecommerce"],
+  "moduleTags": ["Development", "Modules", "Views"],
+  "coveredModuleSlugs": [],
   "learningOutcomes": [
-    "Understand Odoo architecture and module structure",
-    "Create models, fields, relationships, and business logic",
-    "Customize interfaces, navigation, actions, and workflows",
-    "Build and extend maintainable custom modules",
-    "Integrate, debug, document, and support technical solutions"
+    "Explain Odoo’s architecture and where a module fits",
+    "Install and configure Odoo for local development",
+    "Scaffold a custom addon and write its manifest",
+    "Create models with the right field types, representation and ordering",
+    "Build menus, actions and form, list, kanban and search views",
+    "Plan a custom addon from a business case"
   ],
   "whoItsFor": [
-    "Python developers applying programming skills within a business-focused ERP framework",
-    "Technical learners specializing in Odoo architecture, modules, and customization",
-    "ERP technical support moving from troubleshooting into structured development work",
-    "Project developers preparing for custom modules, enhancements, and integration assignments"
+    "Python developers applying their skills within a business-focused ERP framework",
+    "Technical learners specializing in Odoo architecture, modules and customization",
+    "ERP technical support staff moving from troubleshooting into structured development",
+    "Developers preparing for their first custom-module assignments"
   ],
   "requirements": [
-    "Working knowledge of Python fundamentals",
-    "Basic XML, HTML, and web-development concepts",
-    "Understanding of relational data and business workflows",
-    "Comfort using Git and a development environment is recommended"
+    "Working knowledge of Python, including functions and classes",
+    "Basic XML and HTML",
+    "Understanding of relational data",
+    "Comfort with a code editor and the command line"
   ],
   "curriculum": [
-    { "number": "01", "title": "Odoo Architecture", "description": "Understand architecture, addons, manifests, module structure, environments, and development flow." },
-    { "number": "02", "title": "Module Structure, Models, and Fields", "description": "Define models, relationships, computed values, constraints, and business rules." },
-    { "number": "03", "title": "Business Logic and XML Views", "description": "Build and inherit form, list, search, kanban, and other user-interface views." },
-    { "number": "04", "title": "Actions and Menus", "description": "Organize navigation and connect user actions to business behavior." },
-    { "number": "05", "title": "Custom Modules", "description": "Build a maintainable module from requirement analysis through packaging and installation." },
-    { "number": "06", "title": "Integrations", "description": "Connect Odoo with APIs and external tools while preserving reliable structure." },
-    { "number": "07", "title": "Debugging and Maintenance", "description": "Troubleshoot issues, improve code quality, manage upgrades, and support stable deployments." },
-    { "number": "08", "title": "Capstone Development Scenario", "description": "Design, build, test, document, and present a custom Odoo business solution." }
+    {
+      "number": "01",
+      "title": "Odoo Architecture and Setup",
+      "description": "An introduction to Odoo development, then installing and configuring Odoo for local work."
+    },
+    {
+      "number": "02",
+      "title": "Creating Custom Modules",
+      "description": "Scaffold your first module and create a custom addon."
+    },
+    {
+      "number": "03",
+      "title": "Your First Addon",
+      "description": "Create an addon, write the module manifest, add a model, and connect menu items and views."
+    },
+    {
+      "number": "04",
+      "title": "Models and Fields in Depth",
+      "description": "Field types, how records are represented, and how models are ordered."
+    },
+    {
+      "number": "05",
+      "title": "Views and UI",
+      "description": "Guided readings on form, list, kanban and search views, filters, group-by, actions and menus."
+    },
+    {
+      "number": "06",
+      "title": "Business Case",
+      "description": "A reference brief for an automated service-billing and contract-management addon."
+    }
   ],
   "projects": [
-    { "title": "Custom Business Module", "description": "Build models, security, menus, actions, and views for a realistic requirement." },
-    { "title": "Workflow Extension", "description": "Extend an existing Odoo process with new validations, fields, and controlled behavior." },
-    { "title": "External Integration", "description": "Connect Odoo to a third-party service through a documented API workflow." }
+    {
+      "title": "First Addon",
+      "description": "Create an addon with a manifest, a model, menu items and views."
+    },
+    {
+      "title": "Model Design",
+      "description": "Choose field types and set how records are named and ordered."
+    },
+    {
+      "title": "Service-Billing Blueprint",
+      "description": "Plan an automated service-billing and contract-management addon from a business case."
+    }
   ],
   "relatedCourseSlugs": ["python-development-for-odoo", "odoo-implementation"],
   "faq": [
-    { "question": "How is this different from Python Development for Odoo?", "answer": "Odoo Development is the broader end-to-end framework track — architecture, modules, views, actions, and integrations. Python Development for Odoo goes deeper into Python, the ORM, and advanced backend implementation patterns specifically." },
-    { "question": "Do I need advanced Python?", "answer": "You should be comfortable with Python fundamentals. Learners needing stronger Python and ORM depth may benefit more from the Python Development for Odoo track." },
-    { "question": "Will I build a complete module?", "answer": "Yes. The curriculum includes custom module work and a capstone business solution." },
-    { "question": "Are integrations included?", "answer": "Yes. The course introduces external connections, API workflows, and technical enhancement patterns." }
+    {
+      "question": "How is this different from Python Fundamentals?",
+      "answer": "Python Fundamentals teaches the Python language itself. This course applies Python inside the Odoo framework to build modules."
+    },
+    {
+      "question": "Do I need advanced Python?",
+      "answer": "No, but you should be comfortable with Python basics, including functions and classes. Python Fundamentals covers everything you need."
+    },
+    {
+      "question": "Will I build a module?",
+      "answer": "Yes. You build a first addon step by step, with a manifest, a model, menus and views."
+    },
+    {
+      "question": "Are integrations or APIs covered?",
+      "answer": "No. This course focuses on module structure, models, fields and views."
+    }
   ],
   "instructor": {
     "name": "Ibrahim",
     "role": "Odoo Developer Instructor",
-    "bio": "Builds and extends custom Odoo modules, and teaches the framework end to end \u2014 models, views, actions, integrations, and the debugging habits that keep code maintainable.",
+    "bio": "Builds and extends custom Odoo modules, and teaches the framework end to end — models, views, actions, integrations, and the debugging habits that keep code maintainable.",
     "initials": "IB"
   },
   "studentCount": 0,

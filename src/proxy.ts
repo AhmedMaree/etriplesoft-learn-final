@@ -13,8 +13,16 @@ function expiredRedirect(request: NextRequest) {
   const [first, page] = pathname.slice(1).split("/");
   const locale = first && isLocale(first) ? first : defaultLocale;
   if (request.method !== "GET" || request.headers.has("next-action")) return null;
-  const next = page === "admin" ? `/${locale}/admin` : safeReturnPath(locale, pathname);
-  if (page !== "admin" && next !== pathname) return null;
+  // A payment return keeps its order so the learner lands back on the confirmation after signing in.
+  const params = request.nextUrl.searchParams;
+  const order = params.get("order");
+  const wanted =
+    page === "payment" && order
+      ? `${pathname}?order=${order}&step=checkout${params.get("returned") === "1" ? "&returned=1" : ""}`
+      : pathname;
+  let next = page === "admin" ? `/${locale}/admin` : safeReturnPath(locale, wanted);
+  if (next !== wanted && wanted !== pathname) next = safeReturnPath(locale, pathname);
+  if (page !== "admin" && next !== pathname && next !== wanted) return null;
   const login = new URL(`/${locale}/login`, request.url);
   login.searchParams.set("next", next);
   login.searchParams.set("notice", "sessionExpired");

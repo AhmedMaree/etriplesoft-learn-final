@@ -3,7 +3,7 @@
 export const courses = [
   {
     name: "Crash Course Odoo ERP",
-    image: "course-0.svg",
+    image: "course-0.webp",
     description:
       "A practical, hands-on introduction to Odoo ERP and how it integrates business functions.",
     teacher: "Ahmed Raza",
@@ -15,7 +15,7 @@ export const courses = [
   },
   {
     name: "Python Fundamentals",
-    image: "course-1.svg",
+    image: "course-1.webp",
     description:
       "Learn Python from scratch and build the skills for Odoo development with real-world examples.",
     teacher: "Usman Ali",
@@ -27,7 +27,7 @@ export const courses = [
   },
   {
     name: "Odoo Development",
-    image: "course-2.svg",
+    image: "course-2.webp",
     description:
       "Build custom modules, extend functionalities, and become an Odoo developer.",
     teacher: "Fahad Khan",
@@ -39,7 +39,7 @@ export const courses = [
   },
   {
     name: "Odoo Implementation",
-    image: "course-3.svg",
+    image: "course-3.webp",
     description:
       "Learn the complete implementation process from planning to go-live with best practices.",
     teacher: "Bilal Hussain",
@@ -51,7 +51,7 @@ export const courses = [
   },
   {
     name: "Odoo User Guide",
-    image: "course-4.svg",
+    image: "course-4.webp",
     description:
       "A step-by-step guide to using Odoo for everyday business operations across all modules.",
     teacher: "Ahmed Raza",
@@ -63,7 +63,7 @@ export const courses = [
   },
   {
     name: "Odoo System Admin",
-    image: "course-5.svg",
+    image: "course-5.webp",
     description:
       "Learn how to install, configure, secure, and maintain your Odoo instance.",
     teacher: "Usman Ali",

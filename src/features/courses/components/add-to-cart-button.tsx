@@ -1,95 +1,65 @@
 "use client";
 
-import { useState } from "react";
-import { ShoppingCart } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Check, ShoppingCart } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { addToCart, useCart } from "@/features/checkout/cart/use-cart";
+import { notifyDemoToast } from "@/lib/browser/demo-toast";
 
+// Adds a course to the browser cart; no sign-in needed until checkout. Once added it links to the cart.
+// `icon` is the compact course-card control; `button` is a labelled button for course detail pages.
 export function AddToCartButton({
-  courseId,
   courseSlug,
   courseTitle,
-  signedIn,
+  variant = "icon",
+  className = "course-cart-button",
+  onAdded,
 }: {
-  courseId: string;
   courseSlug: string;
   courseTitle: string;
-  signedIn: boolean;
+  variant?: "icon" | "button";
+  className?: string;
+  onAdded?: () => void;
 }) {
-  const t = useTranslations("courses");
-  const locale = useLocale();
-  const router = useRouter();
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(false);
-  const label = t("addToCart", { title: courseTitle });
+  const t = useTranslations("cart");
+  const inCart = useCart().includes(courseSlug);
+  const icon = variant === "icon";
+  const viewCart = { href: "/cart", label: t("viewCart") };
 
-  if (!signedIn) {
+  function add() {
+    if (addToCart(courseSlug)) {
+      notifyDemoToast(t("added", { title: courseTitle }), { action: viewCart });
+      onAdded?.();
+    } else notifyDemoToast(t("full"), { tone: "error", action: viewCart });
+  }
+
+  if (inCart)
     return (
       <Link
-        className="course-cart-button"
-        data-testid="course-add-to-cart"
-        href={`/payment?course=${encodeURIComponent(courseSlug)}`}
-        aria-label={label}
-        title={label}
+        className={`${className} is-in-cart`}
+        data-testid="course-view-cart"
+        href="/cart"
+        aria-label={
+          icon ? t("viewCartTitle", { title: courseTitle }) : undefined
+        }
+        title={icon ? t("viewCartTitle", { title: courseTitle }) : undefined}
       >
-        <ShoppingCart size={19} aria-hidden="true" />
+        <Check size={icon ? 19 : 18} aria-hidden="true" />
+        {!icon && t("viewCart")}
       </Link>
     );
-  }
-
-  async function addToCart() {
-    if (busy) return;
-    setBusy(true);
-    setError(false);
-    try {
-      const response = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "add-to-cart",
-          id: courseId,
-          locale,
-        }),
-      });
-      const value: unknown = await response.json();
-      if (!response.ok || !value || typeof value !== "object" || !("url" in value) || typeof value.url !== "string") {
-        throw new Error("cart_unavailable");
-      }
-      const destination = new URL(value.url, window.location.origin);
-      const orderId = destination.searchParams.get("order");
-      if (
-        destination.origin !== window.location.origin ||
-        destination.pathname !== `/${locale}/payment` ||
-        !orderId ||
-        !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(orderId)
-      ) {
-        throw new Error("cart_unavailable");
-      }
-      router.push(`/payment?order=${orderId}`);
-    } catch {
-      setError(true);
-    } finally {
-      setBusy(false);
-    }
-  }
 
   return (
-    <>
-      <button
-        className="course-cart-button"
-        data-testid="course-add-to-cart"
-        type="button"
-        aria-label={label}
-        title={label}
-        aria-busy={busy}
-        disabled={busy}
-        onClick={() => void addToCart()}
-      >
-        <ShoppingCart size={19} aria-hidden="true" />
-      </button>
-      <span className="sr-only" role="status" aria-live="polite">
-        {error ? t("cartError") : busy ? t("addingToCart") : ""}
-      </span>
-    </>
+    <button
+      className={className}
+      data-testid="course-add-to-cart"
+      type="button"
+      aria-label={icon ? t("addTitle", { title: courseTitle }) : undefined}
+      title={icon ? t("addTitle", { title: courseTitle }) : undefined}
+      onClick={add}
+    >
+      <ShoppingCart size={icon ? 19 : 18} aria-hidden="true" />
+      {!icon && t("add")}
+    </button>
   );
 }

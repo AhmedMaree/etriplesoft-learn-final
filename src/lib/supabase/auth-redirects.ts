@@ -20,16 +20,33 @@ const APP_ROUTES = new Set([
   'messages',
   'calendar',
   'payment',
+  'cart',
   'admin',
   'admin/audit',
+  'organization',
 ])
 
-// The one query-string destination allowed: a course page (/<locale>/courses?course=<slug>).
-const COURSE_RETURN_PATH = /^\/(en|ar)\/courses\?course=[a-z0-9]+(?:-[a-z0-9]+)*$/
+// The only query-string destinations allowed: a course page (/<locale>/courses?course=<slug>),
+// buying one course (/<locale>/payment?course=<slug>), resuming cart checkout (/<locale>/cart?checkout=1)
+// opening an organization invitation (/<locale>/join?code=<32-character code>) and returning to an
+// order's payment step (/<locale>/payment?order=<uuid>&step=checkout[&returned=1]); the order page
+// itself only shows orders the signed-in learner owns.
+const COURSE_RETURN_PATH = /^\/(en|ar)\/(courses|payment)\?course=[a-z0-9]+(?:-[a-z0-9]+)*$/
+const CART_CHECKOUT_PATH = /^\/(en|ar)\/cart\?checkout=1$/
+const INVITATION_PATH = /^\/(en|ar)\/join\?code=[A-Za-z0-9_-]{32}$/
+const ORDER_RETURN_PATH = /^\/(en|ar)\/payment\?order=[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}&step=checkout(?:&returned=1)?$/
 
 export function safeReturnPath(locale: Locale, candidate?: string | null): string {
   const fallback = `/${locale}/overview`
-  if (candidate && COURSE_RETURN_PATH.test(candidate) && candidate.startsWith(`/${locale}/`)) return candidate
+  if (
+    candidate &&
+    (COURSE_RETURN_PATH.test(candidate) ||
+      CART_CHECKOUT_PATH.test(candidate) ||
+      INVITATION_PATH.test(candidate) ||
+      ORDER_RETURN_PATH.test(candidate)) &&
+    candidate.startsWith(`/${locale}/`)
+  )
+    return candidate
   if (!candidate || !candidate.startsWith('/') || candidate.startsWith('//')) return fallback
   if (candidate.includes('\\') || candidate.includes('%') || candidate.includes('?') || candidate.includes('#')) return fallback
 

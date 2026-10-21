@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import { marketingMetadata } from "@/features/marketing/lib/page-meta";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { isLocale } from "@/i18n/config";
-import { getPathname } from "@/i18n/navigation";
 import { FinalCta } from "@/features/marketing/components/home/final-cta";
 import { Hero } from "@/features/marketing/components/home/hero";
 import { HomeFaq } from "@/features/marketing/components/home/home-faq";
@@ -22,11 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale } = await params;
   if (!isLocale(locale)) return {};
   const m = getMarketingMessages(locale);
-  return {
-    title: m.meta.homeTitle,
-    description: m.meta.homeDescription,
-    alternates: { canonical: getPathname({ locale, href: "/" }) },
-  };
+  return marketingMetadata(locale, m.meta.homeTitle, m.meta.homeDescription, "/");
 }
 
 export default async function LandingPage({ params }: PageProps) {
